@@ -1,0 +1,13 @@
+spring:
+  config:
+    activate:
+      on-profile: security
+
+jwt:
+  hmac512:
+    secret-key: 123456789
+
+oauth2:
+  kakao:
+    client-id: ~~
+    client-secret: ~~

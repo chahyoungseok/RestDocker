@@ -29,29 +29,31 @@ import java.util.Optional;
 @Slf4j
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
+    private final JwtProperties jwtProperties;
     private final AccountRepository accountRepository;
     private final ObjectMapper objectMapper;
     private Map<String, Object> body;
 
-    public JwtAuthorizationFilter(AccountRepository accountRepository, ObjectMapper objectMapper) {
+    public JwtAuthorizationFilter(AccountRepository accountRepository, JwtProperties jwtProperties, ObjectMapper objectMapper) {
         this.accountRepository = accountRepository;
+        this.jwtProperties = jwtProperties;
         this.objectMapper = objectMapper;
         body = new HashMap<>();
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String jwtHeader = request.getHeader(JwtProperties.HEADER_STRING);
+        String jwtHeader = request.getHeader(jwtProperties.getHEADER_STRING());
 
         // header가 있는지 확인
-        if(null == jwtHeader || false == jwtHeader.startsWith(JwtProperties.TOKEN_PREFIX)) {
+        if(null == jwtHeader || false == jwtHeader.startsWith(jwtProperties.getTOKEN_PREFIX())) {
             filterChain.doFilter(request, response);
             return;
         }
 
         log.info("Authentication Filter - jwtHeader : {}", jwtHeader);
 
-        String token = request.getHeader(JwtProperties.HEADER_STRING).replace(JwtProperties.TOKEN_PREFIX, "");
+        String token = request.getHeader(jwtProperties.getHEADER_STRING()).replace(jwtProperties.getTOKEN_PREFIX(), "");
         String accountId = null;
 
         try {

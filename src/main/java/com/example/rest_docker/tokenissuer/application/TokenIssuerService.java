@@ -14,17 +14,20 @@ import java.util.Map;
 public class TokenIssuerService {
 
     private Map<String, Object> header;
+    private final JwtProperties jwtProperties;
 
-    public TokenIssuerService() {
+    public TokenIssuerService(JwtProperties jwtProperties) {
         header = new HashMap<>();
-        header.put(JwtProperties.TYPE, JwtProperties.JWT_TYPE);
-        header.put(JwtProperties.ALGORITHM , JwtProperties.HMAC512);
+        header.put(jwtProperties.getTYPE(), jwtProperties.getJWT_TYPE());
+        header.put(jwtProperties.getALGORITHM() , jwtProperties.getHMAC512());
+
+        this.jwtProperties = jwtProperties;
     }
 
     public OAuthLoginResponse issueToken(String oauthServiceId, String nickname) {
 
-        String accessToken = this.issueToken(oauthServiceId, nickname, JwtProperties.ACCESS_TOKEN_EXPIRATION_TIME);
-        String refreshToken = this.issueToken(oauthServiceId, nickname, JwtProperties.REFRESH_TOKEN_EXPIRATION_TIME);
+        String accessToken = this.issueToken(oauthServiceId, nickname, jwtProperties.getACCESS_TOKEN_EXPIRATION_TIME());
+        String refreshToken = this.issueToken(oauthServiceId, nickname, jwtProperties.getREFRESH_TOKEN_EXPIRATION_TIME());
 
         return OAuthLoginResponse.builder()
                 .accessToken(accessToken)
@@ -39,7 +42,7 @@ public class TokenIssuerService {
                 .withClaim("oauthServiceId", oauthServiceId)
                 .withClaim("nickname", nickname)
                 .withExpiresAt(new Date(System.currentTimeMillis() + expiredDate))
-                .sign(Algorithm.HMAC512(JwtProperties.SECRET_KEY));
+                .sign(Algorithm.HMAC512(jwtProperties.getSECRET_KEY()));
     }
 
 }

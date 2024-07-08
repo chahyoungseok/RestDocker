@@ -2,6 +2,7 @@ package com.example.rest_docker.common.config;
 
 import com.example.rest_docker.account.domain.AccountRepository;
 import com.example.rest_docker.common.jwt.JwtAuthorizationFilter;
+import com.example.rest_docker.common.jwt.JwtProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -24,8 +25,9 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final ObjectMapper objectMapper;
     private final AccountRepository accountRepository;
+    private final JwtProperties jwtProperties;
+    private final ObjectMapper objectMapper;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -36,7 +38,7 @@ public class SecurityConfig {
                 .headers((header) -> header.frameOptions((frameOptions) -> frameOptions.disable())) // h2 console 에서 사용하는 X-Frame 의 Jacking 방어 => disable
                 .sessionManagement((manager) -> manager.sessionCreationPolicy(STATELESS)) // 인증과 인가에 관한 처리를 할 때 Session 을 사용하지 않는다는 의미
                 .cors((cors) -> cors.configurationSource(CorsConfigurationSource()))
-                .addFilterBefore(new JwtAuthorizationFilter(accountRepository, objectMapper), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtAuthorizationFilter(accountRepository, jwtProperties, objectMapper), UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests((authorize) -> authorize.requestMatchers("/**").permitAll());
 
 
