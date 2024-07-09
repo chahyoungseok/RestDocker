@@ -37,7 +37,8 @@ public class RequesterArgumentResolver implements HandlerMethodArgumentResolver 
         return GetRequesterDto.builder()
                 .ipAddress(ipAddress)
                 .id(accountPrincipalDetails.getAccountId())
-                .accessToken(httpServletRequest.getHeader("Authorization"))
+                .oauthAccessToken(accountPrincipalDetails.getOAuthAccessToken())
+                .oauthRefreshToken(accountPrincipalDetails.getOAuthRefreshToken())
                 .build();
     }
 }

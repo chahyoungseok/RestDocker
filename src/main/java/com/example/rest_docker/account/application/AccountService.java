@@ -6,7 +6,9 @@ import com.example.rest_docker.account.presentation.dto.kakao.KakaoOAuthLoginInf
 import com.example.rest_docker.account.presentation.dto.kakao.KakaoOAuthLoginRequestDto;
 import com.example.rest_docker.account.presentation.dto.OAuthLoginResponse;
 import com.example.rest_docker.account.util.KakaoOAuthUtils;
+import com.example.rest_docker.common.argument_resolver.dto.GetRequesterDto;
 import com.example.rest_docker.common.exception.RestDockerException;
+import com.example.rest_docker.common.exception.RestDockerExceptionCode;
 import com.example.rest_docker.tokenissuer.application.TokenIssuerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -45,7 +47,7 @@ public class AccountService {
             account.setMyServiceToken(oAuthLoginResponse);
         } catch (Exception e) {
             // KaKao OAuth Logout을 한다.
-            this.kakaoOAuthUtils.kakaoOAuthLogout(kakaoOAuthLoginInfoDto.accessToken());
+            this.kakaoOAuthUtils.kakaoOAuthLogout(kakaoOAuthLoginInfoDto.accessToken(), Long.valueOf(kakaoOAuthLoginInfoDto.id()));
         }
 
         accountRepository.save(account);
@@ -75,5 +77,31 @@ public class AccountService {
         }
 
         return account;
+    }
+
+    /**
+     * @param requesterInfo
+     *    ipAddress : 사용자의 IP
+     *    id : 사용자가 OAuth 를 통해 로그인했을 때, Third Party에서 제공해주는 Unique Id
+     *    accessToken : RestDocker 서버에서 발급해주었던 AccessToken
+     *
+     * @return 로그아웃의 결과
+     * @throws RestDockerException (HTTPCLIENT_ERROR_EXCEPTION / KAKAO_JSON_PROCESSING_EXCEPTION / KAKAO_LOGOUT_EXCEPTION / ACCOUNT_NOT_EXIST_OAUTH_ID_EXCEPTION)
+     */
+    @Transactional(rollbackFor = RestDockerException.class)
+    public boolean kakaoOAuthLogout(GetRequesterDto requesterInfo) throws RestDockerException {
+        boolean result = kakaoOAuthUtils.kakaoOAuthLogout(requesterInfo.oauthAccessToken(), Long.valueOf(requesterInfo.id()));
+        if (!result) {
+            throw new RestDockerException(RestDockerExceptionCode.KAKAO_LOGOUT_EXCEPTION);
+        }
+
+        // 로그아웃 시, accessToken 과 refreshToken을 사용할 수 없게 만듬
+        AccountEntity account = accountRepository.findByOauthServiceIdEquals(requesterInfo.id())
+                .orElseThrow(() -> new RestDockerException(RestDockerExceptionCode.ACCOUNT_NOT_EXIST_OAUTH_ID_EXCEPTION));
+
+        account.eliminateValidToken();
+        accountRepository.save(account);
+
+        return true;
     }
 }

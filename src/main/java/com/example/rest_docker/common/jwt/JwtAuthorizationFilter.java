@@ -57,7 +57,12 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         String accountId = null;
 
         try {
-            accountId = JWT.require(Algorithm.HMAC512(JwtProperties.SECRET_KEY)).build().verify(token).getClaim("id").asString();
+            // 로그아웃 API가 안되는 상태
+            accountId = JWT.require(Algorithm.HMAC512(jwtProperties.getSECRET_KEY()))
+                    .build()
+                    .verify(token)
+                    .getClaim("oauthServiceId")
+                    .asString();
         } catch (TokenExpiredException e) {
             logger.warn("the token is expired and not valid anymore", e);
             sendErrorResponse(request, response, RestDockerExceptionCode.JWT_TOKEN_EXPIRED_EXCEPTION);

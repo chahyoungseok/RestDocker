@@ -6,5 +6,6 @@ import lombok.Builder;
 public record GetRequesterDto(
         String ipAddress,
         String id,
-        String accessToken
+        String oauthAccessToken,
+        String oauthRefreshToken
 ){}

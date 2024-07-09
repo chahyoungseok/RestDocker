@@ -26,4 +26,6 @@ public class KakaoOAuthInfo {
     private String ACCOUNT_INFO_URI = "https://kapi.kakao.com/v2/user/me";
 
     private String TOKEN_REMOVE_URI = "https://kapi.kakao.com/v1/user/logout";
+
+    private String LOGOUT_TARGET_ID_TYPE = "user_id";
 }

@@ -20,6 +20,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Objects;
 
 
 @Slf4j
@@ -34,6 +35,34 @@ public class KakaoOAuthUtils {
     public KakaoOAuthLoginInfoDto kakaoOAuthLogin(String authorizationCode) throws RestDockerException {
         KakaoOAuthTokenDto accessTokenInfo = getAccessToken(authorizationCode);
         return getAccountInfo(accessTokenInfo);
+    }
+
+    public boolean kakaoOAuthLogout(String oauthAccessToken, Long accountId) throws RestDockerException {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + oauthAccessToken);
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+        LinkedMultiValueMap<String, Object> params = new LinkedMultiValueMap<>();
+        params.add("target_id_type", kakaoOAuthInfo.getLOGOUT_TARGET_ID_TYPE());
+        params.add("target_id", accountId);
+
+        HttpEntity<LinkedMultiValueMap<String, Object>> request = new HttpEntity<>(params, headers);
+
+        try {
+            ResponseEntity<String> response = restTemplate.postForEntity(
+                    kakaoOAuthInfo.getTOKEN_REMOVE_URI(),
+                    request,
+                    String.class);
+
+            JsonNode jsonNode = objectMapper.readTree(response.getBody());
+            return !Objects.isNull(jsonNode.get("id"));
+
+        } catch(HttpClientErrorException e){
+            log.error("Kakao Logout 을 완료하지 못하였습니다.");
+            throw new RestDockerException(RestDockerExceptionCode.HTTPCLIENT_ERROR_EXCEPTION);
+        } catch (JsonProcessingException e) {
+            throw new RestDockerException(RestDockerExceptionCode.KAKAO_JSON_PROCESSING_EXCEPTION);
+        }
     }
 
     private KakaoOAuthTokenDto getAccessToken(String authorizationCode) throws RestDockerException {
