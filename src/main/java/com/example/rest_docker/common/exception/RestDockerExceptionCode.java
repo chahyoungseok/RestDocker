@@ -12,7 +12,9 @@ public enum RestDockerExceptionCode {
     KAKAO_JSON_PROCESSING_EXCEPTION(HttpStatus.BAD_REQUEST, "20001", "카카오 Json Processing 과정중에 문제가 발생했습니다."),
     KAKAO_JSON_MAPPING_EXCEPTION(HttpStatus.BAD_REQUEST, "20002", "카카오 Json Mapping 과정중에 문제가 발생했습니다."),
     HTTPCLIENT_ERROR_EXCEPTION(HttpStatus.BAD_REQUEST, "20003", "클라이언트의 인증코드가 틀리거나 이미 사용한 인증코드입니다."),
-    KAKAO_LOGOUT_EXCEPTION(HttpStatus.BAD_REQUEST, "20004", "카카오 Logout 과정중에 문제가 발생했습니다.");
+    KAKAO_LOGOUT_EXCEPTION(HttpStatus.BAD_REQUEST, "20004", "카카오 Logout 과정중에 문제가 발생했습니다."),
+
+    ACCOUNT_NOT_EXIST_OAUTH_ID_EXCEPTION(HttpStatus.BAD_REQUEST, "30001", "Account DB에 OAuth ID의 일치하는 정보가 존재하지 않습니다.");
 
     private HttpStatus httpStatus;
     private final String resultCode;

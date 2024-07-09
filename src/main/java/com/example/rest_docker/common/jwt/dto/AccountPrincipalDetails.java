@@ -42,4 +42,12 @@ public class AccountPrincipalDetails implements UserDetails {
     public String getNickname() {
         return this.account.getNickname();
     }
+
+    public String getOAuthAccessToken() {
+        return this.account.getThirdPartyAccessToken();
+    }
+
+    public String getOAuthRefreshToken() {
+        return this.account.getThirdPartyRefreshToken();
+    }
 }
