@@ -14,7 +14,8 @@ public enum RestDockerExceptionCode {
     HTTPCLIENT_ERROR_EXCEPTION(HttpStatus.BAD_REQUEST, "20003", "클라이언트의 인증코드가 틀리거나 이미 사용한 인증코드입니다."),
     KAKAO_LOGOUT_EXCEPTION(HttpStatus.BAD_REQUEST, "20004", "카카오 Logout 과정중에 문제가 발생했습니다."),
 
-    ACCOUNT_NOT_EXIST_OAUTH_ID_EXCEPTION(HttpStatus.BAD_REQUEST, "30001", "Account DB에 OAuth ID의 일치하는 정보가 존재하지 않습니다.");
+    ACCOUNT_NOT_EXIST_OAUTH_ID_EXCEPTION(HttpStatus.BAD_REQUEST, "30001", "Account DB에 OAuth ID의 일치하는 정보가 존재하지 않습니다."),
+    REFRESH_TOKEN_NOT_MATCH_INFO_EXCEPTION(HttpStatus.BAD_REQUEST, "30002", "Account DB에 RefreshToken 이 헤더에 보낸 RefreshToken 과 일치하지 않습니다.");
 
     private HttpStatus httpStatus;
     private final String resultCode;
