@@ -55,6 +55,10 @@ public class AccountEntity extends BaseDomainEntity {
         this.isActive = true;
     }
 
+    public void reIssueAccessToken(String accessToken) {
+        this.accessToken = accessToken;
+    }
+
     public void setMyServiceToken(OAuthLoginResponse myServiceTokenDto) {
         this.accessToken = myServiceTokenDto.accessToken();
         this.refreshToken = myServiceTokenDto.refreshToken();

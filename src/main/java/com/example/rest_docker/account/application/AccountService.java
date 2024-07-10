@@ -42,7 +42,6 @@ public class AccountService {
 
         OAuthLoginResponse oAuthLoginResponse = null;
         try {
-            // JWT 를 발급하고, RefreshToken을
             oAuthLoginResponse = tokenIssuerService.issueToken(account.getOauthServiceId(), account.getNickname());
             account.setMyServiceToken(oAuthLoginResponse);
         } catch (Exception e) {
