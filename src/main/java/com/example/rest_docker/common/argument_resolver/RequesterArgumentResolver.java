@@ -26,7 +26,7 @@ public class RequesterArgumentResolver implements HandlerMethodArgumentResolver 
         String ipAddress = httpServletRequest.getRemoteAddr();
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (null == authentication) { // JWT 가 없는 API 인 경우
+        if (null == authentication.getAuthorities() || authentication.getPrincipal().toString().equals("anonymousUser")) { // JWT 가 없는 API 인 경우
             return GetRequesterDto.builder()
                     .ipAddress(ipAddress)
                     .build();
