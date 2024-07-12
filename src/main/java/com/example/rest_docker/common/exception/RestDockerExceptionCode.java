@@ -7,6 +7,7 @@ public enum RestDockerExceptionCode {
     COMMON_SERVER_ERROR_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, "10002", "서버에서 예기치못한 에러가 발생하였습니다."),
     JWT_TOKEN_EXPIRED_EXCEPTION(HttpStatus.BAD_REQUEST, "11001", "JWT 토큰이 만료되었습니다."),
     JWT_TOKEN_VALID_EXCEPTION(HttpStatus.BAD_REQUEST, "11002", "JWT 토큰 정보의 유효성검사가 실패하였습니다."),
+    API_NEED_TOKEN_EXCEPTION(HttpStatus.BAD_REQUEST, "11003", "요청한 API는 유효성을 가진 Access Token이 필요하다."),
 
 
     KAKAO_JSON_PROCESSING_EXCEPTION(HttpStatus.BAD_REQUEST, "20001", "카카오 Json Processing 과정중에 문제가 발생했습니다."),

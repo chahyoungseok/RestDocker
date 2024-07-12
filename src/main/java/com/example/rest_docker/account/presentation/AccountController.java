@@ -3,6 +3,7 @@ package com.example.rest_docker.account.presentation;
 import com.example.rest_docker.account.application.AccountService;
 import com.example.rest_docker.account.presentation.dto.kakao.KakaoOAuthLoginRequestDto;
 import com.example.rest_docker.account.presentation.dto.OAuthLoginResponse;
+import com.example.rest_docker.common.aop.annotation.Auth;
 import com.example.rest_docker.common.argument_resolver.annotation.GetRequester;
 import com.example.rest_docker.common.argument_resolver.dto.GetRequesterDto;
 import com.example.rest_docker.common.exception.RestDockerException;
@@ -27,6 +28,7 @@ public class AccountController {
         return ResponseEntity.ok(accountService.kakaoOAuthLogin(request));
     }
 
+    @Auth
     @GetMapping("/kakao/logout")
     public ResponseEntity<?> kakaoOAuthLogout(@GetRequester GetRequesterDto requesterInfo) throws RestDockerException {
         return ResponseEntity.ok(accountService.kakaoOAuthLogout(requesterInfo));
