@@ -7,6 +7,7 @@ import com.example.rest_docker.account.presentation.dto.kakao.KakaoOAuthLoginReq
 import com.example.rest_docker.account.presentation.dto.OAuthLoginResponse;
 import com.example.rest_docker.account.util.KakaoOAuthUtils;
 import com.example.rest_docker.common.argument_resolver.dto.GetRequesterDto;
+import com.example.rest_docker.common.enumerate.ThirdPartyEnum;
 import com.example.rest_docker.common.exception.RestDockerException;
 import com.example.rest_docker.common.exception.RestDockerExceptionCode;
 import com.example.rest_docker.tokenissuer.application.TokenIssuerService;
@@ -38,11 +39,11 @@ public class AccountService {
     @Transactional(rollbackFor = RestDockerException.class)
     public OAuthLoginResponse kakaoOAuthLogin(KakaoOAuthLoginRequestDto request) throws RestDockerException {
         KakaoOAuthLoginInfoDto kakaoOAuthLoginInfoDto = kakaoOAuthUtils.kakaoOAuthLogin(request.code());
-        AccountEntity account = createAccount(kakaoOAuthLoginInfoDto);
+        AccountEntity account = createAccount(kakaoOAuthLoginInfoDto, ThirdPartyEnum.KAKAO);
 
         OAuthLoginResponse oAuthLoginResponse = null;
         try {
-            oAuthLoginResponse = tokenIssuerService.issueToken(account.getOauthServiceId(), account.getNickname());
+            oAuthLoginResponse = tokenIssuerService.issueToken(account.getOauthServiceId(), account.getNickname(), ThirdPartyEnum.KAKAO);
             account.setMyServiceToken(oAuthLoginResponse);
         } catch (Exception e) {
             // KaKao OAuth Logout을 한다.
@@ -53,8 +54,8 @@ public class AccountService {
         return oAuthLoginResponse;
     }
 
-    private AccountEntity createAccount(KakaoOAuthLoginInfoDto kakaoOAuthLoginInfoDto) {
-        Optional<AccountEntity> loginAccount = accountRepository.findByOauthServiceIdEquals(kakaoOAuthLoginInfoDto.id());
+    private AccountEntity createAccount(KakaoOAuthLoginInfoDto kakaoOAuthLoginInfoDto, ThirdPartyEnum thirdPartyType) {
+        Optional<AccountEntity> loginAccount = accountRepository.findByOauthServiceIdEqualsAndThirdPartyTypeEquals(kakaoOAuthLoginInfoDto.id(), thirdPartyType);
 
         // 1. 로그인이 처음인 경우
         // 2. 회원가입은 되어있지만 활성화되어있지 않은경우
@@ -71,6 +72,7 @@ public class AccountService {
                     .thirdPartyRefreshToken(kakaoOAuthLoginInfoDto.refreshToken())
                     .oauthServiceId(kakaoOAuthLoginInfoDto.id())
                     .nickname(kakaoOAuthLoginInfoDto.nickname())
+                    .thirdPartyType(thirdPartyType)
                     .isActive(true)
                     .build();
         }
@@ -95,7 +97,7 @@ public class AccountService {
         }
 
         // 로그아웃 시, accessToken 과 refreshToken을 사용할 수 없게 만듬
-        AccountEntity account = accountRepository.findByOauthServiceIdEquals(requesterInfo.id())
+        AccountEntity account = accountRepository.findByOauthServiceIdEqualsAndThirdPartyTypeEquals(requesterInfo.id(), ThirdPartyEnum.KAKAO)
                 .orElseThrow(() -> new RestDockerException(RestDockerExceptionCode.ACCOUNT_NOT_EXIST_OAUTH_ID_EXCEPTION));
 
         account.eliminateValidToken();

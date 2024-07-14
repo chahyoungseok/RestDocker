@@ -2,9 +2,11 @@ package com.example.rest_docker.tokenissuer.application;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.Claim;
 import com.example.rest_docker.account.domain.AccountRepository;
 import com.example.rest_docker.account.domain.entity.AccountEntity;
 import com.example.rest_docker.account.presentation.dto.OAuthLoginResponse;
+import com.example.rest_docker.common.enumerate.ThirdPartyEnum;
 import com.example.rest_docker.common.exception.RestDockerException;
 import com.example.rest_docker.common.exception.RestDockerExceptionCode;
 import com.example.rest_docker.common.jwt.JwtProperties;
@@ -33,10 +35,10 @@ public class TokenIssuerService {
         this.accountRepository = accountRepository;
     }
 
-    public OAuthLoginResponse issueToken(String oauthServiceId, String nickname) {
+    public OAuthLoginResponse issueToken(String oauthServiceId, String nickname, ThirdPartyEnum thirdPartyType) {
 
-        String accessToken = this.issueToken(oauthServiceId, nickname, jwtProperties.getACCESS_TOKEN_EXPIRATION_TIME());
-        String refreshToken = this.issueToken(oauthServiceId, nickname, jwtProperties.getREFRESH_TOKEN_EXPIRATION_TIME());
+        String accessToken = this.issueToken(oauthServiceId, nickname, thirdPartyType, jwtProperties.getACCESS_TOKEN_EXPIRATION_TIME());
+        String refreshToken = this.issueToken(oauthServiceId, nickname, thirdPartyType, jwtProperties.getREFRESH_TOKEN_EXPIRATION_TIME());
 
         return OAuthLoginResponse.builder()
                 .accessToken(accessToken)
@@ -44,10 +46,11 @@ public class TokenIssuerService {
                 .build();
     }
 
-    private String issueToken(String oauthServiceId, String nickname, int expiredDate) {
+    private String issueToken(String oauthServiceId, String nickname, ThirdPartyEnum thirdPartyType, int expiredDate) {
         return JWT.create()
                 .withHeader(header)
                 .withSubject("Rest Docker - JWT Token")
+                .withClaim("thirdPartyType", thirdPartyType.toString())
                 .withClaim("oauthServiceId", oauthServiceId)
                 .withClaim("nickname", nickname)
                 .withExpiresAt(new Date(System.currentTimeMillis() + expiredDate))
@@ -60,6 +63,7 @@ public class TokenIssuerService {
         String reIssueAccessToken = this.issueToken(
                 verifiedAccount.getOauthServiceId(),
                 verifiedAccount.getNickname(),
+                verifiedAccount.getThirdPartyType(),
                 jwtProperties.getACCESS_TOKEN_EXPIRATION_TIME()
         );
 
@@ -72,13 +76,18 @@ public class TokenIssuerService {
     }
 
     private AccountEntity verifyRefreshToken(String requestRefreshToken) throws RestDockerException {
-        String oauthServiceId = JWT.require(Algorithm.HMAC512(jwtProperties.getSECRET_KEY()))
+        Map<String, Claim> tokenClaims = JWT.require(Algorithm.HMAC512(jwtProperties.getSECRET_KEY()))
                 .build()
                 .verify(requestRefreshToken)
-                .getClaim("oauthServiceId")
-                .asString();
+                .getClaims();
 
-        Optional<AccountEntity> optionalAccount = accountRepository.findByOauthServiceIdEquals(oauthServiceId);
+        String oauthServiceId = tokenClaims.get("oauthServiceId").asString();
+        String thirdPartyType = tokenClaims.get("thirdPartyType").asString();
+        if (null == oauthServiceId || null == thirdPartyType) {
+            throw new RestDockerException(RestDockerExceptionCode.ACCOUNT_NOT_EXIST_OAUTH_ID_EXCEPTION);
+        }
+
+        Optional<AccountEntity> optionalAccount = accountRepository.findByOauthServiceIdEqualsAndThirdPartyTypeEquals(oauthServiceId, ThirdPartyEnum.valueOf(thirdPartyType));
         if (false == optionalAccount.isPresent()) {
             throw new RestDockerException(RestDockerExceptionCode.ACCOUNT_NOT_EXIST_OAUTH_ID_EXCEPTION);
         }

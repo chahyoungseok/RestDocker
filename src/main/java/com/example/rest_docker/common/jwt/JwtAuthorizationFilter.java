@@ -3,8 +3,10 @@ package com.example.rest_docker.common.jwt;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.TokenExpiredException;
+import com.auth0.jwt.interfaces.Claim;
 import com.example.rest_docker.account.domain.AccountRepository;
 import com.example.rest_docker.account.domain.entity.AccountEntity;
+import com.example.rest_docker.common.enumerate.ThirdPartyEnum;
 import com.example.rest_docker.common.exception.RestDockerExceptionCode;
 import com.example.rest_docker.common.jwt.dto.AccountPrincipalDetails;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -54,26 +56,28 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         log.info("Authentication Filter - jwtHeader : {}", jwtHeader);
 
         String token = request.getHeader(jwtProperties.getHEADER_STRING()).replace(jwtProperties.getTOKEN_PREFIX(), "");
-        String accountId = null;
+        Map<String, Claim> tokenClaims = null;
 
         try {
             // 로그아웃 API가 안되는 상태
-            accountId = JWT.require(Algorithm.HMAC512(jwtProperties.getSECRET_KEY()))
+            tokenClaims = JWT.require(Algorithm.HMAC512(jwtProperties.getSECRET_KEY()))
                     .build()
                     .verify(token)
-                    .getClaim("oauthServiceId")
-                    .asString();
+                    .getClaims();
         } catch (TokenExpiredException e) {
             logger.warn("the token is expired and not valid anymore", e);
-            sendErrorResponse(request, response, RestDockerExceptionCode.JWT_TOKEN_EXPIRED_EXCEPTION);
+            sendErrorResponse(request, response, RestDockerExceptionCode.JWT_EXPIRED_EXCEPTION);
         }
 
-        if(null != accountId) {
+        String oauthServiceId = tokenClaims.get("oauthServiceId").asString();
+        String thirdPartyType = tokenClaims.get("thirdPartyType").asString();
+
+        if(null != oauthServiceId && null != thirdPartyType) {
             log.info("Authentication Filter - 서명이 정상적으로 됨");
 
-            Optional<AccountEntity> optionalJwtTokenAccount = accountRepository.findByOauthServiceIdEquals(accountId);
+            Optional<AccountEntity> optionalJwtTokenAccount = accountRepository.findByOauthServiceIdEqualsAndThirdPartyTypeEquals(oauthServiceId, ThirdPartyEnum.valueOf(thirdPartyType));
             if (false == optionalJwtTokenAccount.isPresent()) {
-                sendErrorResponse(request, response, RestDockerExceptionCode.JWT_TOKEN_VALID_EXCEPTION);
+                sendErrorResponse(request, response, RestDockerExceptionCode.JWT_VALID_EXCEPTION);
             }
 
             Authentication authentication = getAuthorities(optionalJwtTokenAccount.get());
