@@ -2,6 +2,7 @@ package com.example.rest_docker.account.domain.entity;
 
 import com.example.rest_docker.account.presentation.dto.OAuthLoginResponse;
 import com.example.rest_docker.common.domain.BaseDomainEntity;
+import com.example.rest_docker.common.enumerate.ThirdPartyEnum;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -31,24 +32,28 @@ public class AccountEntity extends BaseDomainEntity {
     @Column(name = "refresh_token", nullable = true)
     private String refreshToken;
 
-    @Size(max = 100)
+    @Size(max = 300)
     @Column(name = "third_party_access_token", nullable = true)
     private String thirdPartyAccessToken;
 
-    @Size(max = 100)
+    @Size(max = 300)
     @Column(name = "third_party_refresh_token", nullable = true)
     private String thirdPartyRefreshToken;
+
+    @Column(name = "third_party_type", nullable = false)
+    private ThirdPartyEnum thirdPartyType;
 
     @Column(name = "is_active", nullable = false)
     private Boolean isActive;
 
     @Builder
-    public AccountEntity(String nickname, String oauthServiceId, String thirdPartyAccessToken, String thirdPartyRefreshToken, boolean isActive) {
+    public AccountEntity(String nickname, String oauthServiceId, String thirdPartyAccessToken, String thirdPartyRefreshToken, boolean isActive, ThirdPartyEnum thirdPartyType) {
         this.nickname = nickname;
         this.thirdPartyAccessToken = thirdPartyAccessToken;
         this.thirdPartyRefreshToken = thirdPartyRefreshToken;
         this.oauthServiceId = oauthServiceId;
         this.isActive = isActive;
+        this.thirdPartyType = thirdPartyType;
     }
 
     public void onActive() {

@@ -1,4 +1,4 @@
-package com.example.rest_docker.account.util;
+package com.example.rest_docker.account.util.kakao;
 
 import com.example.rest_docker.common.yaml.YamlLoadFactory;
 import lombok.Getter;
