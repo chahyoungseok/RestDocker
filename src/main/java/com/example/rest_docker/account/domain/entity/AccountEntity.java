@@ -32,11 +32,11 @@ public class AccountEntity extends BaseDomainEntity {
     @Column(name = "refresh_token", nullable = true)
     private String refreshToken;
 
-    @Size(max = 100)
+    @Size(max = 300)
     @Column(name = "third_party_access_token", nullable = true)
     private String thirdPartyAccessToken;
 
-    @Size(max = 100)
+    @Size(max = 300)
     @Column(name = "third_party_refresh_token", nullable = true)
     private String thirdPartyRefreshToken;
 

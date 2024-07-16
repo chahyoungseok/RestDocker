@@ -1,7 +1,7 @@
-package com.example.rest_docker.account.util;
+package com.example.rest_docker.account.util.naver;
 
-import com.example.rest_docker.account.presentation.dto.kakao.KakaoOAuthTokenDto;
-import com.example.rest_docker.account.presentation.dto.kakao.KakaoOAuthLoginInfoDto;
+import com.example.rest_docker.account.presentation.dto.OAuthTokenDto;
+import com.example.rest_docker.account.presentation.dto.naver.NaverOAuthLoginInfoDto;
 import com.example.rest_docker.common.exception.RestDockerException;
 import com.example.rest_docker.common.exception.RestDockerExceptionCode;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -20,75 +20,77 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Objects;
-
+import java.math.BigInteger;
+import java.security.SecureRandom;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class KakaoOAuthUtils {
+public class NaverOAuthUtils {
 
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
-    private final KakaoOAuthInfo kakaoOAuthInfo;
 
-    public KakaoOAuthLoginInfoDto kakaoOAuthLogin(String authorizationCode) throws RestDockerException {
-        KakaoOAuthTokenDto accessTokenInfo = getAccessToken(authorizationCode);
+    private final SecureRandom secureRandom;
+    private final NaverOAuthInfo naverOAuthInfo;
+
+    public NaverOAuthLoginInfoDto naverOAuthLogin(String authorizationCode) throws RestDockerException {
+        OAuthTokenDto accessTokenInfo = getAccessToken(authorizationCode);
         return getAccountInfo(accessTokenInfo);
     }
 
-    public boolean kakaoOAuthLogout(String oauthAccessToken, Long accountId) throws RestDockerException {
+    public boolean naverOAuthLogout(String oauthAccessToken) throws RestDockerException {
         HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer " + oauthAccessToken);
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
         LinkedMultiValueMap<String, Object> params = new LinkedMultiValueMap<>();
-        params.add("target_id_type", kakaoOAuthInfo.getLOGOUT_TARGET_ID_TYPE());
-        params.add("target_id", accountId);
+        params.add("client_id", naverOAuthInfo.getCLIENT_ID());
+        params.add("client_secret", naverOAuthInfo.getCLIENT_SECRET());
+        params.add("access_token", oauthAccessToken);
+        params.add("grant_type", naverOAuthInfo.getAUTHORIZATION_GRANT_TYPE_DELETE());
 
         HttpEntity<LinkedMultiValueMap<String, Object>> request = new HttpEntity<>(params, headers);
 
         try {
             ResponseEntity<String> response = restTemplate.postForEntity(
-                    kakaoOAuthInfo.getTOKEN_REMOVE_URI(),
+                    naverOAuthInfo.getTOKEN_REMOVE_URI(),
                     request,
                     String.class);
 
             JsonNode jsonNode = objectMapper.readTree(response.getBody());
-            return !Objects.isNull(jsonNode.get("id"));
-
+            return jsonNode.get("result").asText().equals("success");
         } catch(HttpClientErrorException e){
-            log.error("Kakao Logout 을 완료하지 못하였습니다.");
+            log.error("Naver Logout 을 완료하지 못하였습니다.");
             throw new RestDockerException(RestDockerExceptionCode.HTTPCLIENT_ERROR_EXCEPTION);
         } catch (JsonProcessingException e) {
             throw new RestDockerException(RestDockerExceptionCode.KAKAO_JSON_PROCESSING_EXCEPTION);
         }
     }
 
-    private KakaoOAuthTokenDto getAccessToken(String authorizationCode) throws RestDockerException {
+    private OAuthTokenDto getAccessToken(String authorizationCode) throws RestDockerException {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
         LinkedMultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("grant_type", kakaoOAuthInfo.getAUTHORIZATION_GRANT_TYPE());
-        params.add("client_id", kakaoOAuthInfo.getCLIENT_ID());
-        params.add("redirect_uri", kakaoOAuthInfo.getREDIRECT_URI());
-        params.add("client_secret", kakaoOAuthInfo.getCLIENT_SECRET());
+        params.add("grant_type", naverOAuthInfo.getAUTHORIZATION_GRANT_TYPE_ISSUE());
+        params.add("client_id", naverOAuthInfo.getCLIENT_ID());
+        params.add("client_secret", naverOAuthInfo.getCLIENT_SECRET());
         params.add("code", authorizationCode);
+        params.add("state", naverStateValue());
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
 
         try {
             ResponseEntity<String> response = restTemplate.postForEntity(
-                    kakaoOAuthInfo.getACCESS_TOKEN_URI(),
+                    naverOAuthInfo.getACCESS_TOKEN_URI(),
                     request,
                     String.class);
 
             JsonNode jsonNode = objectMapper.readTree(response.getBody());
 
-            return KakaoOAuthTokenDto.builder()
-                    .accessToken(String.valueOf(jsonNode.get("access_token")))
-                    .refreshToken(String.valueOf(jsonNode.get("refresh_token")))
+            return OAuthTokenDto.builder()
+                    .accessToken(jsonNode.get("access_token").asText())
+                    .refreshToken(jsonNode.get("refresh_token").asText())
                     .build();
         } catch (JsonMappingException e) {
             throw new RestDockerException(RestDockerExceptionCode.KAKAO_JSON_MAPPING_EXCEPTION);
@@ -97,7 +99,7 @@ public class KakaoOAuthUtils {
         }
     }
 
-    private KakaoOAuthLoginInfoDto getAccountInfo(KakaoOAuthTokenDto accessTokenInfo) throws RestDockerException {
+    private NaverOAuthLoginInfoDto getAccountInfo(OAuthTokenDto accessTokenInfo) throws RestDockerException {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         headers.set("Authorization", "Bearer " + accessTokenInfo.accessToken());
@@ -106,14 +108,14 @@ public class KakaoOAuthUtils {
 
         try {
             ResponseEntity<String> response = restTemplate.postForEntity(
-                    kakaoOAuthInfo.getACCOUNT_INFO_URI(),
+                    naverOAuthInfo.getACCOUNT_INFO_URI(),
                     request,
                     String.class);
 
             JsonNode jsonNode = objectMapper.readTree(response.getBody());
-            return KakaoOAuthLoginInfoDto.builder()
-                    .id(String.valueOf(jsonNode.get("id")))
-                    .nickname(String.valueOf(jsonNode.get("properties").get("nickname")))
+            return NaverOAuthLoginInfoDto.builder()
+                    .id(jsonNode.get("response").get("id").asText())
+                    .nickname(jsonNode.get("response").get("nickname").asText())
                     .accessToken(accessTokenInfo.accessToken())
                     .refreshToken(accessTokenInfo.refreshToken())
                     .build();
@@ -124,5 +126,9 @@ public class KakaoOAuthUtils {
         } catch (JsonProcessingException e) {
             throw new RestDockerException(RestDockerExceptionCode.KAKAO_JSON_PROCESSING_EXCEPTION);
         }
+    }
+
+    public String naverStateValue() {
+        return new BigInteger(130, secureRandom).toString(32);
     }
 }
