@@ -5,11 +5,11 @@ import lombok.Getter;
 import org.springframework.http.ResponseEntity;
 
 @Getter
-public class RestDockerException extends Exception {
+public class HistoryException extends Exception {
 
-    private RestDockerExceptionCode exceptionCode;
+    private HistoryExceptionCode exceptionCode;
 
-    public RestDockerException(RestDockerExceptionCode exceptionCode) {
+    public HistoryException(HistoryExceptionCode exceptionCode) {
         super(exceptionCode.getDescription());
         this.exceptionCode = exceptionCode;
     }

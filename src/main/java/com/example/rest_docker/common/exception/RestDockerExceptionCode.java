@@ -9,6 +9,7 @@ public enum RestDockerExceptionCode {
     JWT_VALID_EXCEPTION(HttpStatus.BAD_REQUEST, "11002", "JWT 정보의 유효성검사가 실패하였습니다."),
     API_NEED_TOKEN_EXCEPTION(HttpStatus.BAD_REQUEST, "11003", "요청한 API는 유효성을 가진 Access Token이 필요합니다."),
     JWT_NOT_CORRECT_BODY_EXCEPTION(HttpStatus.BAD_REQUEST, "11003", "JWT 의 구성요소가 알맞게 들어있지 않습니다."),
+    JWT_ISSUE_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, "11004", "JWT 를 발급하는 과정에서 에러가 발생하였습니다."),
 
 
     KAKAO_JSON_PROCESSING_EXCEPTION(HttpStatus.BAD_REQUEST, "20001", "카카오 Json Processing 과정중에 문제가 발생했습니다."),
