@@ -22,8 +22,8 @@ public class AccountLoginHistoryEntity extends BaseDomainHistoryEntity {
     private String failureReason;
 
     @Builder
-    public AccountLoginHistoryEntity(String ipAddress, Boolean failure, String failureReason) {
-        super(ipAddress);
+    public AccountLoginHistoryEntity(String ipAddress, String createdBy, Boolean failure, String failureReason) {
+        super(createdBy, ipAddress);
         this.failure = failure;
         this.failureReason = failureReason;
     }

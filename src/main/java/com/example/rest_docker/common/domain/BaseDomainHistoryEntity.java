@@ -29,10 +29,15 @@ public abstract class BaseDomainHistoryEntity {
     @Column(name = "created_by", nullable = false)
     private String createdBy;
 
-    @Column(name = "ip_address", nullable = false)
+    @Column(name = "ip_address")
     private String ipAddress;
 
     public BaseDomainHistoryEntity(String ipAddress) {
+        this.ipAddress = ipAddress;
+    }
+
+    public BaseDomainHistoryEntity(String createdBy, String ipAddress) {
+        this.createdBy = createdBy;
         this.ipAddress = ipAddress;
     }
 }

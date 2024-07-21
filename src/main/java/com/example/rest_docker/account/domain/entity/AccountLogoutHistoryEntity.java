@@ -21,14 +21,10 @@ public class AccountLogoutHistoryEntity extends BaseDomainHistoryEntity {
     @Column(name = "failure_reason")
     private String failureReason;
 
-    @Column(name = "logout_method")
-    private String logoutMethod;
-
     @Builder
-    public AccountLogoutHistoryEntity(String ipAddress, Boolean failure, String failureReason, String logoutMethod) {
+    public AccountLogoutHistoryEntity(String ipAddress, Boolean failure, String failureReason) {
         super(ipAddress);
         this.failure = failure;
         this.failureReason = failureReason;
-        this.logoutMethod = logoutMethod;
     }
 }
