@@ -1,1 +1,7 @@
 rootProject.name = 'rest-docker'
+include 'tokenissuer'
+include 'global-utils'
+
+include 'restdocker-apis'
+include 'restdocker-core:domain'
+include 'restdocker-core:infra'
