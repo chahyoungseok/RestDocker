@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 import org.chs.domain.common.BaseDomainEntity;
 import org.chs.domain.common.enumerate.ThirdPartyEnum;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @Table(name = "account")
