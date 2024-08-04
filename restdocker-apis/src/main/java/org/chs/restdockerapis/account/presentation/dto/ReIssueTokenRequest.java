@@ -1,8 +1,8 @@
 package org.chs.restdockerapis.account.presentation.dto;
 
-import lombok.Getter;
+import lombok.Builder;
 
-@Getter
-public class ReIssueTokenRequest {
-    private String refreshToken;
-}
+@Builder
+public record ReIssueTokenRequest (
+        String refreshToken
+) {}

@@ -1,4 +1,4 @@
-package org.chs.restdockerapis.common.jwt.dto;
+package org.chs.restdockerapis.common.jwt.principal;
 
 import lombok.AllArgsConstructor;
 import org.chs.domain.account.entity.AccountEntity;

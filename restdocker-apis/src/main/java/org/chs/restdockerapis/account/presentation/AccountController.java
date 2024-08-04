@@ -2,7 +2,8 @@ package org.chs.restdockerapis.account.presentation;
 
 import org.chs.globalutils.dto.TokenDto;
 import org.chs.restdockerapis.account.application.AccountService;
-import org.chs.restdockerapis.account.presentation.dto.OAuthLoginRequestDto;
+import org.chs.restdockerapis.account.presentation.dto.common.GenericSingleResponse;
+import org.chs.restdockerapis.account.presentation.dto.common.OAuthLoginRequestDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.chs.restdockerapis.account.presentation.dto.ReIssueTokenRequest;
@@ -31,7 +32,7 @@ public class AccountController {
 
     @Auth
     @PostMapping("/kakao/logout")
-    public ResponseEntity<?> kakaoOAuthLogout(@GetRequester GetRequesterDto requesterInfo) throws HistoryException, CustomTokenException, OpenApiException {
+    public ResponseEntity<GenericSingleResponse<Boolean>> kakaoOAuthLogout(@GetRequester GetRequesterDto requesterInfo) throws HistoryException, CustomTokenException, OpenApiException {
         return ResponseEntity.ok(accountService.kakaoOAuthLogout(requesterInfo));
     }
 
@@ -42,12 +43,12 @@ public class AccountController {
 
     @Auth
     @PostMapping("/naver/logout")
-    public ResponseEntity<?> naverOAuthLogout(@GetRequester GetRequesterDto requesterInfo) throws HistoryException, CustomTokenException, OpenApiException {
+    public ResponseEntity<GenericSingleResponse<Boolean>> naverOAuthLogout(@GetRequester GetRequesterDto requesterInfo) throws HistoryException, CustomTokenException, OpenApiException {
         return ResponseEntity.ok(accountService.naverOAuthLogout(requesterInfo));
     }
 
     @GetMapping("/naver/state-value")
-    public ResponseEntity<String> naverStateValue() {
+    public ResponseEntity<GenericSingleResponse<String>> naverStateValue() {
         return ResponseEntity.ok(accountService.naverStateValue());
     }
 

@@ -1,6 +1,6 @@
 package org.chs.restdockerapis.account.util.kakao;
 
-import org.chs.restdockerapis.account.presentation.dto.OAuthTokenDto;
+import org.chs.restdockerapis.account.presentation.dto.common.OAuthTokenDto;
 import org.chs.restdockerapis.account.presentation.dto.kakao.KakaoOAuthLoginInfoDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -10,8 +10,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.chs.restdockerapis.common.exception.OpenApiException;
 import org.chs.restdockerapis.common.exception.OpenApiExceptionCode;
-import org.chs.restdockerapis.common.exception.RestDockerException;
-import org.chs.restdockerapis.common.exception.RestDockerExceptionCode;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;

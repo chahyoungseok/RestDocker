@@ -29,4 +29,8 @@ public abstract class BaseDomainEntity {
     @Column(name = "update_date", nullable = false)
     private LocalDateTime updateDate;
 
+    public void setDateTimeForTest(LocalDateTime createDate, LocalDateTime updateDate) {
+        this.createDate = createDate;
+        this.updateDate = updateDate;
+    }
 }
