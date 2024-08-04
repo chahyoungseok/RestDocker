@@ -3,9 +3,14 @@ bootJar { enabled = true }
 jar { enabled = true }
 
 dependencies {
+    // ----- Implementation Other Module -----
     implementation project(':global-utils')
     implementation project(':restdocker-core:domain')
     implementation project(':tokenissuer')
+
+
+    // ----- Implementation Business Logic -----
+    implementation("org.springframework.boot:spring-boot-starter-log4j2")
 
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-aop'
@@ -16,6 +21,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
+
+    // ----- Implementation Test Logic -----
     testImplementation "org.projectlombok:lombok"
     testAnnotationProcessor "org.projectlombok:lombok"
 
