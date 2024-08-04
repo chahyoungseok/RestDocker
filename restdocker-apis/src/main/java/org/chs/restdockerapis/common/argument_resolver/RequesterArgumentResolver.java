@@ -3,7 +3,7 @@ package org.chs.restdockerapis.common.argument_resolver;
 import org.chs.restdockerapis.common.argument_resolver.annotation.GetRequester;
 import org.chs.restdockerapis.common.argument_resolver.dto.GetRequesterDto;
 import jakarta.servlet.http.HttpServletRequest;
-import org.chs.restdockerapis.common.jwt.dto.AccountPrincipalDetails;
+import org.chs.restdockerapis.common.jwt.principal.AccountPrincipalDetails;
 import org.springframework.core.MethodParameter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

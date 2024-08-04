@@ -1,4 +1,4 @@
-package org.chs.restdockerapis.account.presentation.dto;
+package org.chs.restdockerapis.account.presentation.dto.common;
 
 import lombok.Builder;
 

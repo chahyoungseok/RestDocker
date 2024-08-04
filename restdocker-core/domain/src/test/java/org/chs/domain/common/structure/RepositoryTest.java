@@ -1,4 +1,4 @@
-package org.chs.domain.common;
+package org.chs.domain.common.structure;
 
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
