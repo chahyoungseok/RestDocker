@@ -7,7 +7,7 @@ import com.auth0.jwt.interfaces.Claim;
 import org.chs.domain.account.AccountRepository;
 import org.chs.domain.account.entity.AccountEntity;
 import org.chs.domain.common.enumerate.ThirdPartyEnum;
-import org.chs.restdockerapis.common.jwt.dto.AccountPrincipalDetails;
+import org.chs.restdockerapis.common.jwt.principal.AccountPrincipalDetails;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

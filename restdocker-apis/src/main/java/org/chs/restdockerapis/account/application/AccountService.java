@@ -7,8 +7,9 @@ import org.chs.domain.common.enumerate.ThirdPartyEnum;
 import org.chs.globalutils.dto.TokenDto;
 import org.chs.restdockerapis.account.presentation.dto.ReIssueTokenRequest;
 import org.chs.restdockerapis.account.presentation.dto.ReIssueTokenResponse;
+import org.chs.restdockerapis.account.presentation.dto.common.GenericSingleResponse;
 import org.chs.restdockerapis.account.presentation.dto.kakao.KakaoOAuthLoginInfoDto;
-import org.chs.restdockerapis.account.presentation.dto.OAuthLoginRequestDto;
+import org.chs.restdockerapis.account.presentation.dto.common.OAuthLoginRequestDto;
 import org.chs.restdockerapis.account.presentation.dto.naver.NaverOAuthLoginInfoDto;
 import org.chs.restdockerapis.account.util.kakao.KakaoOAuthUtils;
 import org.chs.restdockerapis.account.util.naver.NaverOAuthUtils;
@@ -115,7 +116,7 @@ public class AccountService {
      * @throws HistoryException (LOGOUT_HISTORY_SAVE_EXCEPTION)
      */
     @Transactional(rollbackFor = RestDockerException.class)
-    public boolean kakaoOAuthLogout(GetRequesterDto requesterInfo) throws HistoryException, CustomTokenException, OpenApiException {
+    public GenericSingleResponse<Boolean> kakaoOAuthLogout(GetRequesterDto requesterInfo) throws HistoryException, CustomTokenException, OpenApiException {
         boolean kakaoLogoutResult = kakaoOAuthLogoutWithExceptionHandling(requesterInfo.ipAddress(), requesterInfo.oauthAccessToken(), requesterInfo.id());
 
         if (!kakaoLogoutResult) {
@@ -132,7 +133,9 @@ public class AccountService {
         this.accountRepository.save(account);
         this.accountHistoryService.saveLogoutHistory(requesterInfo.ipAddress(), false, null);
 
-        return true;
+        return GenericSingleResponse.<Boolean>builder()
+                .data(true)
+                .build();
     }
 
     private boolean kakaoOAuthLogoutWithExceptionHandling(String ipAddress, String thirdPartyAccessToken, String oauthServiceId) throws HistoryException, OpenApiException {
@@ -211,7 +214,7 @@ public class AccountService {
      * @throws HistoryException (LOGOUT_HISTORY_SAVE_EXCEPTION)
      */
     @Transactional(noRollbackFor = HistoryException.class, rollbackFor = RestDockerException.class)
-    public Object naverOAuthLogout(GetRequesterDto requesterInfo) throws HistoryException, CustomTokenException, OpenApiException {
+    public GenericSingleResponse<Boolean> naverOAuthLogout(GetRequesterDto requesterInfo) throws HistoryException, CustomTokenException, OpenApiException {
         boolean naverLogoutResult = naverOAuthLogoutWithExceptionHandling(requesterInfo.ipAddress(), requesterInfo.oauthAccessToken());
         if (!naverLogoutResult) {
             OpenApiException exception = new OpenApiException(OpenApiExceptionCode.NAVER_LOGOUT_EXCEPTION);
@@ -227,7 +230,9 @@ public class AccountService {
         accountRepository.save(account);
         this.accountHistoryService.saveLogoutHistory(requesterInfo.ipAddress(), false, null);
 
-        return true;
+        return GenericSingleResponse.<Boolean>builder()
+                .data(true)
+                .build();
     }
 
     private boolean naverOAuthLogoutWithExceptionHandling(String ipAddress, String thirdPartyAccessToken) throws HistoryException, OpenApiException {
@@ -283,8 +288,10 @@ public class AccountService {
         }
     }
 
-    public String naverStateValue() {
-        return naverOAuthUtils.naverStateValue();
+    public GenericSingleResponse<String> naverStateValue() {
+        return GenericSingleResponse.<String>builder()
+                .data(naverOAuthUtils.naverStateValue())
+                .build();
     }
 
     /**
@@ -293,8 +300,8 @@ public class AccountService {
      * @throws CustomTokenException
      */
     public ReIssueTokenResponse reIssueToken(ReIssueTokenRequest request) throws CustomTokenException {
-        Map<String, Claim> tokenClaims = tokenIssuerService.verifyRefreshToken(request.getRefreshToken());
-        AccountEntity verifiedAccount = verifiedTokenClaims(tokenClaims, request.getRefreshToken());
+        Map<String, Claim> tokenClaims = tokenIssuerService.verifyRefreshToken(request.refreshToken());
+        AccountEntity verifiedAccount = verifiedTokenClaims(tokenClaims, request.refreshToken());
 
         String reIssueAccessToken = tokenIssuerService.issueToken(
                 verifiedAccount.getOauthServiceId(),

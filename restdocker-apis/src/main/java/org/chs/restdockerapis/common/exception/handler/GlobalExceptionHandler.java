@@ -7,6 +7,7 @@ import org.chs.restdockerapis.common.exception.RestDockerException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -37,6 +38,14 @@ public class GlobalExceptionHandler {
     }
 
     @Order(value = 3)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<?> handlerCommonException(MethodArgumentNotValidException exception) {
+        log.error(exception.getMessage(), exception);
+
+        return ResponseEntity.badRequest().body(exception.getMessage());
+    }
+
+    @Order(value = 4)
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handlerCommonException(Exception exception) {
         log.error(exception.getMessage(), exception);
