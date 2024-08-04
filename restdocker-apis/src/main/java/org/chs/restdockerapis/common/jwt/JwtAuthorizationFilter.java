@@ -2,6 +2,7 @@ package org.chs.restdockerapis.common.jwt;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.Claim;
 import org.chs.domain.account.AccountRepository;
@@ -67,6 +68,9 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                     .getClaims();
         } catch (TokenExpiredException e) {
             logger.warn("the token is expired and not valid anymore", e);
+            sendErrorResponse(request, response, CustomTokenExceptionCode.JWT_EXPIRED_EXCEPTION);
+        } catch (SignatureVerificationException e) {
+            logger.warn("The Token's Signature resulted invalid when verified using the Algorithm: HmacSHA512", e);
             sendErrorResponse(request, response, CustomTokenExceptionCode.JWT_EXPIRED_EXCEPTION);
         }
 
