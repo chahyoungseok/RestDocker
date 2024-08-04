@@ -2,11 +2,9 @@ package org.chs.domain.account.repository;
 
 import org.chs.domain.account.AccountRepository;
 import org.chs.domain.account.entity.AccountEntity;
-import org.chs.domain.common.RepositoryTest;
+import org.chs.domain.common.structure.RepositoryTest;
 import org.chs.domain.common.enumerate.ThirdPartyEnum;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
@@ -21,32 +19,53 @@ class AccountRepositoryTest extends RepositoryTest {
 
     AccountEntity account1;
 
-    @BeforeEach
-    void beforeAll() {
-        account1 = AccountEntity.builder()
-                .nickname("테스트용 계정1")
-                .oauthServiceId("test_account_1")
-                .thirdPartyType(ThirdPartyEnum.KAKAO)
-                .isActive(true)
-                .build();
+    @Nested
+    @DisplayName("[Account][성공/실패 테스트] Account 를 조회한다.")
+    class readAccount {
 
-        account1.setDateTimeForTest(LocalDateTime.now(), LocalDateTime.now());
-        accountRepository.save(account1);
+        @BeforeEach
+        void beforeAll() {
+            account1 = AccountEntity.builder()
+                    .nickname("테스트용 계정1")
+                    .oauthServiceId("test_account_1")
+                    .thirdPartyType(ThirdPartyEnum.KAKAO)
+                    .isActive(true)
+                    .build();
+
+            account1.setDateTimeForTest(LocalDateTime.now(), LocalDateTime.now());
+            accountRepository.save(account1);
+        }
+
+        @Tag("domain")
+        @Test
+        @DisplayName("[Account][성공 테스트] Read Account")
+        void 고유_OAuthServiceId와_ThirdParty로_계정을_조회한다() {
+            // given
+            String testOAuthServiceId = "test_account_1";
+            ThirdPartyEnum testThirdPartyType = ThirdPartyEnum.KAKAO;
+
+            // when
+            Optional<AccountEntity> testSelectResult = accountRepository
+                    .findByOauthServiceIdEqualsAndThirdPartyTypeEquals(testOAuthServiceId, testThirdPartyType);
+
+            // then
+            assertThat(testSelectResult.get().getOauthServiceId()).isEqualTo(account1.getOauthServiceId());
+        }
+
+        @Tag("domain")
+        @Test
+        @DisplayName("[Account][실패 테스트] Read Account")
+        void 고유_OAuthServiceId와_다른_ThirdParty로_계정을_조회한다() {
+            // given
+            String testOAuthServiceId = "test_account_1";
+            ThirdPartyEnum testThirdPartyType = ThirdPartyEnum.NAVER;
+
+            // when
+            Optional<AccountEntity> testSelectResult = accountRepository
+                    .findByOauthServiceIdEqualsAndThirdPartyTypeEquals(testOAuthServiceId, testThirdPartyType);
+
+            // then
+            assertThat(testSelectResult.isPresent()).isEqualTo(false);
+        }
     }
-
-    @Test
-    @DisplayName("고유_OAuthServiceId와_ThirdParty로_계정을_조회한다")
-    void findByOauthServiceIdEqualsAndThirdPartyTypeEquals_메서드를_테스트한다() {
-        // given
-        String testOAuthServiceId = "test_account_1";
-        ThirdPartyEnum testThirdPartyType = ThirdPartyEnum.KAKAO;
-
-        // when
-        Optional<AccountEntity> testSelectResult = accountRepository
-                .findByOauthServiceIdEqualsAndThirdPartyTypeEquals(testOAuthServiceId, testThirdPartyType);
-
-        // then
-        assertThat(testSelectResult.get().getOauthServiceId()).isEqualTo(account1.getOauthServiceId());
-    }
-
 }
