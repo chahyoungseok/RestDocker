@@ -3,8 +3,12 @@ bootJar { enabled = false }
 jar { enabled = true }
 
 dependencies {
+    // ----- Implementation Other Module -----
     implementation project(':global-utils')
 
+
+    // ----- Implementation Business Logic -----
     implementation 'com.auth0:java-jwt:4.4.0'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+
 }

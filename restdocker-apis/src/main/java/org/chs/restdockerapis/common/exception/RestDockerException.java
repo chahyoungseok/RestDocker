@@ -1,17 +1,30 @@
 package org.chs.restdockerapis.common.exception;
 
-import lombok.Getter;
 import org.chs.globalutils.dto.GlobalResponse;
+import org.springframework.core.NestedRuntimeException;
 import org.springframework.http.ResponseEntity;
 
-@Getter
-public class RestDockerException extends Exception {
+public abstract class RestDockerException extends NestedRuntimeException {
 
-    private RestDockerExceptionCode exceptionCode;
+    private ErrorCode exceptionCode;
 
-    public RestDockerException(RestDockerExceptionCode exceptionCode) {
+    protected RestDockerException(ErrorCode exceptionCode) {
         super(exceptionCode.getDescription());
         this.exceptionCode = exceptionCode;
+    }
+
+    protected RestDockerException(ErrorCode exceptionCode, Throwable cause) {
+        super(exceptionCode.getResultCode(), cause);
+        this.exceptionCode = exceptionCode;
+    }
+
+    protected RestDockerException(ErrorCode exceptionCode, String message) {
+        super(message);
+        this.exceptionCode = exceptionCode;
+    }
+
+    public ErrorCode getErrorCode() {
+        return exceptionCode;
     }
 
     public ResponseEntity<GlobalResponse> makeResponseEntity() {
