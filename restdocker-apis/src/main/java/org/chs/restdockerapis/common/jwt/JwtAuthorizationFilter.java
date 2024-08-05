@@ -8,6 +8,7 @@ import com.auth0.jwt.interfaces.Claim;
 import org.chs.domain.account.AccountRepository;
 import org.chs.domain.account.entity.AccountEntity;
 import org.chs.domain.common.enumerate.ThirdPartyEnum;
+import org.chs.restdockerapis.common.exception.ErrorCode;
 import org.chs.restdockerapis.common.jwt.principal.AccountPrincipalDetails;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
@@ -16,7 +17,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.chs.tokenissuer.common.properties.JwtProperties;
-import org.chs.tokenissuer.common.exception.CustomTokenExceptionCode;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -68,10 +68,10 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                     .getClaims();
         } catch (TokenExpiredException e) {
             logger.warn("the token is expired and not valid anymore", e);
-            sendErrorResponse(request, response, CustomTokenExceptionCode.JWT_EXPIRED_EXCEPTION);
+            sendErrorResponse(request, response, ErrorCode.JWT_EXPIRED_EXCEPTION);
         } catch (SignatureVerificationException e) {
             logger.warn("The Token's Signature resulted invalid when verified using the Algorithm: HmacSHA512", e);
-            sendErrorResponse(request, response, CustomTokenExceptionCode.JWT_EXPIRED_EXCEPTION);
+            sendErrorResponse(request, response, ErrorCode.JWT_EXPIRED_EXCEPTION);
         }
 
         String oauthServiceId = tokenClaims.get("oauthServiceId").asString();
@@ -82,7 +82,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
             Optional<AccountEntity> optionalJwtTokenAccount = accountRepository.findByOauthServiceIdEqualsAndThirdPartyTypeEquals(oauthServiceId, ThirdPartyEnum.valueOf(thirdPartyType));
             if (false == optionalJwtTokenAccount.isPresent()) {
-                sendErrorResponse(request, response, CustomTokenExceptionCode.JWT_VALID_EXCEPTION);
+                sendErrorResponse(request, response, ErrorCode.JWT_VALID_EXCEPTION);
             }
 
             Authentication authentication = getAuthorities(optionalJwtTokenAccount.get());
@@ -96,7 +96,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         return new UsernamePasswordAuthenticationToken(new AccountPrincipalDetails(account), null, null);
     }
 
-    private void sendErrorResponse(HttpServletRequest request, HttpServletResponse response, CustomTokenExceptionCode exception) throws IOException {
+    private void sendErrorResponse(HttpServletRequest request, HttpServletResponse response, ErrorCode exception) throws IOException {
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
         body.put("status", HttpServletResponse.SC_UNAUTHORIZED);

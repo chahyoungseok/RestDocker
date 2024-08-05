@@ -1,0 +1,26 @@
+<included>
+    <!-- RollingFileAppender : 로그 파일이 일정한 크기나 시간에 도달했을 때 새로운 파일로 교체(롤링)하여 로그 파일의 크기를 제한하고 관리하는 Appender -->
+    <appender class="ch.qos.logback.core.rolling.RollingFileAppender" name="FILE-INFO">
+        <!-- UTF-8 Encoding -->
+        <encoder>
+            <!-- FILE_LOG_PATTERN : [%d{yyyy-MM-dd HH:mm:ss}:%-4relative] [%thread] %-5level [%C.%M:%L] - %msg %ex{10}%n -->
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+
+        <!-- 로그 레벨이 INFO 만 기록 -->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+
+        <!-- SizeAndTimeBasedRollingPolicy : 로그 파일이 특정 시간 간격과 크기 제한을 동시에 만족할 때 새로운 로그 파일을 생성하는 방식 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>/var/log/common/info/info-%d{yyyy-MM-dd}.%i.log</fileNamePattern> <!---->
+            <maxFileSize>100MB</maxFileSize> <!-- 단일 로그 파일의 최대 크기 -->
+            <maxHistory>10</maxHistory> <!-- 최대 5일 동안의 로그 파일 보관 -->
+            <totalSizeCap>1000MB</totalSizeCap> <!-- 모든 로그 파일의 총 크기 -->
+        </rollingPolicy>
+
+    </appender>
+</included>
