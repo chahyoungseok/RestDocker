@@ -14,7 +14,7 @@ configurations {
 
 // snippet 들이 저장될 snippetsDir 변수를 설정한다.
 ext {
-    set('snippetsDir', file("build/genderated-snippets"))
+    set('snippetsDir', file("build/generated-snippets"))
 }
 
 dependencies {

@@ -1,29 +1,32 @@
 package org.chs.restdockerapis.account.presentation;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 import org.chs.globalutils.dto.TokenDto;
 import org.chs.restdockerapis.account.application.AccountService;
 import org.chs.restdockerapis.account.presentation.dto.ReIssueTokenRequest;
 import org.chs.restdockerapis.account.presentation.dto.ReIssueTokenResponse;
 import org.chs.restdockerapis.account.presentation.dto.common.GenericSingleResponse;
 import org.chs.restdockerapis.account.presentation.dto.common.OAuthLoginRequestDto;
-import org.chs.restdockerapis.common.config.AccountMockMvcConfig;
+import org.chs.restdockerapis.common.exception.CustomBadRequestException;
 import org.chs.restdockerapis.common.structure.ControllerTest;
 import org.junit.jupiter.api.*;
 import org.mockito.BDDMockito;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.ArgumentMatchers.any;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@Import(AccountMockMvcConfig.class)
 public class AccountControllerTest extends ControllerTest {
 
     @MockBean
@@ -70,7 +73,17 @@ public class AccountControllerTest extends ControllerTest {
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.accessToken").value("success_accessToken"))
                     .andExpect(jsonPath("$.refreshToken").value("success_refreshToken"))
-                    .andDo(print());
+                    .andDo(
+                            restDocs.document(
+                                    requestFields(
+                                            fieldWithPath("code").type(JsonFieldType.STRING).description("인가 코드")
+                                    ),
+                                    responseFields(
+                                            fieldWithPath("accessToken").type(JsonFieldType.STRING).description("Access Token"),
+                                            fieldWithPath("refreshToken").type(JsonFieldType.STRING).description("Refresh Token")
+                                    )
+                            )
+                    );
         }
 
         @Tag("controller")
@@ -92,7 +105,17 @@ public class AccountControllerTest extends ControllerTest {
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.accessToken").value("success_accessToken"))
                     .andExpect(jsonPath("$.refreshToken").value("success_refreshToken"))
-                    .andDo(print());
+                    .andDo(
+                            restDocs.document(
+                                    requestFields(
+                                            fieldWithPath("code").type(JsonFieldType.STRING).description("인가 코드")
+                                    ),
+                                    responseFields(
+                                            fieldWithPath("accessToken").type(JsonFieldType.STRING).description("Access Token"),
+                                            fieldWithPath("refreshToken").type(JsonFieldType.STRING).description("Refresh Token")
+                                    )
+                            )
+                    );
         }
     }
 
@@ -116,8 +139,14 @@ public class AccountControllerTest extends ControllerTest {
             // then
             resultActions
                     .andExpect(status().isBadRequest())
-                    .andExpect(result -> assertTrue(result.getResolvedException() instanceof MethodArgumentNotValidException))
-                    .andDo(print());
+                    .andExpect(result -> assertFalse(result.getResolvedException() instanceof CustomBadRequestException))
+                    .andDo(
+                            restDocs.document(
+                                    requestFields(
+                                            fieldWithPath("code").type(JsonFieldType.NULL).description("인가 코드")
+                                    )
+                            )
+                    );
         }
 
         @Tag("controller")
@@ -136,14 +165,32 @@ public class AccountControllerTest extends ControllerTest {
             // then
             resultActions
                     .andExpect(status().isBadRequest())
-                    .andExpect(result -> assertTrue(result.getResolvedException() instanceof MethodArgumentNotValidException))
-                    .andDo(print());
+                    .andExpect(result -> assertFalse(result.getResolvedException() instanceof CustomBadRequestException))
+                    .andDo(
+                            restDocs.document(
+                                    requestFields(
+                                            fieldWithPath("code").type(JsonFieldType.NULL).description("인가 코드")
+                                    )
+                            )
+                    );
         }
     }
 
     @Nested
     @DisplayName("[Account][성공 테스트] OAuth Logout을 테스트한다.")
     class OAuthLogoutSuccess {
+
+        String accessToken = "AccessToken";
+
+        @PostConstruct
+        void init() {
+            enableAuthentication();
+        }
+
+        @PreDestroy
+        void destroy() {
+            disableAuthentication();
+        }
 
         @Tag("controller")
         @Test
@@ -158,13 +205,23 @@ public class AccountControllerTest extends ControllerTest {
                     );
 
             // when
-            ResultActions resultActions = mockMvc.perform(post("/api/v1/account/kakao/logout"));
+            ResultActions resultActions = mockMvc.perform(
+                    post("/api/v1/account/kakao/logout")
+                            .header("Authorization", accessToken)
+            );
 
             // then
             resultActions
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.data").value(true))
-                    .andDo(print());
+                    .andDo(
+                            restDocs.document(
+                                    requestHeaders(headerWithName("Authorization").description("AccessToken")),
+                                    responseFields(
+                                            fieldWithPath("data").type(JsonFieldType.BOOLEAN).description("로그아웃 성공 여부")
+                                    )
+                            )
+                    );
 
         }
 
@@ -181,14 +238,23 @@ public class AccountControllerTest extends ControllerTest {
                     );
 
             // when
-            ResultActions resultActions = mockMvc.perform(post("/api/v1/account/naver/logout"));
+            ResultActions resultActions = mockMvc.perform(
+                    post("/api/v1/account/naver/logout")
+                            .header("Authorization", accessToken)
+            );
 
             // then
             resultActions
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.data").value(true))
-                    .andDo(print());
-
+                    .andDo(
+                            restDocs.document(
+                                    requestHeaders(headerWithName("Authorization").description("AccessToken")),
+                                    responseFields(
+                                            fieldWithPath("data").type(JsonFieldType.BOOLEAN).description("로그아웃 성공 여부")
+                                    )
+                            )
+                    );
         }
     }
 
@@ -231,7 +297,16 @@ public class AccountControllerTest extends ControllerTest {
             resultActions
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.accessToken").value("testAccessToken"))
-                    .andDo(print());
+                    .andDo(
+                            restDocs.document(
+                                    requestFields(
+                                            fieldWithPath("refreshToken").type(JsonFieldType.STRING).description("Refresh Token")
+                                    ),
+                                    responseFields(
+                                            fieldWithPath("accessToken").type(JsonFieldType.STRING).description("Refresh Token 을 통해 재발급한 Access Token")
+                                    )
+                            )
+                    );
         }
     }
 }

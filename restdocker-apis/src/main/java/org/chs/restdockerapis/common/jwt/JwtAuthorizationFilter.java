@@ -85,15 +85,29 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 sendErrorResponse(request, response, ErrorCode.JWT_VALID_EXCEPTION);
             }
 
-            Authentication authentication = getAuthorities(optionalJwtTokenAccount.get());
+            Authentication authentication = getAuthorities(
+                    optionalJwtTokenAccount.get().getThirdPartyAccessToken(),
+                    optionalJwtTokenAccount.get().getThirdPartyRefreshToken(),
+                    optionalJwtTokenAccount.get().getOauthServiceId(),
+                    optionalJwtTokenAccount.get().getThirdPartyType()
+            );
+
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
             filterChain.doFilter(request, response);
         }
     }
 
-    private Authentication getAuthorities(AccountEntity account) {
-        return new UsernamePasswordAuthenticationToken(new AccountPrincipalDetails(account), null, null);
+    private Authentication getAuthorities(String oAuthAccessToken, String oAuthRefreshToken, String oAuthServiceId, ThirdPartyEnum thirdPartyType) {
+        return new UsernamePasswordAuthenticationToken(
+                AccountPrincipalDetails.builder()
+                        .oAuthAccessToken(oAuthAccessToken)
+                        .oAuthRefreshToken(oAuthRefreshToken)
+                        .oAuthServiceId(oAuthServiceId)
+                        .thirdPartyType(thirdPartyType)
+                        .build(),
+                null,
+                null);
     }
 
     private void sendErrorResponse(HttpServletRequest request, HttpServletResponse response, ErrorCode exception) throws IOException {

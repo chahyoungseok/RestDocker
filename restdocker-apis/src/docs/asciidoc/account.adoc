@@ -1,0 +1,133 @@
+== Account(계정) - 카카오
+
+=== 카카오 OAuth 로그인 [성공 테스트]
+
+==== Request Fields
+
+include::{snippets}/o-auth-login-success/카카오_요청에_대해_특정_접근권한_없이_인증코드만으로_계정이_생성될_수_있는지_테스트한다/request-fields.adoc[]
+
+==== Response Fields
+
+include::{snippets}/o-auth-login-success/카카오_요청에_대해_특정_접근권한_없이_인증코드만으로_계정이_생성될_수_있는지_테스트한다/response-fields.adoc[]
+
+==== HTTP Request
+
+include::{snippets}/o-auth-login-success/카카오_요청에_대해_특정_접근권한_없이_인증코드만으로_계정이_생성될_수_있는지_테스트한다/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/o-auth-login-success/카카오_요청에_대해_특정_접근권한_없이_인증코드만으로_계정이_생성될_수_있는지_테스트한다/http-response.adoc[]
+
+
+=== 카카오 OAuth 로그인 [실패 테스트 - notEmpty 값인 code 를 넣지 않고 보낸다]
+
+==== Request Fields
+
+include::{snippets}/o-auth-login-fail/카카오_요청에_-not-empty_값인_code_를_넣지_않고_보낸다/request-fields.adoc[]
+
+==== HTTP Request
+
+include::{snippets}/o-auth-login-fail/카카오_요청에_-not-empty_값인_code_를_넣지_않고_보낸다/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/o-auth-login-fail/카카오_요청에_-not-empty_값인_code_를_넣지_않고_보낸다/http-response.adoc[]
+
+
+=== 카카오 OAuth 로그아웃 [성공 테스트]
+
+==== Request Header
+
+include::{snippets}/o-auth-logout-success/네이버_요청에_대해_로그아웃을_테스트한다/request-headers.adoc[]
+
+==== Response Fields
+
+include::{snippets}/o-auth-logout-success/카카오_요청에_대해_로그아웃을_테스트한다/response-fields.adoc[]
+
+==== HTTP Request
+
+include::{snippets}/o-auth-logout-success/카카오_요청에_대해_로그아웃을_테스트한다/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/o-auth-logout-success/카카오_요청에_대해_로그아웃을_테스트한다/http-response.adoc[]
+
+
+
+
+== Account(계정) - 네이버
+
+=== 네이버 OAuth 로그인 [성공 테스트]
+
+==== Request Fields
+
+include::{snippets}/o-auth-login-success/네이버_요청에_대해_특정_접근권한_없이_인증코드만으로_계정이_생성될_수_있는지_테스트한다/request-fields.adoc[]
+
+==== Response Fields
+
+include::{snippets}/o-auth-login-success/네이버_요청에_대해_특정_접근권한_없이_인증코드만으로_계정이_생성될_수_있는지_테스트한다/response-fields.adoc[]
+
+==== HTTP Request
+
+include::{snippets}/o-auth-login-success/네이버_요청에_대해_특정_접근권한_없이_인증코드만으로_계정이_생성될_수_있는지_테스트한다/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/o-auth-login-success/네이버_요청에_대해_특정_접근권한_없이_인증코드만으로_계정이_생성될_수_있는지_테스트한다/http-response.adoc[]
+
+
+=== 네이버 OAuth 로그인 [실패 테스트 - notEmpty 값인 code 를 넣지 않고 보낸다]
+
+==== Request Fields
+
+include::{snippets}/o-auth-login-fail/네이버_요청에_-not-empty_값인_code_를_넣지_않고_보낸다/request-fields.adoc[]
+
+==== HTTP Request
+
+include::{snippets}/o-auth-login-fail/네이버_요청에_-not-empty_값인_code_를_넣지_않고_보낸다/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/o-auth-login-fail/네이버_요청에_-not-empty_값인_code_를_넣지_않고_보낸다/http-response.adoc[]
+
+
+
+=== 네이버 OAuth 로그아웃 [성공 테스트]
+
+==== Request Header
+
+include::{snippets}/o-auth-logout-success/네이버_요청에_대해_로그아웃을_테스트한다/request-headers.adoc[]
+
+==== Response Fields
+
+include::{snippets}/o-auth-logout-success/네이버_요청에_대해_로그아웃을_테스트한다/response-fields.adoc[]
+
+==== HTTP Request
+
+include::{snippets}/o-auth-logout-success/네이버_요청에_대해_로그아웃을_테스트한다/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/o-auth-logout-success/네이버_요청에_대해_로그아웃을_테스트한다/http-response.adoc[]
+
+
+
+== Account(계정) - 토큰 재발급
+
+=== RefreshToken 을 통한 토큰 재발급 [성공 테스트]
+
+==== Request Fields
+
+include::{snippets}/re-issue-token/refresh-token에_대해_유효성검증을_거친_후_-access-token을_발급해준다/request-fields.adoc[]
+
+==== Response Fields
+
+include::{snippets}/re-issue-token/refresh-token에_대해_유효성검증을_거친_후_-access-token을_발급해준다/response-fields.adoc[]
+
+==== HTTP Request
+
+include::{snippets}/re-issue-token/refresh-token에_대해_유효성검증을_거친_후_-access-token을_발급해준다/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/re-issue-token/refresh-token에_대해_유효성검증을_거친_후_-access-token을_발급해준다/http-response.adoc[]
