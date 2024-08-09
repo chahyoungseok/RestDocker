@@ -2,8 +2,8 @@ package org.chs.domain.account.repository;
 
 import org.chs.domain.account.AccountRepository;
 import org.chs.domain.account.entity.AccountEntity;
-import org.chs.domain.common.RepositoryTest;
 import org.chs.domain.common.enumerate.ThirdPartyEnum;
+import org.chs.domain.common.structure.RepositoryTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
