@@ -111,7 +111,7 @@ public class AccountService {
         boolean kakaoLogoutResult = kakaoOAuthLogoutWithExceptionHandling(requesterInfo.ipAddress(), requesterInfo.oauthAccessToken(), requesterInfo.id());
 
         if (!kakaoLogoutResult) {
-            this.saveLogoutHistoryWithExceptionHandling(requesterInfo.ipAddress(), true, org.chs.restdockerapis.common.exception.ErrorCode.KAKAO_LOGOUT_EXCEPTION.getDescription());
+            this.saveLogoutHistoryWithExceptionHandling(requesterInfo.ipAddress(), true, ErrorCode.KAKAO_LOGOUT_EXCEPTION.getDescription());
             return GenericSingleResponse.<Boolean>builder()
                     .data(false)
                     .build();
@@ -203,7 +203,7 @@ public class AccountService {
     public GenericSingleResponse<Boolean> naverOAuthLogout(GetRequesterDto requesterInfo) {
         boolean naverLogoutResult = naverOAuthLogoutWithExceptionHandling(requesterInfo.ipAddress(), requesterInfo.oauthAccessToken());
         if (!naverLogoutResult) {
-            this.saveLogoutHistoryWithExceptionHandling(requesterInfo.ipAddress(), true, org.chs.restdockerapis.common.exception.ErrorCode.NAVER_LOGOUT_EXCEPTION.getDescription());
+            this.saveLogoutHistoryWithExceptionHandling(requesterInfo.ipAddress(), true, ErrorCode.NAVER_LOGOUT_EXCEPTION.getDescription());
 
             return GenericSingleResponse.<Boolean>builder()
                     .data(false)
@@ -264,7 +264,7 @@ public class AccountService {
             // 히스토리 저장과는 관계없이 사용자에게 결과응답이 돼야하므로 ExceptionHandler 에서 제외
             this.accountHistoryService.saveLoginHistory(createdBy, ipAddress, failure,failureReason);
         } catch (Exception exception) {
-            throw new HistoryException(org.chs.restdockerapis.common.exception.ErrorCode.LOGIN_HISTORY_SAVE_EXCEPTION);
+            throw new HistoryException(ErrorCode.LOGIN_HISTORY_SAVE_EXCEPTION);
         }
     }
 
@@ -272,7 +272,7 @@ public class AccountService {
         try {
             this.accountHistoryService.saveLogoutHistory(ipAddress, failure,failureReason);
         } catch (Exception exception) {
-            throw new HistoryException(org.chs.restdockerapis.common.exception.ErrorCode.LOGOUT_HISTORY_SAVE_EXCEPTION);
+            throw new HistoryException(ErrorCode.LOGOUT_HISTORY_SAVE_EXCEPTION);
         }
     }
 

@@ -4,8 +4,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.chs.globalutils.dto.GlobalResponse;
 import org.chs.restdockerapis.common.exception.*;
-import org.chs.restdockerapis.common.exception.CustomTokenException;
-import org.springframework.core.NestedRuntimeException;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.ResponseEntity;
@@ -35,10 +33,8 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(HistoryException.class)
-    public ResponseEntity<GlobalResponse> handlerCommonException(HistoryException historyException, HttpServletRequest request) {
+    public void handlerCommonException(HistoryException historyException, HttpServletRequest request) {
         logInfo(historyException, request);
-
-        return historyException.makeResponseEntity();
     }
 
     @ExceptionHandler(CustomTokenException.class)
