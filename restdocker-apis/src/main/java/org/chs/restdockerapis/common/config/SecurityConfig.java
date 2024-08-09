@@ -1,4 +1,4 @@
-package org.chs.restdockerapis.config;
+package org.chs.restdockerapis.common.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
