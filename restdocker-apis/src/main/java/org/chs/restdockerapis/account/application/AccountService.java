@@ -41,6 +41,8 @@ public class AccountService {
 
     private final AccountRepository accountRepository;
 
+    private final String LOG_FORMAT_INFO_HISTORY = "\n[🔵INFO] - {}\n {}: {}";
+
     /**
      * @param ipAddress : 사용자 ip
      * @param request code : 사용자가 카카오 계정로그인을 동의하고 받은 인가코드
@@ -123,7 +125,7 @@ public class AccountService {
 
         account.eliminateValidToken();
         this.accountRepository.save(account);
-        this.accountHistoryService.saveLogoutHistory(requesterInfo.ipAddress(), false, null);
+        this.saveLogoutHistoryWithExceptionHandling(requesterInfo.ipAddress(), false, null);
 
         return GenericSingleResponse.<Boolean>builder()
                 .data(true)
@@ -216,7 +218,7 @@ public class AccountService {
 
         account.eliminateValidToken();
         accountRepository.save(account);
-        this.accountHistoryService.saveLogoutHistory(requesterInfo.ipAddress(), false, null);
+        this.saveLogoutHistoryWithExceptionHandling(requesterInfo.ipAddress(), false, null);
 
         return GenericSingleResponse.<Boolean>builder()
                 .data(true)
@@ -264,7 +266,7 @@ public class AccountService {
             // 히스토리 저장과는 관계없이 사용자에게 결과응답이 돼야하므로 ExceptionHandler 에서 제외
             this.accountHistoryService.saveLoginHistory(createdBy, ipAddress, failure,failureReason);
         } catch (Exception exception) {
-            throw new HistoryException(ErrorCode.LOGIN_HISTORY_SAVE_EXCEPTION);
+            logInfoHistory(new HistoryException(ErrorCode.LOGIN_HISTORY_SAVE_EXCEPTION));
         }
     }
 
@@ -272,7 +274,7 @@ public class AccountService {
         try {
             this.accountHistoryService.saveLogoutHistory(ipAddress, failure,failureReason);
         } catch (Exception exception) {
-            throw new HistoryException(ErrorCode.LOGOUT_HISTORY_SAVE_EXCEPTION);
+            logInfoHistory(new HistoryException(ErrorCode.LOGOUT_HISTORY_SAVE_EXCEPTION));
         }
     }
 
@@ -324,4 +326,9 @@ public class AccountService {
 
         return verifiedAccount;
     }
+
+    private void logInfoHistory(HistoryException exception) {
+        log.info(LOG_FORMAT_INFO_HISTORY, exception.getErrorCode(), exception.getClass().getName(), exception.getErrorCode().getDescription());
+    }
+
 }

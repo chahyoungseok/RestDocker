@@ -32,11 +32,6 @@ public class GlobalExceptionHandler {
         return notFoundException.makeResponseEntity();
     }
 
-    @ExceptionHandler(HistoryException.class)
-    public void handlerCommonException(HistoryException historyException, HttpServletRequest request) {
-        logInfo(historyException, request);
-    }
-
     @ExceptionHandler(CustomTokenException.class)
     public ResponseEntity<GlobalResponse> handlerCommonException(CustomTokenException customTokenException, HttpServletRequest request) {
         logInfo(customTokenException, request);
