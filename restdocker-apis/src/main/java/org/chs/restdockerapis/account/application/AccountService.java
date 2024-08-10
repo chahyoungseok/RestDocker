@@ -49,7 +49,7 @@ public class AccountService {
      * @return 회원가입 또는 로그인이 완료된 사용자의 정보를 바탕으로 만든 JWT (accessToken, refreshToken)
      *
      */
-    @Transactional(noRollbackFor = HistoryException.class, rollbackFor = RestDockerException.class)
+    @Transactional(rollbackFor = RestDockerException.class)
     public TokenDto kakaoOAuthLogin(String ipAddress, OAuthLoginRequestDto request) {
         OAuthLoginInfoDto kakaoOAuthLoginInfoDto = this.kakaoOAuthLoginWithExceptionHandling(ipAddress, request.code());
 
@@ -69,7 +69,7 @@ public class AccountService {
         );
         account.setMyServiceToken(oAuthLoginResponse.accessToken(), oAuthLoginResponse.refreshToken());
 
-        this.accountRepository.saveAndFlush(account);
+        this.accountRepository.save(account);
         this.saveLoginHistoryWithExceptionHandling(account.getOauthServiceId(), ipAddress, false, null);
 
         return oAuthLoginResponse;
@@ -108,7 +108,7 @@ public class AccountService {
      *
      * @return 로그아웃의 결과
      */
-    @Transactional(noRollbackFor = HistoryException.class, rollbackFor = RestDockerException.class)
+    @Transactional(rollbackFor = RestDockerException.class)
     public GenericSingleResponse<Boolean> kakaoOAuthLogout(GetRequesterDto requesterInfo) {
         boolean kakaoLogoutResult = kakaoOAuthLogoutWithExceptionHandling(requesterInfo.ipAddress(), requesterInfo.oauthAccessToken(), requesterInfo.id());
 
@@ -146,7 +146,7 @@ public class AccountService {
      * @param request code : 사용자가 네이버 계정로그인을 동의하고 받은 인가코드
      * @return 회원가입 또는 로그인이 완료된 사용자의 정보를 바탕으로 만든 JWT (accessToken, refreshToken)
      */
-    @Transactional(noRollbackFor = HistoryException.class, rollbackFor = RestDockerException.class)
+    @Transactional(rollbackFor = RestDockerException.class)
     public TokenDto naverOAuthLogin(String ipAddress, OAuthLoginRequestDto request) {
         OAuthLoginInfoDto naverOAuthLoginInfoDto = naverOAuthLoginWithExceptionHandling(ipAddress, request.code());
 
@@ -201,7 +201,7 @@ public class AccountService {
      *
      * @return 로그아웃의 결과
      */
-    @Transactional(noRollbackFor = HistoryException.class, rollbackFor = RestDockerException.class)
+    @Transactional(rollbackFor = RestDockerException.class)
     public GenericSingleResponse<Boolean> naverOAuthLogout(GetRequesterDto requesterInfo) {
         boolean naverLogoutResult = naverOAuthLogoutWithExceptionHandling(requesterInfo.ipAddress(), requesterInfo.oauthAccessToken());
         if (!naverLogoutResult) {
