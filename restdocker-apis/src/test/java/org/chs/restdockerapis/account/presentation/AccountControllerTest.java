@@ -1,29 +1,32 @@
 package org.chs.restdockerapis.account.presentation;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 import org.chs.globalutils.dto.TokenDto;
 import org.chs.restdockerapis.account.application.AccountService;
 import org.chs.restdockerapis.account.presentation.dto.ReIssueTokenRequest;
 import org.chs.restdockerapis.account.presentation.dto.ReIssueTokenResponse;
 import org.chs.restdockerapis.account.presentation.dto.common.GenericSingleResponse;
 import org.chs.restdockerapis.account.presentation.dto.common.OAuthLoginRequestDto;
-import org.chs.restdockerapis.common.config.AccountMockMvcConfig;
+import org.chs.restdockerapis.common.exception.CustomBadRequestException;
 import org.chs.restdockerapis.common.structure.ControllerTest;
 import org.junit.jupiter.api.*;
 import org.mockito.BDDMockito;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.ArgumentMatchers.any;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@Import(AccountMockMvcConfig.class)
 public class AccountControllerTest extends ControllerTest {
 
     @MockBean
@@ -53,7 +56,7 @@ public class AccountControllerTest extends ControllerTest {
 
         @Tag("controller")
         @Test
-        @DisplayName("[Account] Kakao OAuth Login")
+        @DisplayName("[Account][Controller] Kakao OAuth Login")
         void 카카오_요청에_대해_특정_접근권한_없이_인증코드만으로_계정이_생성될_수_있는지_테스트한다() throws Exception {
             // given
             BDDMockito.given(accountService.kakaoOAuthLogin(any(), any()))
@@ -70,12 +73,22 @@ public class AccountControllerTest extends ControllerTest {
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.accessToken").value("success_accessToken"))
                     .andExpect(jsonPath("$.refreshToken").value("success_refreshToken"))
-                    .andDo(print());
+                    .andDo(
+                            restDocs.document(
+                                    requestFields(
+                                            fieldWithPath("code").type(JsonFieldType.STRING).description("인가 코드")
+                                    ),
+                                    responseFields(
+                                            fieldWithPath("accessToken").type(JsonFieldType.STRING).description("Access Token"),
+                                            fieldWithPath("refreshToken").type(JsonFieldType.STRING).description("Refresh Token")
+                                    )
+                            )
+                    );
         }
 
         @Tag("controller")
         @Test
-        @DisplayName("[Account] Naver OAuth Login")
+        @DisplayName("[Account][Controller] Naver OAuth Login")
         void 네이버_요청에_대해_특정_접근권한_없이_인증코드만으로_계정이_생성될_수_있는지_테스트한다() throws Exception {
             // given
             BDDMockito.given(accountService.naverOAuthLogin(any(), any()))
@@ -92,7 +105,17 @@ public class AccountControllerTest extends ControllerTest {
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.accessToken").value("success_accessToken"))
                     .andExpect(jsonPath("$.refreshToken").value("success_refreshToken"))
-                    .andDo(print());
+                    .andDo(
+                            restDocs.document(
+                                    requestFields(
+                                            fieldWithPath("code").type(JsonFieldType.STRING).description("인가 코드")
+                                    ),
+                                    responseFields(
+                                            fieldWithPath("accessToken").type(JsonFieldType.STRING).description("Access Token"),
+                                            fieldWithPath("refreshToken").type(JsonFieldType.STRING).description("Refresh Token")
+                                    )
+                            )
+                    );
         }
     }
 
@@ -102,7 +125,7 @@ public class AccountControllerTest extends ControllerTest {
 
         @Tag("controller")
         @Test
-        @DisplayName("[Account] Kakao OAuth Login")
+        @DisplayName("[Account][Controller] Kakao OAuth Login")
         void 카카오_요청에_NotEmpty_값인_code_를_넣지_않고_보낸다() throws Exception {
             // given
             String testEmptyRequest = objectMapper.writeValueAsString(OAuthLoginRequestDto.builder().build());
@@ -116,13 +139,19 @@ public class AccountControllerTest extends ControllerTest {
             // then
             resultActions
                     .andExpect(status().isBadRequest())
-                    .andExpect(result -> assertTrue(result.getResolvedException() instanceof MethodArgumentNotValidException))
-                    .andDo(print());
+                    .andExpect(result -> assertFalse(result.getResolvedException() instanceof CustomBadRequestException))
+                    .andDo(
+                            restDocs.document(
+                                    requestFields(
+                                            fieldWithPath("code").type(JsonFieldType.NULL).description("인가 코드")
+                                    )
+                            )
+                    );
         }
 
         @Tag("controller")
         @Test
-        @DisplayName("[Account] Naver OAuth Login")
+        @DisplayName("[Account][Controller] Naver OAuth Login")
         void 네이버_요청에_NotEmpty_값인_code_를_넣지_않고_보낸다() throws Exception {
             // given
             String testEmptyRequest = objectMapper.writeValueAsString(OAuthLoginRequestDto.builder().build());
@@ -136,8 +165,14 @@ public class AccountControllerTest extends ControllerTest {
             // then
             resultActions
                     .andExpect(status().isBadRequest())
-                    .andExpect(result -> assertTrue(result.getResolvedException() instanceof MethodArgumentNotValidException))
-                    .andDo(print());
+                    .andExpect(result -> assertFalse(result.getResolvedException() instanceof CustomBadRequestException))
+                    .andDo(
+                            restDocs.document(
+                                    requestFields(
+                                            fieldWithPath("code").type(JsonFieldType.NULL).description("인가 코드")
+                                    )
+                            )
+                    );
         }
     }
 
@@ -145,9 +180,21 @@ public class AccountControllerTest extends ControllerTest {
     @DisplayName("[Account][성공 테스트] OAuth Logout을 테스트한다.")
     class OAuthLogoutSuccess {
 
+        String accessToken = "AccessToken";
+
+        @PostConstruct
+        void init() {
+            enableAuthentication();
+        }
+
+        @PreDestroy
+        void destroy() {
+            disableAuthentication();
+        }
+
         @Tag("controller")
         @Test
-        @DisplayName("[Account] Kakao OAuth Logout")
+        @DisplayName("[Account][Controller] Kakao OAuth Logout")
         void 카카오_요청에_대해_로그아웃을_테스트한다() throws Exception {
             // given
             BDDMockito.given(accountService.kakaoOAuthLogout(any()))
@@ -158,19 +205,29 @@ public class AccountControllerTest extends ControllerTest {
                     );
 
             // when
-            ResultActions resultActions = mockMvc.perform(post("/api/v1/account/kakao/logout"));
+            ResultActions resultActions = mockMvc.perform(
+                    post("/api/v1/account/kakao/logout")
+                            .header("Authorization", accessToken)
+            );
 
             // then
             resultActions
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.data").value(true))
-                    .andDo(print());
+                    .andDo(
+                            restDocs.document(
+                                    requestHeaders(headerWithName("Authorization").description("AccessToken")),
+                                    responseFields(
+                                            fieldWithPath("data").type(JsonFieldType.BOOLEAN).description("로그아웃 성공 여부")
+                                    )
+                            )
+                    );
 
         }
 
         @Tag("controller")
         @Test
-        @DisplayName("[Account] Naver OAuth Logout")
+        @DisplayName("[Account][Controller] Naver OAuth Logout")
         void 네이버_요청에_대해_로그아웃을_테스트한다() throws Exception {
             // given
             BDDMockito.given(accountService.naverOAuthLogout(any()))
@@ -181,14 +238,23 @@ public class AccountControllerTest extends ControllerTest {
                     );
 
             // when
-            ResultActions resultActions = mockMvc.perform(post("/api/v1/account/naver/logout"));
+            ResultActions resultActions = mockMvc.perform(
+                    post("/api/v1/account/naver/logout")
+                            .header("Authorization", accessToken)
+            );
 
             // then
             resultActions
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.data").value(true))
-                    .andDo(print());
-
+                    .andDo(
+                            restDocs.document(
+                                    requestHeaders(headerWithName("Authorization").description("AccessToken")),
+                                    responseFields(
+                                            fieldWithPath("data").type(JsonFieldType.BOOLEAN).description("로그아웃 성공 여부")
+                                    )
+                            )
+                    );
         }
     }
 
@@ -215,7 +281,7 @@ public class AccountControllerTest extends ControllerTest {
 
         @Tag("controller")
         @Test
-        @DisplayName("[Account][성공 테스트] ReIssue AccessToken")
+        @DisplayName("[Account][Controller] ReIssue AccessToken")
         void RefreshToken에_대해_유효성검증을_거친_후_AccessToken을_발급해준다() throws Exception {
             // given
             BDDMockito.given(accountService.reIssueToken(any()))
@@ -231,7 +297,16 @@ public class AccountControllerTest extends ControllerTest {
             resultActions
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.accessToken").value("testAccessToken"))
-                    .andDo(print());
+                    .andDo(
+                            restDocs.document(
+                                    requestFields(
+                                            fieldWithPath("refreshToken").type(JsonFieldType.STRING).description("Refresh Token")
+                                    ),
+                                    responseFields(
+                                            fieldWithPath("accessToken").type(JsonFieldType.STRING).description("Refresh Token 을 통해 재발급한 Access Token")
+                                    )
+                            )
+                    );
         }
     }
 }

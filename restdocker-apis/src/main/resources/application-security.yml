@@ -9,8 +9,8 @@ jwt:
 
 oauth2:
   kakao:
-    client-id: be8542abac947a6d7c8f0302c7a488be
-    client-secret: ehEunzUMzlEKCFYLTyxavcFNLA76SGfx
+    client-id: ~
+    client-secret: ~
   naver:
-    client-id: vkJAvYpNJR4avwLpsOEZ
-    client-secret: htb_llRHOx
+    client-id: ~
+    client-secret: ~
