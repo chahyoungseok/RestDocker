@@ -1,13 +1,13 @@
 package org.chs.restdockerapis.account.util.naver;
 
-import org.chs.restdockerapis.account.presentation.dto.common.OAuthTokenDto;
-import org.chs.restdockerapis.account.presentation.dto.naver.NaverOAuthLoginInfoDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.chs.restdockerapis.account.presentation.dto.common.OAuthTokenDto;
+import org.chs.restdockerapis.account.presentation.dto.oauth.OAuthLoginInfoDto;
 import org.chs.restdockerapis.common.exception.CustomBadRequestException;
 import org.chs.restdockerapis.common.exception.ErrorCode;
 import org.chs.restdockerapis.common.exception.InternalServerException;
@@ -36,12 +36,12 @@ public class NaverOAuthUtils {
     private final SecureRandom secureRandom;
     private final NaverOAuthInfo naverOAuthInfo;
 
-    public NaverOAuthLoginInfoDto naverOAuthLogin(String authorizationCode) {
+    public OAuthLoginInfoDto oAuthLogin(String authorizationCode) {
         OAuthTokenDto accessTokenInfo = getAccessToken(authorizationCode);
         return getAccountInfo(accessTokenInfo);
     }
 
-    public boolean naverOAuthLogout(String oauthAccessToken) {
+    public boolean oAuthLogout(String oauthAccessToken) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
@@ -112,7 +112,7 @@ public class NaverOAuthUtils {
         }
     }
 
-    private NaverOAuthLoginInfoDto getAccountInfo(OAuthTokenDto accessTokenInfo) {
+    private OAuthLoginInfoDto getAccountInfo(OAuthTokenDto accessTokenInfo) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         headers.set("Authorization", "Bearer " + accessTokenInfo.accessToken());
@@ -126,7 +126,7 @@ public class NaverOAuthUtils {
                     String.class);
 
             JsonNode jsonNode = objectMapper.readTree(response.getBody());
-            return NaverOAuthLoginInfoDto.builder()
+            return OAuthLoginInfoDto.builder()
                     .id(jsonNode.get("response").get("id").asText())
                     .nickname(jsonNode.get("response").get("nickname").asText())
                     .accessToken(accessTokenInfo.accessToken())

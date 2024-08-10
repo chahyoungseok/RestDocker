@@ -1,4 +1,4 @@
-package org.chs.restdockerapis.config;
+package org.chs.restdockerapis.common.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,13 +1,13 @@
 package org.chs.restdockerapis.account.util.kakao;
 
-import org.chs.restdockerapis.account.presentation.dto.common.OAuthTokenDto;
-import org.chs.restdockerapis.account.presentation.dto.kakao.KakaoOAuthLoginInfoDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.chs.restdockerapis.account.presentation.dto.common.OAuthTokenDto;
+import org.chs.restdockerapis.account.presentation.dto.oauth.OAuthLoginInfoDto;
 import org.chs.restdockerapis.common.exception.CustomBadRequestException;
 import org.chs.restdockerapis.common.exception.ErrorCode;
 import org.chs.restdockerapis.common.exception.InternalServerException;
@@ -34,12 +34,12 @@ public class KakaoOAuthUtils {
     private final ObjectMapper objectMapper;
     private final KakaoOAuthInfo kakaoOAuthInfo;
 
-    public KakaoOAuthLoginInfoDto kakaoOAuthLogin(String authorizationCode) {
+    public OAuthLoginInfoDto oAuthLogin(String authorizationCode) {
         OAuthTokenDto accessTokenInfo = getAccessToken(authorizationCode);
         return getAccountInfo(accessTokenInfo);
     }
 
-    public boolean kakaoOAuthLogout(String oauthAccessToken, Long accountId) {
+    public boolean oAuthLogout(String oauthAccessToken, Long accountId) {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + oauthAccessToken);
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
@@ -109,7 +109,7 @@ public class KakaoOAuthUtils {
         }
     }
 
-    private KakaoOAuthLoginInfoDto getAccountInfo(OAuthTokenDto accessTokenInfo) {
+    private OAuthLoginInfoDto getAccountInfo(OAuthTokenDto accessTokenInfo) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         headers.set("Authorization", "Bearer " + accessTokenInfo.accessToken());
@@ -123,7 +123,7 @@ public class KakaoOAuthUtils {
                     String.class);
 
             JsonNode jsonNode = objectMapper.readTree(response.getBody());
-            return KakaoOAuthLoginInfoDto.builder()
+            return OAuthLoginInfoDto.builder()
                     .id(String.valueOf(jsonNode.get("id")))
                     .nickname(String.valueOf(jsonNode.get("properties").get("nickname")))
                     .accessToken(accessTokenInfo.accessToken())

@@ -1,6 +1,21 @@
+// asciidoctor task 가 adoc 파일과 snippet 을 조합해 html 로 변경해주는 플러그인
+plugins {
+    id 'org.asciidoctor.jvm.convert' version '3.3.2'
+}
+
 bootJar { enabled = true }
 
 jar { enabled = true }
+
+// dependencies 에서 asciidoctorExt 로 라이브러리를 불러올 수 있도록 선언한다.
+configurations {
+    asciidoctorExt
+}
+
+// snippet 들이 저장될 snippetsDir 변수를 설정한다.
+ext {
+    set('snippetsDir', file("build/generated-snippets"))
+}
 
 dependencies {
     // ----- Implementation Other Module -----
@@ -28,4 +43,39 @@ dependencies {
     testImplementation 'org.springframework.security:spring-security-test'
 
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    asciidoctorExt 'org.springframework.restdocs:spring-restdocs-asciidoctor' // adoc 파일에서 사용할 snippets 속성이 자동으로 build/generated-snippets 을 가리키도록 해준다.
+    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc' // MockMvc에 기반해서 snippet을 뽑아낼 수 있도록 하는 라이브러리
+}
+
+// outputs.dir 을 snippetDir로  설정해 snippet 들이 해당 경로에 저장되도록 설정한다.
+test {
+    outputs.dir snippetsDir
+}
+
+asciidoctor {
+    configurations 'asciidoctorExt'
+    baseDirFollowsSourceFile() // adoc 파일에서 다른 adoc 파일을 include 할 경우 동일한 경로를 base Dir 로 동일하게 설정해준다.
+    inputs.dir snippetsDir // inputs.dir 을 snippetDir로 설정해 snippet 들이 해당 경로에 저장되도록 설정한다.
+    dependsOn test // Gradle Build 시 test -> asciidoctor 순으로 진행되게한다.
+}
+
+// 기존에 생성된 파일이 계속 사용할 수 있기 떄문에 삭제
+asciidoctor.doFirst {
+    delete file('src/main/resources/static/docs')
+}
+
+task createDocument(type: Copy) { // from 에 위치한 파일들을 into 로 복사하는 역할
+    dependsOn asciidoctor // Gradle Build 시 asciidoctor -> createDocument 순으로 진행되게한다.
+    from file("build/docs/asciidoc")
+    into file("src/main/resources/static")
+}
+
+bootJar {
+    dependsOn createDocument // Gradle Build 시 createDocument -> bootJar 순으로 진행되게한다.
+
+    // Gradle Build 시 asciidoctor.outputDir 에 Html 파일이 생기고 이것을 jar 안에 /resources/static 폴더에 복사한다.
+    from( "${asciidoctor.outputDir}") {
+        into 'static/docs'
+    }
 }

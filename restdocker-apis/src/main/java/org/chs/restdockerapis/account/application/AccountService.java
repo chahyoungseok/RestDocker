@@ -1,6 +1,8 @@
 package org.chs.restdockerapis.account.application;
 
 import com.auth0.jwt.interfaces.Claim;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.chs.domain.account.AccountRepository;
 import org.chs.domain.account.entity.AccountEntity;
 import org.chs.domain.common.enumerate.ThirdPartyEnum;
@@ -8,18 +10,14 @@ import org.chs.globalutils.dto.TokenDto;
 import org.chs.restdockerapis.account.presentation.dto.ReIssueTokenRequest;
 import org.chs.restdockerapis.account.presentation.dto.ReIssueTokenResponse;
 import org.chs.restdockerapis.account.presentation.dto.common.GenericSingleResponse;
-import org.chs.restdockerapis.account.presentation.dto.kakao.KakaoOAuthLoginInfoDto;
 import org.chs.restdockerapis.account.presentation.dto.common.OAuthLoginRequestDto;
-import org.chs.restdockerapis.account.presentation.dto.naver.NaverOAuthLoginInfoDto;
+import org.chs.restdockerapis.account.presentation.dto.oauth.OAuthLoginInfoDto;
 import org.chs.restdockerapis.account.util.kakao.KakaoOAuthUtils;
 import org.chs.restdockerapis.account.util.naver.NaverOAuthUtils;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.chs.restdockerapis.common.argument_resolver.dto.GetRequesterDto;
 import org.chs.restdockerapis.common.exception.*;
-import org.chs.tokenissuer.common.properties.JwtProperties;
 import org.chs.tokenissuer.application.TokenIssuerService;
-import org.chs.restdockerapis.common.exception.CustomTokenException;
+import org.chs.tokenissuer.common.properties.JwtProperties;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,15 +41,17 @@ public class AccountService {
 
     private final AccountRepository accountRepository;
 
+    private final String LOG_FORMAT_INFO_HISTORY = "\n[🔵INFO] - {}\n {}: {}";
+
     /**
      * @param ipAddress : 사용자 ip
      * @param request code : 사용자가 카카오 계정로그인을 동의하고 받은 인가코드
      * @return 회원가입 또는 로그인이 완료된 사용자의 정보를 바탕으로 만든 JWT (accessToken, refreshToken)
      *
      */
-    @Transactional(noRollbackFor = HistoryException.class, rollbackFor = RestDockerException.class)
+    @Transactional(rollbackFor = RestDockerException.class)
     public TokenDto kakaoOAuthLogin(String ipAddress, OAuthLoginRequestDto request) {
-        KakaoOAuthLoginInfoDto kakaoOAuthLoginInfoDto = this.kakaoOAuthLoginWithExceptionHandling(ipAddress, request.code());
+        OAuthLoginInfoDto kakaoOAuthLoginInfoDto = this.kakaoOAuthLoginWithExceptionHandling(ipAddress, request.code());
 
         AccountEntity account = createAccount(
                 kakaoOAuthLoginInfoDto.id(),
@@ -69,7 +69,7 @@ public class AccountService {
         );
         account.setMyServiceToken(oAuthLoginResponse.accessToken(), oAuthLoginResponse.refreshToken());
 
-        this.accountRepository.saveAndFlush(account);
+        this.accountRepository.save(account);
         this.saveLoginHistoryWithExceptionHandling(account.getOauthServiceId(), ipAddress, false, null);
 
         return oAuthLoginResponse;
@@ -78,9 +78,9 @@ public class AccountService {
     // History를 저장하려다 Exception이 발생되어 기존의 로직수행에 영향이 간다면 안된다. -> "History 저장로직과 메인로직은 독립적으로 운영되어야 함."
     // 따라서 Exception의 종류를 구별하여 rollback이 되지않게 Service 의 메인 트랜잭션 단에서 조절하고
     // 메인 로직이 실패했을 때도 로그인 실패 히스토리는 남아야되므로 독립적으로 실행할 수 있게 Propagation.NON_SUPPORTED 로 전파레벨을 설정한다.
-    private KakaoOAuthLoginInfoDto kakaoOAuthLoginWithExceptionHandling(String ipAddress, String code) {
+    private OAuthLoginInfoDto kakaoOAuthLoginWithExceptionHandling(String ipAddress, String code) {
         try {
-            return kakaoOAuthUtils.kakaoOAuthLogin(code);
+            return kakaoOAuthUtils.oAuthLogin(code);
         } catch (InternalServerException | CustomBadRequestException exception) {
             this.saveLoginHistoryWithExceptionHandling(null, ipAddress, true, exception.getMessage());
             throw exception;
@@ -92,7 +92,7 @@ public class AccountService {
             return tokenIssuerService.issueToken(oauthServiceId, nickname, ThirdPartyEnum.KAKAO.toString());
         } catch (InternalServerException | CustomBadRequestException exception) {
             // KaKao OAuth Logout을 한다.
-            this.kakaoOAuthUtils.kakaoOAuthLogout(thirdPartyAccessToken, Long.valueOf(oauthServiceId));
+            this.kakaoOAuthUtils.oAuthLogout(thirdPartyAccessToken, Long.valueOf(oauthServiceId));
 
             ErrorCode exceptionCause = ErrorCode.JWT_ISSUE_EXCEPTION;
             this.saveLoginHistoryWithExceptionHandling(null, ipAddress, true, exceptionCause.getDescription());
@@ -108,12 +108,12 @@ public class AccountService {
      *
      * @return 로그아웃의 결과
      */
-    @Transactional(noRollbackFor = HistoryException.class, rollbackFor = RestDockerException.class)
+    @Transactional(rollbackFor = RestDockerException.class)
     public GenericSingleResponse<Boolean> kakaoOAuthLogout(GetRequesterDto requesterInfo) {
         boolean kakaoLogoutResult = kakaoOAuthLogoutWithExceptionHandling(requesterInfo.ipAddress(), requesterInfo.oauthAccessToken(), requesterInfo.id());
 
         if (!kakaoLogoutResult) {
-            this.saveLogoutHistoryWithExceptionHandling(requesterInfo.ipAddress(), true, org.chs.restdockerapis.common.exception.ErrorCode.KAKAO_LOGOUT_EXCEPTION.getDescription());
+            this.saveLogoutHistoryWithExceptionHandling(requesterInfo.ipAddress(), true, ErrorCode.KAKAO_LOGOUT_EXCEPTION.getDescription());
             return GenericSingleResponse.<Boolean>builder()
                     .data(false)
                     .build();
@@ -125,7 +125,7 @@ public class AccountService {
 
         account.eliminateValidToken();
         this.accountRepository.save(account);
-        this.accountHistoryService.saveLogoutHistory(requesterInfo.ipAddress(), false, null);
+        this.saveLogoutHistoryWithExceptionHandling(requesterInfo.ipAddress(), false, null);
 
         return GenericSingleResponse.<Boolean>builder()
                 .data(true)
@@ -134,7 +134,7 @@ public class AccountService {
 
     private boolean kakaoOAuthLogoutWithExceptionHandling(String ipAddress, String thirdPartyAccessToken, String oauthServiceId) {
         try {
-            return kakaoOAuthUtils.kakaoOAuthLogout(thirdPartyAccessToken, Long.valueOf(oauthServiceId));
+            return kakaoOAuthUtils.oAuthLogout(thirdPartyAccessToken, Long.valueOf(oauthServiceId));
         } catch (InternalServerException | CustomBadRequestException exception) {
             this.saveLogoutHistoryWithExceptionHandling(ipAddress, true, exception.getMessage());
             throw exception;
@@ -146,9 +146,9 @@ public class AccountService {
      * @param request code : 사용자가 네이버 계정로그인을 동의하고 받은 인가코드
      * @return 회원가입 또는 로그인이 완료된 사용자의 정보를 바탕으로 만든 JWT (accessToken, refreshToken)
      */
-    @Transactional(noRollbackFor = HistoryException.class, rollbackFor = RestDockerException.class)
+    @Transactional(rollbackFor = RestDockerException.class)
     public TokenDto naverOAuthLogin(String ipAddress, OAuthLoginRequestDto request) {
-        NaverOAuthLoginInfoDto naverOAuthLoginInfoDto = naverOAuthLoginWithExceptionHandling(ipAddress, request.code());
+        OAuthLoginInfoDto naverOAuthLoginInfoDto = naverOAuthLoginWithExceptionHandling(ipAddress, request.code());
 
         AccountEntity account = createAccount(
                 naverOAuthLoginInfoDto.id(),
@@ -172,9 +172,9 @@ public class AccountService {
         return oAuthLoginResponse;
     }
 
-    private NaverOAuthLoginInfoDto naverOAuthLoginWithExceptionHandling(String ipAddress, String code) {
+    private OAuthLoginInfoDto naverOAuthLoginWithExceptionHandling(String ipAddress, String code) {
         try {
-            return naverOAuthUtils.naverOAuthLogin(code);
+            return naverOAuthUtils.oAuthLogin(code);
         } catch (InternalServerException | CustomBadRequestException exception) {
             this.saveLoginHistoryWithExceptionHandling(null, ipAddress, true, exception.getMessage());
             throw exception;
@@ -185,7 +185,7 @@ public class AccountService {
         try {
             return tokenIssuerService.issueToken(oauthServiceId, nickname, ThirdPartyEnum.NAVER.toString());
         } catch (Exception e) {
-            this.naverOAuthUtils.naverOAuthLogout(thirdPartyAccessToken);
+            this.naverOAuthUtils.oAuthLogout(thirdPartyAccessToken);
 
             ErrorCode exceptionCause = ErrorCode.JWT_ISSUE_EXCEPTION;
             this.saveLoginHistoryWithExceptionHandling(null, ipAddress, true, exceptionCause.getDescription());
@@ -201,11 +201,11 @@ public class AccountService {
      *
      * @return 로그아웃의 결과
      */
-    @Transactional(noRollbackFor = HistoryException.class, rollbackFor = RestDockerException.class)
+    @Transactional(rollbackFor = RestDockerException.class)
     public GenericSingleResponse<Boolean> naverOAuthLogout(GetRequesterDto requesterInfo) {
         boolean naverLogoutResult = naverOAuthLogoutWithExceptionHandling(requesterInfo.ipAddress(), requesterInfo.oauthAccessToken());
         if (!naverLogoutResult) {
-            this.saveLogoutHistoryWithExceptionHandling(requesterInfo.ipAddress(), true, org.chs.restdockerapis.common.exception.ErrorCode.NAVER_LOGOUT_EXCEPTION.getDescription());
+            this.saveLogoutHistoryWithExceptionHandling(requesterInfo.ipAddress(), true, ErrorCode.NAVER_LOGOUT_EXCEPTION.getDescription());
 
             return GenericSingleResponse.<Boolean>builder()
                     .data(false)
@@ -218,7 +218,7 @@ public class AccountService {
 
         account.eliminateValidToken();
         accountRepository.save(account);
-        this.accountHistoryService.saveLogoutHistory(requesterInfo.ipAddress(), false, null);
+        this.saveLogoutHistoryWithExceptionHandling(requesterInfo.ipAddress(), false, null);
 
         return GenericSingleResponse.<Boolean>builder()
                 .data(true)
@@ -227,7 +227,7 @@ public class AccountService {
 
     private boolean naverOAuthLogoutWithExceptionHandling(String ipAddress, String thirdPartyAccessToken) {
         try {
-            return naverOAuthUtils.naverOAuthLogout(thirdPartyAccessToken);
+            return naverOAuthUtils.oAuthLogout(thirdPartyAccessToken);
         } catch (InternalServerException | CustomBadRequestException exception) {
             this.saveLogoutHistoryWithExceptionHandling(ipAddress, true, exception.getMessage());
             throw exception;
@@ -266,7 +266,7 @@ public class AccountService {
             // 히스토리 저장과는 관계없이 사용자에게 결과응답이 돼야하므로 ExceptionHandler 에서 제외
             this.accountHistoryService.saveLoginHistory(createdBy, ipAddress, failure,failureReason);
         } catch (Exception exception) {
-            throw new HistoryException(org.chs.restdockerapis.common.exception.ErrorCode.LOGIN_HISTORY_SAVE_EXCEPTION);
+            logInfoHistory(new HistoryException(ErrorCode.LOGIN_HISTORY_SAVE_EXCEPTION));
         }
     }
 
@@ -274,7 +274,7 @@ public class AccountService {
         try {
             this.accountHistoryService.saveLogoutHistory(ipAddress, failure,failureReason);
         } catch (Exception exception) {
-            throw new HistoryException(org.chs.restdockerapis.common.exception.ErrorCode.LOGOUT_HISTORY_SAVE_EXCEPTION);
+            logInfoHistory(new HistoryException(ErrorCode.LOGOUT_HISTORY_SAVE_EXCEPTION));
         }
     }
 
@@ -326,4 +326,9 @@ public class AccountService {
 
         return verifiedAccount;
     }
+
+    private void logInfoHistory(HistoryException exception) {
+        log.info(LOG_FORMAT_INFO_HISTORY, exception.getErrorCode(), exception.getClass().getName(), exception.getErrorCode().getDescription());
+    }
+
 }
