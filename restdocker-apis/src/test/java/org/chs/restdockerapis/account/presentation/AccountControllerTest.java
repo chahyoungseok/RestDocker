@@ -182,12 +182,12 @@ public class AccountControllerTest extends ControllerTest {
 
         String accessToken = "AccessToken";
 
-        @PostConstruct
+        @BeforeEach
         void init() {
             enableAuthentication();
         }
 
-        @PreDestroy
+        @AfterEach
         void destroy() {
             disableAuthentication();
         }
