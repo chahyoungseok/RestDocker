@@ -48,6 +48,9 @@ dependencies {
     testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc' // MockMvc에 기반해서 snippet을 뽑아낼 수 있도록 하는 라이브러리
 }
 
+
+// ########## RestDocs ##########
+
 // outputs.dir 을 snippetDir로  설정해 snippet 들이 해당 경로에 저장되도록 설정한다.
 test {
     outputs.dir snippetsDir
