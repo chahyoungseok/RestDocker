@@ -9,6 +9,7 @@ public enum ErrorCode {
     LOGIN_HISTORY_SAVE_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, "10101", "로그인 히스토리 저장시 문제가 발생하였습니다."),
     LOGOUT_HISTORY_SAVE_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, "10102", "로그아웃 히스토리 저장시 문제가 발생하였습니다."),
     ARGUMENT_NOT_VALID_EXCEPTION(HttpStatus.BAD_REQUEST, "10103", "Request DTO Validation 에서 문제가 발생하였습니다."),
+    API_NEED_COMMAND(HttpStatus.BAD_REQUEST, "10104", "Command 가 필요한 API 입니다."),
 
     JWT_EXPIRED_EXCEPTION(HttpStatus.BAD_REQUEST, "11001", "JWT 만료되었습니다."),
     JWT_VALID_EXCEPTION(HttpStatus.BAD_REQUEST, "11002", "JWT 정보의 유효성검사가 실패하였습니다."),
@@ -26,6 +27,10 @@ public enum ErrorCode {
 
     ACCOUNT_NOT_EXIST_OAUTH_ID_EXCEPTION(HttpStatus.BAD_REQUEST, "30001", "Account DB에 OAuth ID의 일치하는 정보가 존재하지 않습니다."),
     REFRESH_TOKEN_NOT_MATCH_INFO_EXCEPTION(HttpStatus.BAD_REQUEST, "30002", "Account DB에 RefreshToken 이 헤더에 보낸 RefreshToken 과 일치하지 않습니다."),
+    COMMAND_NEED_DOCKER(HttpStatus.BAD_REQUEST, "30003", "명령어의 시작이 docker 가 아닙니다"),
+    BLANK_COMMAND(HttpStatus.BAD_REQUEST, "30005", "명령어가 비어있습니다"),
+    NOT_CORRECT_MAINCOMMAND(HttpStatus.BAD_REQUEST, "30006", "MainCommand 가 올바르지 않습니다"),
+    NOT_CORRECT_SUBCOMMAND(HttpStatus.BAD_REQUEST, "30007", "SubCommand 가 올바르지 않습니다"),
 
     THIRD_PARTY_CLIENT_EXCEPTION(HttpStatus.BAD_REQUEST, "40001", "Third Party 와의 통신중 Client 의 문제로 에러가 발생하였습니다."),
     THIRD_PARTY_AUTHORIZATION_SERVER_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, "40002", "Third Party 와의 통신중 인증 서버의 문제로 에러가 발생하였습니다.");
