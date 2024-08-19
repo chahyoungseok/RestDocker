@@ -1,8 +1,6 @@
 package org.chs.restdockerapis.account.presentation;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import jakarta.annotation.PostConstruct;
-import jakarta.annotation.PreDestroy;
 import org.chs.globalutils.dto.TokenDto;
 import org.chs.restdockerapis.account.application.AccountService;
 import org.chs.restdockerapis.account.presentation.dto.ReIssueTokenRequest;
@@ -13,12 +11,15 @@ import org.chs.restdockerapis.common.exception.CustomBadRequestException;
 import org.chs.restdockerapis.common.structure.ControllerTest;
 import org.junit.jupiter.api.*;
 import org.mockito.BDDMockito;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
@@ -27,6 +28,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@WebMvcTest(AccountController.class)
 public class AccountControllerTest extends ControllerTest {
 
     @MockBean
@@ -139,7 +141,7 @@ public class AccountControllerTest extends ControllerTest {
             // then
             resultActions
                     .andExpect(status().isBadRequest())
-                    .andExpect(result -> assertFalse(result.getResolvedException() instanceof CustomBadRequestException))
+                    .andExpect(result -> assertTrue(result.getResolvedException() instanceof MethodArgumentNotValidException))
                     .andDo(
                             restDocs.document(
                                     requestFields(
