@@ -2,42 +2,36 @@ package org.chs.restdockerapis.command.application;
 
 import org.chs.restdockerapis.command.enumerate.MainCommandEnum;
 import org.chs.restdockerapis.command.enumerate.SubCommandEnum;
-import org.chs.restdockerapis.command.presentation.dto.CommandRequestDto;
+import org.chs.restdockerapis.command.presentation.dto.CommandAnalysisRequestDto;
+import org.chs.restdockerapis.command.presentation.dto.CommandAnalysisResponseDto;
 import org.chs.restdockerapis.command.presentation.dto.SeparateRequestDto;
-import org.chs.restdockerapis.common.argument_resolver.dto.GetRequesterDto;
 import org.chs.restdockerapis.common.exception.CustomBadRequestException;
 import org.chs.restdockerapis.common.exception.ErrorCode;
-import org.chs.restdockerapis.image.application.ImageService;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class CommandService {
 
-    private final ImageService dockerImageService;
     private List<String> imageSubCommands;
     private List<String> networkSubCommands;
     private List<String> containerSubCommands;
 
-    public CommandService(ImageService dockerImageService) {
-        this.dockerImageService = dockerImageService;
+    public CommandService() {
         this.imageSubCommands = List.of("ls", "inspect", "rm", "pull");
         this.networkSubCommands = List.of("ls", "inspect", "create", "rm");
         this.containerSubCommands = List.of("ls", "ps", "rename", "create", "run", "start", "stop", "exec", "rm", "inspect");
     }
 
-    public Object analysisCommand(GetRequesterDto requesterInfo, CommandRequestDto request) {
-        SeparateRequestDto analysisResult = analysisCommand(request.getCommand());
+    public CommandAnalysisResponseDto filteringCommand(CommandAnalysisRequestDto request) {
+        SeparateRequestDto analysisResult = analysisCommand(request.command());
         if (null == analysisResult) {
             throw new CustomBadRequestException(ErrorCode.COMMON_BAD_REQUEST_ERROR_EXCEPTION);
         }
 
-        return requestSeparateApi(
-                requesterInfo,
+        return separateApi(
                 analysisResult.mainCommand(),
                 analysisResult.subCommand(),
                 analysisResult.argCommand()
@@ -53,7 +47,7 @@ public class CommandService {
      * 5. argCommand 를 추출한다.
      * 6. SeparateRequestDto 를 완성한다.
      */
-    private SeparateRequestDto analysisCommand(String requestCommand) {
+    public SeparateRequestDto analysisCommand(String requestCommand) {
         SeparateRequestDto separateRequestDto = null;
 
         String[] commands = requestCommand.split("\\s+");
@@ -66,7 +60,7 @@ public class CommandService {
         }
 
         // 인덱스 3부터 검사해서 인자 빼오기
-        Map<String, List<String>> argCommand = extractArgCommand(commands);
+        List<String> argCommand = extractArgCommand(commands);
 
         if (null != (separateRequestDto = dockerImages(commands, argCommand))) {
             return separateRequestDto;
@@ -87,8 +81,8 @@ public class CommandService {
         return null;
     }
 
-    private Map<String, List<String>> extractArgCommand(String[] commands) {
-        Map<String, List<String>> argCommands = new HashMap<>();
+    private List<String> extractArgCommand(String[] commands) {
+        List<String> argCommands = new ArrayList<>();
 
         int argCommandStartNumber = 3;
         if (commands[1].equals("images")) {
@@ -101,120 +95,45 @@ public class CommandService {
 
                 // - 옵션의 추가 인자가 있는지 확인
                 if (commands.length > commandIndex + 1 && false == commands[commandIndex + 1].startsWith("-")) {
-
-                    // Key 값이 이미 있는지 확인 후 저장
-                    List<String> existKey = argCommands.get(commands[commandIndex]);
-                    if (null == existKey) {
-                        argCommands.put(commands[commandIndex], makeArrayList(commands[commandIndex + 1]));
-                    }
-                    else {
-                        existKey.add(commands[commandIndex + 1]);
-                    }
+                    argCommands.add(commands[commandIndex] + " " + commands[commandIndex + 1]);
 
                     // 추가 인자가 저장되어 그 다음 요소는 건너 뜀
                     commandIndex++;
                 }
                 else {
                     // - 옵션이 있지만 추가 인자가 없는 조건
-                    argCommands.put(commands[commandIndex], null);
+                    argCommands.add(commands[commandIndex]);
                 }
             }
             else {
                 // - 옵션이 없는 일반 인자값
-                argCommands.put(commands[commandIndex], null);
+                argCommands.add(commands[commandIndex]);
             }
         }
 
         return argCommands;
     }
 
-    public Object requestSeparateApi(GetRequesterDto requesterInfo, MainCommandEnum mainCommand, SubCommandEnum subCommand, Map<String, List<String>> argCommand) {
+    public CommandAnalysisResponseDto separateApi(MainCommandEnum mainCommand, SubCommandEnum subCommand, List<String> argCommand) {
+        String urlPrefix = null;
+        String urlSubCommand = null;
+
         switch (mainCommand) {
-            case IMAGE -> {
-
-                switch (subCommand) {
-                    case READ_ALL -> {
-                        return dockerImageService.readImage(requesterInfo, argCommand);
-                    }
-                    case READ_SPECIFIC_NAME -> {
-                        return null;
-                    }
-                    case LS -> {
-                        return null;
-                    }
-                    case INSPECT -> {
-                        return null;
-                    }
-                    case RM -> {
-                        return null;
-                    }
-                    case PULL -> {
-                        return null;
-                    }
-                    default -> throw new CustomBadRequestException(ErrorCode.NOT_CORRECT_SUBCOMMAND);
-                }
-            }
-            case NETWORK -> {
-
-                switch (subCommand) {
-                    case LS -> {
-                        return null;
-                    }
-                    case INSPECT -> {
-                        return null;
-                    }
-                    case CREATE -> {
-                        return null;
-                    }
-                    case RM -> {
-                        return null;
-                    }
-                    default -> throw new CustomBadRequestException(ErrorCode.NOT_CORRECT_SUBCOMMAND);
-                }
-            }
-            case CONTAINER -> {
-
-                switch (subCommand) {
-                    case LS -> {
-                        return null;
-                    }
-                    case PS -> {
-                        return null;
-                    }
-                    case RENAME -> {
-                        return null;
-                    }
-                    case CREATE -> {
-                        return null;
-                    }
-                    case RUN -> {
-                        return null;
-                    }
-                    case START -> {
-                        return null;
-                    }
-                    case STOP -> {
-                        return null;
-                    }
-                    case EXEC -> {
-                        return null;
-                    }
-                    case RM -> {
-                        return null;
-                    }
-                    case INSPECT -> {
-                        return null;
-                    }
-                    default -> throw new CustomBadRequestException(ErrorCode.NOT_CORRECT_SUBCOMMAND);
-                }
-            }
-            case HELP -> {
-                break;
-            }
+            case IMAGE -> urlPrefix = "/api/v1/image";
+            case NETWORK -> urlPrefix = "/api/v1/network";
+            case CONTAINER -> urlPrefix = "/api/v1/container";
+            case HELP -> urlPrefix = "/api/v1/help";
             default -> throw new CustomBadRequestException(ErrorCode.NOT_CORRECT_MAINCOMMAND);
         }
 
-        throw new CustomBadRequestException(ErrorCode.NOT_CORRECT_MAINCOMMAND);
+        if (null != subCommand) {
+            urlSubCommand = "/" + subCommand.name().toLowerCase();
+        }
+
+        return CommandAnalysisResponseDto.builder()
+                .url(urlPrefix + urlSubCommand)
+                .argCommands(argCommand)
+                .build();
     }
 
     private void firstCommandCheck(String firstCommand) {
@@ -234,7 +153,7 @@ public class CommandService {
         return null;
     }
 
-    private SeparateRequestDto dockerImages(String[] commands, Map<String, List<String>> argCommand) {
+    private SeparateRequestDto dockerImages(String[] commands, List<String> argCommand) {
         if (commands[1].equals("images")) {
             if (null == commands[2]) {
                 return makeSeparateRequestDto(MainCommandEnum.IMAGE, SubCommandEnum.READ_ALL, null);
@@ -245,7 +164,7 @@ public class CommandService {
         return null;
     }
 
-    private SeparateRequestDto dockerSeparate(String[] commands, Map<String, List<String>> argCommand, List<String> candidateSubCommands, String keyword) {
+    private SeparateRequestDto dockerSeparate(String[] commands, List<String> argCommand, List<String> candidateSubCommands, String keyword) {
         if (false == commands[1].equals(keyword)) {
             return null;
         }
@@ -311,7 +230,7 @@ public class CommandService {
         return arrayList;
     }
 
-    private SeparateRequestDto makeSeparateRequestDto(MainCommandEnum mainCommand, SubCommandEnum subCommand, Map<String, List<String>> argCommand) {
+    private SeparateRequestDto makeSeparateRequestDto(MainCommandEnum mainCommand, SubCommandEnum subCommand, List<String> argCommand) {
         return SeparateRequestDto.builder()
                 .mainCommand(mainCommand)
                 .subCommand(subCommand)

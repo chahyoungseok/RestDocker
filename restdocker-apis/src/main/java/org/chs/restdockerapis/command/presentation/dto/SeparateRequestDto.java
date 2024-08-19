@@ -6,7 +6,6 @@ import org.chs.restdockerapis.command.enumerate.MainCommandEnum;
 import org.chs.restdockerapis.command.enumerate.SubCommandEnum;
 
 import java.util.List;
-import java.util.Map;
 
 @Builder
 public record SeparateRequestDto(
@@ -15,5 +14,5 @@ public record SeparateRequestDto(
 
         SubCommandEnum subCommand,
 
-        Map<String, List<String>> argCommand
+        List<String> argCommand
 ) {}
