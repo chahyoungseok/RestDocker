@@ -7,7 +7,6 @@ import org.chs.restdockerapis.common.jwt.principal.AccountPrincipalDetails;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
@@ -21,7 +20,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 
-@WebMvcTest
 @Import(RestDocsConfig.class)
 @ExtendWith(RestDocumentationExtension.class)
 public abstract class ControllerTest {
