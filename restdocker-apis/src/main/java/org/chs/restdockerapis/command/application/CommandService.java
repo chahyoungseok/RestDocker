@@ -47,7 +47,7 @@ public class CommandService {
      * 5. argCommand 를 추출한다.
      * 6. SeparateRequestDto 를 완성한다.
      */
-    public SeparateRequestDto analysisCommand(String requestCommand) {
+    private SeparateRequestDto analysisCommand(String requestCommand) {
         SeparateRequestDto separateRequestDto = null;
 
         String[] commands = requestCommand.split("\\s+");
