@@ -15,6 +15,12 @@ import java.util.List;
 @Service
 public class CommandService {
 
+    private final String DOCKER = "docker";
+
+    private final String MAIN_COMMAND_IMAGE = "image";
+    private final String MAIN_COMMAND_IMAGES = "images";
+    private final String MAIN_COMMAND_CONTAINER = "container";
+
     private List<String> imageSubCommands;
     private List<String> networkSubCommands;
     private List<String> containerSubCommands;
@@ -85,7 +91,7 @@ public class CommandService {
         List<String> argCommands = new ArrayList<>();
 
         int argCommandStartNumber = 3;
-        if (commands[1].equals("images")) {
+        if (commands[1].equals(MAIN_COMMAND_IMAGES)) {
             argCommandStartNumber = 2;
         }
 
@@ -141,7 +147,7 @@ public class CommandService {
             throw new CustomBadRequestException(ErrorCode.BLANK_COMMAND);
         }
 
-        if (false == firstCommand.equals("docker")) {
+        if (false == firstCommand.equals(DOCKER)) {
             throw new CustomBadRequestException(ErrorCode.COMMAND_NEED_DOCKER);
         }
     }
@@ -154,7 +160,7 @@ public class CommandService {
     }
 
     private SeparateRequestDto dockerImages(String[] commands, List<String> argCommand) {
-        if (commands[1].equals("images")) {
+        if (commands[1].equals(MAIN_COMMAND_IMAGES)) {
             if (null == commands[2]) {
                 return makeSeparateRequestDto(MainCommandEnum.IMAGE, SubCommandEnum.READ_ALL, null);
             } else {
@@ -205,7 +211,7 @@ public class CommandService {
         }
 
         newCommands[0] = oldCommands[0];
-        newCommands[1] = "container";
+        newCommands[1] = MAIN_COMMAND_CONTAINER;
         return newCommands;
     }
 
@@ -217,17 +223,10 @@ public class CommandService {
         }
 
         newCommands[0] = oldCommands[0];
-        newCommands[1] = "image";
+        newCommands[1] = MAIN_COMMAND_IMAGE;
         newCommands[2] = "rm";
 
         return newCommands;
-    }
-
-    private ArrayList<String> makeArrayList(String element) {
-        ArrayList<String> arrayList = new ArrayList<>();
-        arrayList.add(element);
-
-        return arrayList;
     }
 
     private SeparateRequestDto makeSeparateRequestDto(MainCommandEnum mainCommand, SubCommandEnum subCommand, List<String> argCommand) {
