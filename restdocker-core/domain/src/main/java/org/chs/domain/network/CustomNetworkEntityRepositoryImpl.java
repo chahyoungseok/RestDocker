@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 @RequiredArgsConstructor
 public class CustomNetworkEntityRepositoryImpl implements CustomNetworkEntityRepository{
 
-    private JPAQueryFactory jpaQueryFactory;
+    private final JPAQueryFactory jpaQueryFactory;
 }

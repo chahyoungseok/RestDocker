@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 @RequiredArgsConstructor
 public class CustomContainerEntityRepositoryImpl implements CustomContainerEntityRepository{
 
-    private JPAQueryFactory jpaQueryFactory;
+    private final JPAQueryFactory jpaQueryFactory;
 }

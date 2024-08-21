@@ -1,10 +1,11 @@
-package org.chs.domain.docker.entity;
+package org.chs.domain.portbinding.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.chs.domain.common.BaseDomainEntity;
+import org.chs.domain.container.entity.ContainerEntity;
 
 @Entity
 @Getter

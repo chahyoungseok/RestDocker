@@ -1,4 +1,4 @@
-package org.chs.domain.account.querydsl;
+package org.chs.domain.account;
 
 public interface CustomAccountRepository {
 }

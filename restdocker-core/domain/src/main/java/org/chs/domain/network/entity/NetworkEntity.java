@@ -1,4 +1,4 @@
-package org.chs.domain.docker.entity;
+package org.chs.domain.network.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
