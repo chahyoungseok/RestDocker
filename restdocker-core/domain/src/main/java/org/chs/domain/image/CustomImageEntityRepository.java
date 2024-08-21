@@ -1,4 +1,5 @@
-package org.chs.domain.docker.querydsl;
+package org.chs.domain.image;
+
 
 public interface CustomImageEntityRepository {
 }

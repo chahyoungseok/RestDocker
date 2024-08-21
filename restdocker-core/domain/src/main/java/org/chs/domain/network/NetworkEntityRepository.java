@@ -1,7 +1,6 @@
-package org.chs.domain.docker;
+package org.chs.domain.network;
 
-import org.chs.domain.docker.entity.NetworkEntity;
-import org.chs.domain.docker.querydsl.CustomNetworkEntityRepository;
+import org.chs.domain.network.entity.NetworkEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface NetworkEntityRepository extends JpaRepository<NetworkEntity, String>, CustomNetworkEntityRepository {

@@ -1,4 +1,4 @@
-package org.chs.domain.docker.querydsl;
+package org.chs.domain.network;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 @RequiredArgsConstructor
-public class CustomImageEntityRepositoryImpl implements CustomImageEntityRepository{
+public class CustomNetworkEntityRepositoryImpl implements CustomNetworkEntityRepository{
 
     private JPAQueryFactory jpaQueryFactory;
 }

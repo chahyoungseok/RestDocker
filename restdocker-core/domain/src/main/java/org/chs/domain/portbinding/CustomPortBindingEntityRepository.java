@@ -1,4 +1,4 @@
-package org.chs.domain.docker.querydsl;
+package org.chs.domain.portbinding;
 
 public interface CustomPortBindingEntityRepository {
 }

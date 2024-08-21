@@ -1,4 +1,4 @@
-package org.chs.domain.docker.querydsl;
+package org.chs.domain.portbinding;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 @RequiredArgsConstructor
-public class CustomNetworkContainerMappingEntityRepositoryImpl implements CustomNetworkContainerMappingEntityRepository{
+public class CustomPortBindingEntityRepositoryImpl implements CustomPortBindingEntityRepository{
 
     private JPAQueryFactory jpaQueryFactory;
 }

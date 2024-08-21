@@ -1,7 +1,6 @@
-package org.chs.domain.docker;
+package org.chs.domain.portbinding;
 
-import org.chs.domain.docker.entity.PortBindingEntity;
-import org.chs.domain.docker.querydsl.CustomPortBindingEntityRepository;
+import org.chs.domain.portbinding.entity.PortBindingEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PortBindingEntityRepository extends JpaRepository<PortBindingEntity, String>, CustomPortBindingEntityRepository {
