@@ -68,10 +68,6 @@ public class CommandService {
         // 인덱스 3부터 검사해서 인자 빼오기
         List<String> argCommand = extractArgCommand(commands);
 
-        if (null != (separateRequestDto = dockerImages(commands, argCommand))) {
-            return separateRequestDto;
-        }
-
         if (null != (separateRequestDto = dockerSeparate(commands, argCommand, imageSubCommands, MainCommandEnum.IMAGE.name().toLowerCase()))) {
             return separateRequestDto;
         }
@@ -133,7 +129,7 @@ public class CommandService {
         }
 
         if (null != subCommand) {
-            urlSubCommand = "/" + subCommand.name().toLowerCase();
+            urlSubCommand = "/" + subCommand.name().replace("_", "-").toLowerCase();
         }
 
         return CommandAnalysisResponseDto.builder()
@@ -155,17 +151,6 @@ public class CommandService {
     private SeparateRequestDto dockerHelp(String secondCommand) {
         if (null == secondCommand) {
             return makeSeparateRequestDto(MainCommandEnum.HELP, null, null);
-        }
-        return null;
-    }
-
-    private SeparateRequestDto dockerImages(String[] commands, List<String> argCommand) {
-        if (commands[1].equals(MAIN_COMMAND_IMAGES)) {
-            if (null == commands[2]) {
-                return makeSeparateRequestDto(MainCommandEnum.IMAGE, SubCommandEnum.READ_ALL, null);
-            } else {
-                return makeSeparateRequestDto(MainCommandEnum.IMAGE, SubCommandEnum.READ_SPECIFIC_NAME, argCommand);
-            }
         }
         return null;
     }
@@ -196,8 +181,16 @@ public class CommandService {
             return insertOmitContainer(commands);
         }
 
+        if (secondToken.equals("pull")) {
+            return insertOmitImage(commands);
+        }
+
+        if (secondToken.equals("images")) {
+            return changeImageAbbreviation(commands, "ls");
+        }
+
         if (secondToken.equals("rmi")) {
-            return changeRmi(commands);
+            return changeImageAbbreviation(commands, "rm");
         }
 
         return commands;
@@ -215,7 +208,7 @@ public class CommandService {
         return newCommands;
     }
 
-    private String[] changeRmi(String[] oldCommands) {
+    private String[] insertOmitImage(String[] oldCommands) {
         String[] newCommands = new String[oldCommands.length + 1];
 
         for (int commandIndex = 2; commandIndex < oldCommands.length + 1; commandIndex++) {
@@ -224,7 +217,19 @@ public class CommandService {
 
         newCommands[0] = oldCommands[0];
         newCommands[1] = MAIN_COMMAND_IMAGE;
-        newCommands[2] = "rm";
+        return newCommands;
+    }
+
+    private String[] changeImageAbbreviation(String[] oldCommands, String originCommand) {
+        String[] newCommands = new String[oldCommands.length + 1];
+
+        for (int commandIndex = 2; commandIndex < oldCommands.length + 1; commandIndex++) {
+            newCommands[commandIndex] = oldCommands[commandIndex - 1];
+        }
+
+        newCommands[0] = oldCommands[0];
+        newCommands[1] = MAIN_COMMAND_IMAGE;
+        newCommands[2] = originCommand;
 
         return newCommands;
     }
