@@ -1,0 +1,269 @@
+== Docker Image
+
+=== LS Image [성공 테스트 - 인자가 있는경우]
+
+==== Request Fields
+
+include::{snippets}/ls-image-success/사용자가_-pull_받은_-image_정보를_반환한다_인자가_있는경우/request-fields.adoc[]
+
+==== Response Fields
+
+include::{snippets}/ls-image-success/사용자가_-pull_받은_-image_정보를_반환한다_인자가_있는경우/response-fields.adoc[]
+
+==== HTTP Request
+
+include::{snippets}/ls-image-success/사용자가_-pull_받은_-image_정보를_반환한다_인자가_있는경우//http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/ls-image-success/사용자가_-pull_받은_-image_정보를_반환한다_인자가_있는경우//http-response.adoc[]
+
+
+=== LS Image [성공 테스트 - 인자가 없는경우]
+
+==== Request Fields
+
+include::{snippets}/ls-image-success/사용자가_-pull_받은_-image_정보를_반환한다_인자가_없는경우/request-fields.adoc[]
+
+==== Response Fields
+
+include::{snippets}/ls-image-success/사용자가_-pull_받은_-image_정보를_반환한다_인자가_없는경우/response-fields.adoc[]
+
+==== HTTP Request
+
+include::{snippets}/ls-image-success/사용자가_-pull_받은_-image_정보를_반환한다_인자가_없는경우//http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/ls-image-success/사용자가_-pull_받은_-image_정보를_반환한다_인자가_없는경우//http-response.adoc[]
+
+
+=== LS Image [성공 테스트 - 인에 맞는 데이터가 없는경우]
+
+==== Request Fields
+
+include::{snippets}/ls-image-success/사용자가_가지고있는_-image_정보를_반환한다_인자에_맞는_데이터가_없는경우/request-fields.adoc[]
+
+==== Response Fields
+
+include::{snippets}/ls-image-success/사용자가_가지고있는_-image_정보를_반환한다_인자에_맞는_데이터가_없는경우/response-fields.adoc[]
+
+==== HTTP Request
+
+include::{snippets}/ls-image-success/사용자가_가지고있는_-image_정보를_반환한다_인자에_맞는_데이터가_없는경우//http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/ls-image-success/사용자가_가지고있는_-image_정보를_반환한다_인자에_맞는_데이터가_없는경우//http-response.adoc[]
+
+
+
+=== LS Image [실패 테스트 - notEmpty 값인 code 를 넣지 않고 보낸다]
+
+==== Request Fields
+
+include::{snippets}/ls-image-fail/사용자가_전달한_인자가_형식에_맞지_않는경우/request-fields.adoc[]
+
+==== Response Body
+
+include::{snippets}/ls-image-fail/사용자가_전달한_인자가_형식에_맞지_않는경우/response-body.adoc[]
+
+==== HTTP Request
+
+include::{snippets}/ls-image-fail/사용자가_전달한_인자가_형식에_맞지_않는경우/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/ls-image-fail/사용자가_전달한_인자가_형식에_맞지_않는경우/http-response.adoc[]
+
+
+
+=== Pull Image [성공 테스트 - 이미지 태그가 있는경우]
+
+==== Request Fields
+
+include::{snippets}/pull-image-success/docker-hub에서_사용자가_원하는_이미지를_받아온다_이미지_태그가_있는경우/request-fields.adoc[]
+
+==== Response Fields
+
+include::{snippets}/pull-image-success/docker-hub에서_사용자가_원하는_이미지를_받아온다_이미지_태그가_있는경우/response-fields.adoc[]
+
+==== HTTP Request
+
+include::{snippets}/pull-image-success/docker-hub에서_사용자가_원하는_이미지를_받아온다_이미지_태그가_있는경우/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/pull-image-success/docker-hub에서_사용자가_원하는_이미지를_받아온다_이미지_태그가_있는경우/http-response.adoc[]
+
+
+=== Pull Image [성공 테스트 - 이미지 태그가 없는경우]
+
+==== Request Fields
+
+include::{snippets}/pull-image-success/docker-hub에서_사용자가_원하는_이미지를_받아온다_이미지_태그가_없는경우/request-fields.adoc[]
+
+==== Response Fields
+
+include::{snippets}/pull-image-success/docker-hub에서_사용자가_원하는_이미지를_받아온다_이미지_태그가_없는경우/response-fields.adoc[]
+
+==== HTTP Request
+
+include::{snippets}/pull-image-success/docker-hub에서_사용자가_원하는_이미지를_받아온다_이미지_태그가_없는경우/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/pull-image-success/docker-hub에서_사용자가_원하는_이미지를_받아온다_이미지_태그가_없는경우/http-response.adoc[]
+
+
+
+=== Pull Fail [실패 테스트 - Docker Hub에서 사용자가 원하는 이미지가 없는경우]
+
+==== Request Fields
+
+include::{snippets}/pull-image-fail/docker-hub에서_사용자가_원하는_이미지가_없는경우/request-fields.adoc[]
+
+==== HTTP Request
+
+include::{snippets}/pull-image-fail/docker-hub에서_사용자가_원하는_이미지가_없는경우/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/pull-image-fail/docker-hub에서_사용자가_원하는_이미지가_없는경우/http-response.adoc[]
+
+
+=== Pull Fail [실패 테스트 - 사용자가 전달한 인자가 형식에 맞지 않는경우]
+
+==== Request Fields
+
+include::{snippets}/pull-image-fail/사용자가_전달한_인자가_형식에_맞지_않는경우/request-fields.adoc[]
+
+==== HTTP Request
+
+include::{snippets}/pull-image-fail/사용자가_전달한_인자가_형식에_맞지_않는경우/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/pull-image-fail/사용자가_전달한_인자가_형식에_맞지_않는경우/http-response.adoc[]
+
+
+
+=== Inspect Image [성공 테스트]
+
+==== Request Fields
+
+include::{snippets}/inspect-image-success/사용자가_원하는_이미지의_자세한_정보를_응답한다/request-fields.adoc[]
+
+==== Response Fields
+
+include::{snippets}/inspect-image-success/사용자가_원하는_이미지의_자세한_정보를_응답한다/response-fields.adoc[]
+
+==== HTTP Request
+
+include::{snippets}/inspect-image-success/사용자가_원하는_이미지의_자세한_정보를_응답한다/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/inspect-image-success/사용자가_원하는_이미지의_자세한_정보를_응답한다/http-response.adoc[]
+
+
+=== Inspect Image [실패 테스트 - 사용자가 원하는 이미지의 DB에 없는경우]
+
+==== Request Fields
+
+include::{snippets}/inspect-image-fail/사용자가_원하는_이미지의_db에_없는경우/request-fields.adoc[]
+
+==== Response Fields
+
+include::{snippets}/inspect-image-fail/사용자가_원하는_이미지의_db에_없는경우/response-fields.adoc[]
+
+==== HTTP Request
+
+include::{snippets}/inspect-image-fail/사용자가_원하는_이미지의_db에_없는경우/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/inspect-image-fail/사용자가_원하는_이미지의_db에_없는경우/http-response.adoc[]
+
+
+=== Inspect Image [실패 테스트 - 사용자가 전달한 인자가 형식에 맞지 않는경우]
+
+==== Request Fields
+
+include::{snippets}/inspect-image-fail/사용자가_전달한_인자가_형식에_맞지_않는경우/request-fields.adoc[]
+
+==== HTTP Request
+
+include::{snippets}/inspect-image-fail/사용자가_전달한_인자가_형식에_맞지_않는경우/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/inspect-image-fail/사용자가_전달한_인자가_형식에_맞지_않는경우/http-response.adoc[]
+
+
+=== Inspect Image [실패 테스트 - 사용자가 전달한 인자가 형식에 맞지 않는경우]
+
+==== Request Fields
+
+include::{snippets}/inspect-image-fail/사용자가_전달한_인자가_형식에_맞지_않는경우/request-fields.adoc[]
+
+==== HTTP Request
+
+include::{snippets}/inspect-image-fail/사용자가_전달한_인자가_형식에_맞지_않는경우/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/inspect-image-fail/사용자가_전달한_인자가_형식에_맞지_않는경우/http-response.adoc[]
+
+
+=== Rm Image [성공 테스트]
+
+==== Request Fields
+
+include::{snippets}/rm-image-success/사용자가_원하는_이미지를_삭제한다/request-fields.adoc[]
+
+==== Response Fields
+
+include::{snippets}/rm-image-success/사용자가_원하는_이미지를_삭제한다/response-fields.adoc[]
+
+==== HTTP Request
+
+include::{snippets}/rm-image-success/사용자가_원하는_이미지를_삭제한다/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/rm-image-success/사용자가_원하는_이미지를_삭제한다/http-response.adoc[]
+
+
+=== Rm Image [실패 테스트 - 사용자가 요청한 이미지의 삭제를 실패한경우]
+
+==== Request Fields
+
+include::{snippets}/rm-image-fail/사용자가_요청한_이미지의_삭제를_실패한경우/request-fields.adoc[]
+
+==== Response Fields
+
+include::{snippets}/rm-image-fail/사용자가_요청한_이미지의_삭제를_실패한경우/response-fields.adoc[]
+
+==== HTTP Request
+
+include::{snippets}/rm-image-fail/사용자가_요청한_이미지의_삭제를_실패한경우/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/rm-image-fail/사용자가_요청한_이미지의_삭제를_실패한경우/http-response.adoc[]
+
+
+=== Rm Image [실패 테스트 - 사용자가 이미지를 인자로 전달하지 않은경우]
+
+==== Request Fields
+
+include::{snippets}/rm-image-fail/사용자가_이미지를_인자로_전달하지_않은경우/request-fields.adoc[]
+
+==== HTTP Request
+
+include::{snippets}/rm-image-fail/사용자가_이미지를_인자로_전달하지_않은경우/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/rm-image-fail/사용자가_이미지를_인자로_전달하지_않은경우/http-response.adoc[]

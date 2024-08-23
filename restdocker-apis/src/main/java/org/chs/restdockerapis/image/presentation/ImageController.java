@@ -37,6 +37,7 @@ public class ImageController {
     public ResponseEntity<InspectImageResponseDto> inspectImage(@GetRequester GetRequesterDto requesterInfo, @Valid @RequestBody DockerCommandRequestDto request) {
         return ResponseEntity.ok(imageService.inspectImage(requesterInfo, request));
     }
+
     @Auth
     @PostMapping("/rm")
     public ResponseEntity<RmImageResponseDto> rmImage(@GetRequester GetRequesterDto requesterInfo, @Valid @RequestBody DockerCommandRequestDto request) {

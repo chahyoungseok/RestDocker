@@ -65,14 +65,14 @@ public class ImageService {
         String imageName = existArgOnlyOneImageName(request.getArgCommands());
         DockerHubEntity pulledImage = dockerHubEntityRepository.selectDockerImage(imageName);
         if (null == pulledImage) {
-            throw new IllegalArgumentException("이미지 이름과 태그 조합이 DockerHub에 있지 않습니다.");
+            throw new CustomBadRequestException(ErrorCode.NOT_EXIST_IMAGE_IN_DOCKERHUB);
         }
 
         AccountEntity account = accountRepository
                 .findByOauthServiceIdEqualsAndThirdPartyTypeEquals(requesterInfo.id(), requesterInfo.thirdPartyType())
                 .orElseThrow(() -> new IllegalArgumentException("토큰으로 온 사용자의 정보가 없습니다."));
 
-        ImageEntity save = dockerImageRepository.save(
+        ImageEntity savedImage = dockerImageRepository.save(
                 ImageEntity.builder()
                         .name(pulledImage.getName())
                         .os(pulledImage.getOs())
@@ -84,7 +84,7 @@ public class ImageService {
         );
 
         return PullImageResponseDto.builder()
-                .pullImageFullName(save.getFullName())
+                .pullImageFullName(savedImage.getFullName())
                 .build();
     }
 
