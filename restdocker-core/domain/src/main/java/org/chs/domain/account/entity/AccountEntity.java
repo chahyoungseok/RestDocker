@@ -1,8 +1,6 @@
 package org.chs.domain.account.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -11,11 +9,11 @@ import lombok.NoArgsConstructor;
 import org.chs.domain.common.BaseDomainEntity;
 import org.chs.domain.common.enumerate.ThirdPartyEnum;
 
-import java.time.LocalDateTime;
-
 @Entity
 @Getter
-@Table(name = "account")
+@Table(name = "account",
+        indexes = @Index(name = "idx_oauth_service_id", columnList = "oauth_service_id")
+)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class AccountEntity extends BaseDomainEntity {
 

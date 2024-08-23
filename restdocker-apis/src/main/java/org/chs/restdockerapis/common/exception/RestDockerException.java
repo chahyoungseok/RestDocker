@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 public abstract class RestDockerException extends NestedRuntimeException {
 
     private ErrorCode exceptionCode;
+    private String message;
 
     protected RestDockerException(ErrorCode exceptionCode) {
         super(exceptionCode.getDescription());
@@ -20,6 +21,7 @@ public abstract class RestDockerException extends NestedRuntimeException {
 
     protected RestDockerException(ErrorCode exceptionCode, String message) {
         super(message);
+        this.message = message;
         this.exceptionCode = exceptionCode;
     }
 
@@ -31,7 +33,7 @@ public abstract class RestDockerException extends NestedRuntimeException {
         return ResponseEntity.status(exceptionCode.getHttpStatus())
                 .body(GlobalResponse.builder()
                         .resultCode(exceptionCode.getResultCode())
-                        .description(exceptionCode.getDescription())
+                        .description(null == message ? exceptionCode.getDescription() : message)
                         .build()
                 );
     }

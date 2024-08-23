@@ -10,6 +10,8 @@ public enum ErrorCode {
     LOGOUT_HISTORY_SAVE_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, "10102", "로그아웃 히스토리 저장시 문제가 발생하였습니다."),
     ARGUMENT_NOT_VALID_EXCEPTION(HttpStatus.BAD_REQUEST, "10103", "Request DTO Validation 에서 문제가 발생하였습니다."),
     API_NEED_COMMAND(HttpStatus.BAD_REQUEST, "10104", "Command 가 필요한 API 입니다."),
+    ARGUMENT_COMMAND_NOT_VALID_EXCEPTION(HttpStatus.BAD_REQUEST, "10105", "ArgCommand 가 지원하지 않는 형태입니다."),
+    NOT_EXIST_IMAGE_IN_DOCKERHUB(HttpStatus.BAD_REQUEST, "10106", "이미지 이름과 태그 조합이 DockerHub에 있지 않습니다."),
 
     JWT_EXPIRED_EXCEPTION(HttpStatus.BAD_REQUEST, "11001", "JWT 만료되었습니다."),
     JWT_VALID_EXCEPTION(HttpStatus.BAD_REQUEST, "11002", "JWT 정보의 유효성검사가 실패하였습니다."),

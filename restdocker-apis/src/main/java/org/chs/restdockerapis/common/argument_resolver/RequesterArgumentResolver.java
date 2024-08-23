@@ -41,6 +41,7 @@ public class RequesterArgumentResolver implements HandlerMethodArgumentResolver 
                 .id(accountPrincipalDetails.getAccountId())
                 .oauthAccessToken(accountPrincipalDetails.getOAuthAccessToken())
                 .oauthRefreshToken(accountPrincipalDetails.getOAuthRefreshToken())
+                .thirdPartyType(accountPrincipalDetails.getThirdPartyType())
                 .build();
     }
 }

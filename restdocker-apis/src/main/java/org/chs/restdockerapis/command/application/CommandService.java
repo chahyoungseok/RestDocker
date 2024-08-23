@@ -15,6 +15,12 @@ import java.util.List;
 @Service
 public class CommandService {
 
+    private final String DOCKER = "docker";
+
+    private final String MAIN_COMMAND_IMAGE = "image";
+    private final String MAIN_COMMAND_IMAGES = "images";
+    private final String MAIN_COMMAND_CONTAINER = "container";
+
     private List<String> imageSubCommands;
     private List<String> networkSubCommands;
     private List<String> containerSubCommands;
@@ -62,10 +68,6 @@ public class CommandService {
         // 인덱스 3부터 검사해서 인자 빼오기
         List<String> argCommand = extractArgCommand(commands);
 
-        if (null != (separateRequestDto = dockerImages(commands, argCommand))) {
-            return separateRequestDto;
-        }
-
         if (null != (separateRequestDto = dockerSeparate(commands, argCommand, imageSubCommands, MainCommandEnum.IMAGE.name().toLowerCase()))) {
             return separateRequestDto;
         }
@@ -85,7 +87,7 @@ public class CommandService {
         List<String> argCommands = new ArrayList<>();
 
         int argCommandStartNumber = 3;
-        if (commands[1].equals("images")) {
+        if (commands[1].equals(MAIN_COMMAND_IMAGES)) {
             argCommandStartNumber = 2;
         }
 
@@ -127,7 +129,7 @@ public class CommandService {
         }
 
         if (null != subCommand) {
-            urlSubCommand = "/" + subCommand.name().toLowerCase();
+            urlSubCommand = "/" + subCommand.name().replace("_", "-").toLowerCase();
         }
 
         return CommandAnalysisResponseDto.builder()
@@ -141,7 +143,7 @@ public class CommandService {
             throw new CustomBadRequestException(ErrorCode.BLANK_COMMAND);
         }
 
-        if (false == firstCommand.equals("docker")) {
+        if (false == firstCommand.equals(DOCKER)) {
             throw new CustomBadRequestException(ErrorCode.COMMAND_NEED_DOCKER);
         }
     }
@@ -149,17 +151,6 @@ public class CommandService {
     private SeparateRequestDto dockerHelp(String secondCommand) {
         if (null == secondCommand) {
             return makeSeparateRequestDto(MainCommandEnum.HELP, null, null);
-        }
-        return null;
-    }
-
-    private SeparateRequestDto dockerImages(String[] commands, List<String> argCommand) {
-        if (commands[1].equals("images")) {
-            if (null == commands[2]) {
-                return makeSeparateRequestDto(MainCommandEnum.IMAGE, SubCommandEnum.READ_ALL, null);
-            } else {
-                return makeSeparateRequestDto(MainCommandEnum.IMAGE, SubCommandEnum.READ_SPECIFIC_NAME, argCommand);
-            }
         }
         return null;
     }
@@ -190,8 +181,16 @@ public class CommandService {
             return insertOmitContainer(commands);
         }
 
+        if (secondToken.equals("pull")) {
+            return insertOmitImage(commands);
+        }
+
+        if (secondToken.equals("images")) {
+            return changeImageAbbreviation(commands, "ls");
+        }
+
         if (secondToken.equals("rmi")) {
-            return changeRmi(commands);
+            return changeImageAbbreviation(commands, "rm");
         }
 
         return commands;
@@ -205,11 +204,11 @@ public class CommandService {
         }
 
         newCommands[0] = oldCommands[0];
-        newCommands[1] = "container";
+        newCommands[1] = MAIN_COMMAND_CONTAINER;
         return newCommands;
     }
 
-    private String[] changeRmi(String[] oldCommands) {
+    private String[] insertOmitImage(String[] oldCommands) {
         String[] newCommands = new String[oldCommands.length + 1];
 
         for (int commandIndex = 2; commandIndex < oldCommands.length + 1; commandIndex++) {
@@ -217,17 +216,22 @@ public class CommandService {
         }
 
         newCommands[0] = oldCommands[0];
-        newCommands[1] = "image";
-        newCommands[2] = "rm";
-
+        newCommands[1] = MAIN_COMMAND_IMAGE;
         return newCommands;
     }
 
-    private ArrayList<String> makeArrayList(String element) {
-        ArrayList<String> arrayList = new ArrayList<>();
-        arrayList.add(element);
+    private String[] changeImageAbbreviation(String[] oldCommands, String originCommand) {
+        String[] newCommands = new String[oldCommands.length + 1];
 
-        return arrayList;
+        for (int commandIndex = 2; commandIndex < oldCommands.length + 1; commandIndex++) {
+            newCommands[commandIndex] = oldCommands[commandIndex - 1];
+        }
+
+        newCommands[0] = oldCommands[0];
+        newCommands[1] = MAIN_COMMAND_IMAGE;
+        newCommands[2] = originCommand;
+
+        return newCommands;
     }
 
     private SeparateRequestDto makeSeparateRequestDto(MainCommandEnum mainCommand, SubCommandEnum subCommand, List<String> argCommand) {
