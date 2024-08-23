@@ -9,4 +9,5 @@ import java.util.Optional;
 public interface AccountRepository extends JpaRepository<AccountEntity, String>, CustomAccountRepository {
 
     Optional<AccountEntity> findByOauthServiceIdEqualsAndThirdPartyTypeEquals(String oauthServiceId, ThirdPartyEnum thirdPartyType);
+
 }

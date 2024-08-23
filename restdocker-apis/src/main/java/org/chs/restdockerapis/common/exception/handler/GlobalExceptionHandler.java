@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class GlobalExceptionHandler {
 
     private final String LOG_FORMAT_INFO = "\n[🔵INFO] - ({} {})\n{}\n {}: {}";
-    private final String LOG_FORMAT_ERROR = "\n[🔴ERROR] - ({} {})\n {}";
+    private final String LOG_FORMAT_ERROR = "\n[🔴ERROR] - ({} {})";
 
     @ExceptionHandler(CustomBadRequestException.class)
     public ResponseEntity<GlobalResponse> handlerCommonException(CustomBadRequestException customBadRequestException, HttpServletRequest request) {
@@ -47,6 +47,18 @@ public class GlobalExceptionHandler {
         return inValidException.makeResponseEntity();
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<GlobalResponse> handlerCommonException(IllegalArgumentException illegalArgumentException, HttpServletRequest request) {
+        logInfo(illegalArgumentException, request);
+
+        return ResponseEntity.badRequest().body(
+                        GlobalResponse.builder()
+                                .resultCode("[Illegal Argument Exception] - NOT RESULT_CODE")
+                                .description(illegalArgumentException.getMessage())
+                                .build()
+                );
+    }
+
     @ExceptionHandler(InternalServerException.class)
     public ResponseEntity<GlobalResponse> handlerCommonException(InternalServerException internalServerException, HttpServletRequest request) {
         logError(internalServerException, request);
@@ -70,7 +82,11 @@ public class GlobalExceptionHandler {
         log.info(LOG_FORMAT_INFO, request.getRequestURI(), request.getMethod(), e.getErrorCode(), e.getClass().getName(), message);
     }
 
+    private void logInfo(IllegalArgumentException e, HttpServletRequest request) {
+        log.info(LOG_FORMAT_INFO, request.getRequestURI(), request.getMethod(), "[Illegal Argument Exception] - NOT ERROR_CODE", e.getClass().getName(), e.getMessage());
+    }
+
     private void logError(Exception e, HttpServletRequest request) {
-        log.error(LOG_FORMAT_ERROR, request.getRequestURI(), request.getMethod(), e.getMessage());
+        log.error(LOG_FORMAT_ERROR, request.getRequestURI(), request.getMethod(), e);
     }
 }

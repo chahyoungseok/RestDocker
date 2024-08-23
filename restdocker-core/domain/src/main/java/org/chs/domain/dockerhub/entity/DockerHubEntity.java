@@ -1,21 +1,21 @@
-package org.chs.domain.docker.entity;
+package org.chs.domain.dockerhub.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.chs.domain.account.entity.AccountEntity;
 import org.chs.domain.common.BaseDomainEntity;
 
 @Entity
 @Getter
-@Table(name = "image")
+@Table(name = "docker_hub")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ImageEntity extends BaseDomainEntity {
+public class DockerHubEntity extends BaseDomainEntity {
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "account_fk", nullable = false)
-    private AccountEntity account;
+    @Column(name = "name", nullable = false)
+    private String name;
 
     @Column(name = "tag", nullable = false)
     private String tag;
@@ -23,7 +23,9 @@ public class ImageEntity extends BaseDomainEntity {
     @Column(name = "os", nullable = false)
     private String os;
 
+    @Column(name = "architecture", nullable = false)
+    private String architecture;
+
     @Column(name = "size", nullable = false)
     private String size;
-
 }

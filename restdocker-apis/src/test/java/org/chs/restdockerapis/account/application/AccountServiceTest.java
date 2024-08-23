@@ -722,7 +722,7 @@ public class AccountServiceTest {
             // when
             GenericSingleResponse<Boolean> actual = accountService.naverOAuthLogout(testRequesterInfo);
 
-            // then
+            // the
             Assertions.assertEquals(testSuccessResponse.getData(), actual.getData());
         }
     }

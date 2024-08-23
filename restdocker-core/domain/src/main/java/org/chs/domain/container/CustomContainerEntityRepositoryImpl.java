@@ -9,4 +9,9 @@ import org.springframework.stereotype.Repository;
 public class CustomContainerEntityRepositoryImpl implements CustomContainerEntityRepository{
 
     private final JPAQueryFactory jpaQueryFactory;
+
+    @Override
+    public long deleteByImage(String imagePk) {
+        return 0;
+    }
 }
