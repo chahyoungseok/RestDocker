@@ -48,6 +48,7 @@ public class CustomImageEntityRepositoryImpl implements CustomImageEntityReposit
 
     @Override
     public ImageDetailElements inspectImage(String oauthServiceId, String imageName) {
+        nullCheckImageName(imageName);
         String[] imageNameAndTag = validColonImageName(imageName);
 
         return queryFactory.select(
@@ -74,11 +75,12 @@ public class CustomImageEntityRepositoryImpl implements CustomImageEntityReposit
 
     @Override
     public boolean rmImage(String oauthServiceId, String imageName) {
+        nullCheckImageName(imageName);
         String[] imageNameAndTag = validColonImageName(imageName);
 
         ImageEntity selectedImage = queryFactory.selectFrom(imageEntity)
                 .innerJoin(imageEntity.account, accountEntity)
-                .on(imageEntity.account.pk.eq(accountEntity.pk))
+                    .on(imageEntity.account.pk.eq(accountEntity.pk))
                 .where(
                         eqOauthServiceId(oauthServiceId),
                         eqImageName(imageNameAndTag[0]),
@@ -145,6 +147,12 @@ public class CustomImageEntityRepositoryImpl implements CustomImageEntityReposit
         }
 
         return imageEntity.tag.contains(imageTag);
+    }
+
+    private void nullCheckImageName(String imageName) {
+        if (null == imageName) {
+            throw new IllegalArgumentException("ImageName은 Null 이면 안됩니다.");
+        }
     }
 
     private String[] separateColonImageName(String imageName) {

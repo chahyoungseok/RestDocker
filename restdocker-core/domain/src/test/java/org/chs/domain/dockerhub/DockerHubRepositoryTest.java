@@ -33,7 +33,7 @@ public class DockerHubRepositoryTest extends RepositoryTest {
 
             pulledImage.setDateTimeForTest(LocalDateTime.now(), LocalDateTime.now());
 
-            dockerHubEntityRepository.saveAndFlush(pulledImage);
+            dockerHubEntityRepository.save(pulledImage);
         }
 
         @Tag("domain")
@@ -106,7 +106,6 @@ public class DockerHubRepositoryTest extends RepositoryTest {
                 || false == compare1.getSize().equals(compare2.getSize())) {
             return false;
         }
-
         return true;
     }
 }
