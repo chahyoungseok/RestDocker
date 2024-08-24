@@ -19,6 +19,7 @@ import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDateTime;
@@ -188,11 +189,11 @@ public class ImageServiceTest {
         void 토큰으로_온_사용자_정보가_유효하지_않을때_실패한다() {
             // given - mocking
             BDDMockito.given(dockerImageRepository.findAllByOauthServiceId(any(), any()))
-                    .willThrow(new IllegalArgumentException("OAuthServiceId를 가진 계정이 존재하지 않습니다."));
+                    .willThrow(new InvalidDataAccessApiUsageException("OAuthServiceId를 가진 계정이 존재하지 않습니다."));
 
             // when && then
             Assertions.assertThrows(
-                    IllegalArgumentException.class,
+                    InvalidDataAccessApiUsageException.class,
                     () -> imageService.lsImage(testInValidRequestInfo, testRequest)
             );
         }
@@ -303,11 +304,11 @@ public class ImageServiceTest {
                     .willReturn(pulledImage);
 
             BDDMockito.given(accountRepository.findByOauthServiceIdEqualsAndThirdPartyTypeEquals(any(), any()))
-                    .willThrow(new IllegalArgumentException("토큰으로 온 사용자의 정보가 없습니다."));
+                    .willThrow(new InvalidDataAccessApiUsageException("토큰으로 온 사용자의 정보가 없습니다."));
 
             // when && then
             Assertions.assertThrows(
-                    IllegalArgumentException.class,
+                    InvalidDataAccessApiUsageException.class,
                     () -> imageService.pullImage(testInValidRequestInfo, testRequest)
             );
         }
@@ -418,11 +419,11 @@ public class ImageServiceTest {
                     .willReturn(false);
 
             BDDMockito.given(dockerImageRepository.inspectImage(any(), any()))
-                    .willThrow(new IllegalArgumentException("OAuthServiceId를 가진 계정이 존재하지 않습니다."));
+                    .willThrow(new InvalidDataAccessApiUsageException("OAuthServiceId를 가진 계정이 존재하지 않습니다."));
 
             // when && then
             Assertions.assertThrows(
-                    IllegalArgumentException.class,
+                    InvalidDataAccessApiUsageException.class,
                     () -> imageService.inspectImage(testInValidRequestInfo, testRequest)
             );
         }
@@ -533,11 +534,11 @@ public class ImageServiceTest {
                     .willReturn(false);
 
             BDDMockito.given(dockerImageRepository.rmImage(any(), any()))
-                    .willThrow(new IllegalArgumentException("OAuthServiceId를 가진 계정이 존재하지 않습니다."));
+                    .willThrow(new InvalidDataAccessApiUsageException("OAuthServiceId를 가진 계정이 존재하지 않습니다."));
 
             // when && then
             Assertions.assertThrows(
-                    IllegalArgumentException.class,
+                    InvalidDataAccessApiUsageException.class,
                     () -> imageService.rmImage(testInValidRequestInfo, testRequest)
             );
         }
