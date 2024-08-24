@@ -4,6 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.chs.domain.common.BaseDomainEntity;
@@ -28,4 +29,13 @@ public class DockerHubEntity extends BaseDomainEntity {
 
     @Column(name = "size", nullable = false)
     private String size;
+
+    @Builder
+    public DockerHubEntity(String name, String tag, String os, String architecture, String size) {
+        this.name = name;
+        this.tag = tag;
+        this.os = os;
+        this.architecture = architecture;
+        this.size = size;
+    }
 }
