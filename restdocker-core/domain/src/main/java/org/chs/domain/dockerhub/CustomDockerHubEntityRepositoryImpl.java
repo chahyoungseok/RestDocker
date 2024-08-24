@@ -19,8 +19,9 @@ public class CustomDockerHubEntityRepositoryImpl implements CustomDockerHubEntit
         String[] imageNameAndTag = validColonImageName(imageName);
 
         return queryFactory.selectFrom(dockerHubEntity)
-                .where(eqImageName(imageNameAndTag[0])
-                        .and(eqImageTag(imageNameAndTag[1]))
+                .where(
+                        eqImageName(imageNameAndTag[0]),
+                        eqImageTag(imageNameAndTag[1])
                 )
                 .fetchOne();
     }

@@ -6,6 +6,7 @@ import org.chs.globalutils.dto.GlobalResponse;
 import org.chs.restdockerapis.common.exception.*;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -47,14 +48,14 @@ public class GlobalExceptionHandler {
         return inValidException.makeResponseEntity();
     }
 
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<GlobalResponse> handlerCommonException(IllegalArgumentException illegalArgumentException, HttpServletRequest request) {
-        logInfo(illegalArgumentException, request);
+    @ExceptionHandler(InvalidDataAccessApiUsageException.class)
+    public ResponseEntity<GlobalResponse> handlerCommonException(InvalidDataAccessApiUsageException invalidDataAccessApiUsageException, HttpServletRequest request) {
+        logInfo(invalidDataAccessApiUsageException, request);
 
         return ResponseEntity.badRequest().body(
                         GlobalResponse.builder()
                                 .resultCode("[Illegal Argument Exception] - NOT RESULT_CODE")
-                                .description(illegalArgumentException.getMessage())
+                                .description(invalidDataAccessApiUsageException.getCause().getMessage())
                                 .build()
                 );
     }
@@ -82,7 +83,7 @@ public class GlobalExceptionHandler {
         log.info(LOG_FORMAT_INFO, request.getRequestURI(), request.getMethod(), e.getErrorCode(), e.getClass().getName(), message);
     }
 
-    private void logInfo(IllegalArgumentException e, HttpServletRequest request) {
+    private void logInfo(InvalidDataAccessApiUsageException e, HttpServletRequest request) {
         log.info(LOG_FORMAT_INFO, request.getRequestURI(), request.getMethod(), "[Illegal Argument Exception] - NOT ERROR_CODE", e.getClass().getName(), e.getMessage());
     }
 

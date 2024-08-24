@@ -25,6 +25,8 @@ public class CustomImageEntityRepositoryImpl implements CustomImageEntityReposit
 
     @Override
     public List<ImageElements> findAllByOauthServiceId(String oauthServiceId, String imageName) {
+        String[] imageNameAndTag = separateColonImageName(imageName);
+
         return queryFactory.select(
                         Projections.fields(ImageElements.class,
                                 imageEntity.createDate.as("createDate"),
@@ -36,14 +38,17 @@ public class CustomImageEntityRepositoryImpl implements CustomImageEntityReposit
                 .from(imageEntity)
                 .innerJoin(imageEntity.account, accountEntity)
                     .on(imageEntity.account.pk.eq(accountEntity.pk))
-                .where(eqOauthServiceId(oauthServiceId)
-                        .and(containImageName(imageName))
+                .where(
+                        eqOauthServiceId(oauthServiceId),
+                        containImageName(imageNameAndTag[0]),
+                        containImageTag(imageNameAndTag[1])
                 )
                 .fetch();
     }
 
     @Override
     public ImageDetailElements inspectImage(String oauthServiceId, String imageName) {
+        nullCheckImageName(imageName);
         String[] imageNameAndTag = validColonImageName(imageName);
 
         return queryFactory.select(
@@ -59,9 +64,10 @@ public class CustomImageEntityRepositoryImpl implements CustomImageEntityReposit
                 .from(imageEntity)
                 .innerJoin(imageEntity.account, accountEntity)
                     .on(imageEntity.account.pk.eq(accountEntity.pk))
-                .where(eqOauthServiceId(oauthServiceId)
-                        .and(eqImageName(imageNameAndTag[0]))
-                        .and(eqImageTag(imageNameAndTag[1]))
+                .where(
+                        eqOauthServiceId(oauthServiceId),
+                        eqImageName(imageNameAndTag[0]),
+                        eqImageTag(imageNameAndTag[1])
                 )
                 .fetchOne();
     }
@@ -69,14 +75,16 @@ public class CustomImageEntityRepositoryImpl implements CustomImageEntityReposit
 
     @Override
     public boolean rmImage(String oauthServiceId, String imageName) {
+        nullCheckImageName(imageName);
         String[] imageNameAndTag = validColonImageName(imageName);
 
         ImageEntity selectedImage = queryFactory.selectFrom(imageEntity)
                 .innerJoin(imageEntity.account, accountEntity)
-                .on(imageEntity.account.pk.eq(accountEntity.pk))
-                .where(eqOauthServiceId(oauthServiceId)
-                        .and(eqImageName(imageNameAndTag[0]))
-                        .and(eqImageTag(imageNameAndTag[1]))
+                    .on(imageEntity.account.pk.eq(accountEntity.pk))
+                .where(
+                        eqOauthServiceId(oauthServiceId),
+                        eqImageName(imageNameAndTag[0]),
+                        eqImageTag(imageNameAndTag[1])
                 )
                 .fetchOne();
 
@@ -131,6 +139,37 @@ public class CustomImageEntityRepositoryImpl implements CustomImageEntityReposit
         }
 
         return imageEntity.name.contains(imageName);
+    }
+
+    private BooleanExpression containImageTag(String imageTag) {
+        if (null == imageTag) {
+            return null;
+        }
+
+        return imageEntity.tag.contains(imageTag);
+    }
+
+    private void nullCheckImageName(String imageName) {
+        if (null == imageName) {
+            throw new IllegalArgumentException("ImageName은 Null 이면 안됩니다.");
+        }
+    }
+
+    private String[] separateColonImageName(String imageName) {
+        if (null == imageName) {
+            return new String[] { null, null };
+        }
+        if (false == imageName.contains(":")) {
+            return new String[] {imageName, null};
+        }
+
+        String[] imageNameAndTag = imageName.split(":");
+
+        if (2 != imageNameAndTag.length) {
+            throw new IllegalArgumentException("Image 이름에 콜론(:) 이 포함 되어 있습니다.");
+        }
+
+        return imageNameAndTag;
     }
 
     private String[] validColonImageName(String imageName) {
