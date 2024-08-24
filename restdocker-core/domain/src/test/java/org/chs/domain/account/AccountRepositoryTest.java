@@ -1,6 +1,5 @@
-package org.chs.domain.account.repository;
+package org.chs.domain.account;
 
-import org.chs.domain.account.AccountRepository;
 import org.chs.domain.account.entity.AccountEntity;
 import org.chs.domain.common.structure.RepositoryTest;
 import org.chs.domain.common.enumerate.ThirdPartyEnum;
@@ -17,23 +16,23 @@ class AccountRepositoryTest extends RepositoryTest {
     @Autowired
     private AccountRepository accountRepository;
 
-    AccountEntity account1;
+    AccountEntity account;
 
     @Nested
     @DisplayName("[Account][성공/실패 테스트] Account 를 조회한다.")
-    class readAccount {
+    class ReadAccount {
 
         @BeforeEach
-        void beforeAll() {
-            account1 = AccountEntity.builder()
+        void beforeEach() {
+            account = AccountEntity.builder()
                     .nickname("테스트용 계정1")
                     .oauthServiceId("test_account_1")
                     .thirdPartyType(ThirdPartyEnum.KAKAO)
                     .isActive(true)
                     .build();
 
-            account1.setDateTimeForTest(LocalDateTime.now(), LocalDateTime.now());
-            accountRepository.save(account1);
+            account.setDateTimeForTest(LocalDateTime.now(), LocalDateTime.now());
+            accountRepository.save(account);
         }
 
         @Tag("domain")
@@ -49,7 +48,7 @@ class AccountRepositoryTest extends RepositoryTest {
                     .findByOauthServiceIdEqualsAndThirdPartyTypeEquals(testOAuthServiceId, testThirdPartyType);
 
             // then
-            assertThat(testSelectResult.get().getOauthServiceId()).isEqualTo(account1.getOauthServiceId());
+            assertThat(testSelectResult.get().getOauthServiceId()).isEqualTo(account.getOauthServiceId());
         }
 
         @Tag("domain")
