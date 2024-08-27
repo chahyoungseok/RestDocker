@@ -6,6 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.chs.domain.account.AccountRepository;
 import org.chs.domain.account.entity.AccountEntity;
 import org.chs.domain.common.enumerate.ThirdPartyEnum;
+import org.chs.domain.network.NetworkEntityRepository;
+import org.chs.domain.network.entity.NetworkEntity;
 import org.chs.globalutils.dto.TokenDto;
 import org.chs.restdockerapis.account.presentation.dto.ReIssueTokenRequest;
 import org.chs.restdockerapis.account.presentation.dto.ReIssueTokenResponse;
@@ -16,6 +18,7 @@ import org.chs.restdockerapis.account.util.kakao.KakaoOAuthUtils;
 import org.chs.restdockerapis.account.util.naver.NaverOAuthUtils;
 import org.chs.restdockerapis.common.argument_resolver.dto.GetRequesterDto;
 import org.chs.restdockerapis.common.exception.*;
+import org.chs.restdockerapis.network.application.properties.DockerZeroProperties;
 import org.chs.tokenissuer.application.TokenIssuerService;
 import org.chs.tokenissuer.common.properties.JwtProperties;
 import org.springframework.stereotype.Service;
@@ -40,6 +43,7 @@ public class AccountService {
     private final AccountHistoryService accountHistoryService;
 
     private final AccountRepository accountRepository;
+    private final NetworkEntityRepository dockerNetworkRepository;
 
     private final String LOG_FORMAT_INFO_HISTORY = "\n[🔵INFO] - {}\n {}: {}";
 
@@ -69,8 +73,10 @@ public class AccountService {
         );
         account.setMyServiceToken(oAuthLoginResponse.accessToken(), oAuthLoginResponse.refreshToken());
 
-        this.accountRepository.save(account);
+        this.accountRepository.saveAndFlush(account);
         this.saveLoginHistoryWithExceptionHandling(account.getOauthServiceId(), ipAddress, false, null);
+
+        this.createDockerZero(account);
 
         return oAuthLoginResponse;
     }
@@ -166,8 +172,10 @@ public class AccountService {
         );
         account.setMyServiceToken(oAuthLoginResponse.accessToken(), oAuthLoginResponse.refreshToken());
 
-        this.accountRepository.save(account);
+        this.accountRepository.saveAndFlush(account);
         this.saveLoginHistoryWithExceptionHandling(account.getOauthServiceId(), ipAddress, false,null);
+
+        this.createDockerZero(account);
 
         return oAuthLoginResponse;
     }
@@ -325,6 +333,19 @@ public class AccountService {
         }
 
         return verifiedAccount;
+    }
+
+    private void createDockerZero(AccountEntity account) {
+        dockerNetworkRepository.save(
+                NetworkEntity.builder()
+                        .account(account)
+                        .name(DockerZeroProperties.NAME)
+                        .subnet(DockerZeroProperties.SUBNET)
+                        .gateway(DockerZeroProperties.GATEWAY)
+                        .mtu(DockerZeroProperties.MTU)
+                        .enableIcc(DockerZeroProperties.ICC)
+                        .build()
+        );
     }
 
     private void logInfoHistory(HistoryException exception) {

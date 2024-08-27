@@ -1,5 +1,9 @@
 package org.chs.domain.container;
 
+import java.util.List;
+
 public interface CustomContainerEntityRepository {
-    long deleteByImage(String imagePk);
+    long deleteByContainerPkList(List<String> containerPkList);
+
+    long deleteByImagePk(String pk);
 }

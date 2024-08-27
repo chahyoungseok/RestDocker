@@ -9,7 +9,15 @@ import org.chs.domain.image.entity.ImageEntity;
 
 @Entity
 @Getter
-@Table(name = "container")
+@Table(name = "container",
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "unique__network___account_fk_name",
+                        columnNames = {
+                                "account_fk", "name"
+                        }
+                )
+})
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ContainerEntity extends BaseDomainEntity {
 

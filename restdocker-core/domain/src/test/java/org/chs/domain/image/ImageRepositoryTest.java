@@ -316,7 +316,7 @@ public class ImageRepositoryTest extends RepositoryTest {
         @Tag("domain")
         @Test
         @DisplayName("[Image][실패 테스트] Rm Image - OAuthServiceId이 Null인 경우 삭제에 실패한다.")
-        void OauthServiceId이_Null인_경우_조회에_실패한다() {
+        void OauthServiceId이_Null인_경우_삭제에_실패한다() {
             // given
             String oauthServiceId = null;
             String imageName = "tomcat:latest";

@@ -12,6 +12,10 @@ public enum ErrorCode {
     API_NEED_COMMAND(HttpStatus.BAD_REQUEST, "10104", "Command 가 필요한 API 입니다."),
     ARGUMENT_COMMAND_NOT_VALID_EXCEPTION(HttpStatus.BAD_REQUEST, "10105", "ArgCommand 가 지원하지 않는 형태입니다."),
     NOT_EXIST_IMAGE_IN_DOCKERHUB(HttpStatus.BAD_REQUEST, "10106", "이미지 이름과 태그 조합이 DockerHub에 있지 않습니다."),
+    ARGS_NEED_SUBNET(HttpStatus.BAD_REQUEST, "10107", "GateWay나 IPRange를 명시적으로 설정하려면 Subnet을 명시적으로 설정해야합니다."),
+    NOT_VALID_ADDRESS_FORMAT(HttpStatus.BAD_REQUEST, "10108","유효한 IP 주소형식이 아닙니다."),
+    MUST_IPRANGE_INTO_SUBNET(HttpStatus.BAD_REQUEST, "10109", "IPRange 는 Subnet 안에 포함되어야합니다"),
+    MUST_GATEWAY_INTO_SUBNET(HttpStatus.BAD_REQUEST, "10110", "Gateway 는 Subnet 안에 포함되어야합니다"),
 
     JWT_EXPIRED_EXCEPTION(HttpStatus.BAD_REQUEST, "11001", "JWT 만료되었습니다."),
     JWT_VALID_EXCEPTION(HttpStatus.BAD_REQUEST, "11002", "JWT 정보의 유효성검사가 실패하였습니다."),
