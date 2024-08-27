@@ -12,11 +12,11 @@ include::{snippets}/ls-image-success/사용자가_-pull_받은_-image_정보를_
 
 ==== HTTP Request
 
-include::{snippets}/ls-image-success/사용자가_-pull_받은_-image_정보를_반환한다_인자가_있는경우//http-request.adoc[]
+include::{snippets}/ls-image-success/사용자가_-pull_받은_-image_정보를_반환한다_인자가_있는경우/http-request.adoc[]
 
 ==== HTTP Response
 
-include::{snippets}/ls-image-success/사용자가_-pull_받은_-image_정보를_반환한다_인자가_있는경우//http-response.adoc[]
+include::{snippets}/ls-image-success/사용자가_-pull_받은_-image_정보를_반환한다_인자가_있는경우/http-response.adoc[]
 
 
 === LS Image [성공 테스트 - 인자가 없는경우]
@@ -31,11 +31,11 @@ include::{snippets}/ls-image-success/사용자가_-pull_받은_-image_정보를_
 
 ==== HTTP Request
 
-include::{snippets}/ls-image-success/사용자가_-pull_받은_-image_정보를_반환한다_인자가_없는경우//http-request.adoc[]
+include::{snippets}/ls-image-success/사용자가_-pull_받은_-image_정보를_반환한다_인자가_없는경우/http-request.adoc[]
 
 ==== HTTP Response
 
-include::{snippets}/ls-image-success/사용자가_-pull_받은_-image_정보를_반환한다_인자가_없는경우//http-response.adoc[]
+include::{snippets}/ls-image-success/사용자가_-pull_받은_-image_정보를_반환한다_인자가_없는경우/http-response.adoc[]
 
 
 === LS Image [성공 테스트 - 인에 맞는 데이터가 없는경우]
@@ -50,11 +50,11 @@ include::{snippets}/ls-image-success/사용자가_가지고있는_-image_정보�
 
 ==== HTTP Request
 
-include::{snippets}/ls-image-success/사용자가_가지고있는_-image_정보를_반환한다_인자에_맞는_데이터가_없는경우//http-request.adoc[]
+include::{snippets}/ls-image-success/사용자가_가지고있는_-image_정보를_반환한다_인자에_맞는_데이터가_없는경우/http-request.adoc[]
 
 ==== HTTP Response
 
-include::{snippets}/ls-image-success/사용자가_가지고있는_-image_정보를_반환한다_인자에_맞는_데이터가_없는경우//http-response.adoc[]
+include::{snippets}/ls-image-success/사용자가_가지고있는_-image_정보를_반환한다_인자에_맞는_데이터가_없는경우/http-response.adoc[]
 
 
 

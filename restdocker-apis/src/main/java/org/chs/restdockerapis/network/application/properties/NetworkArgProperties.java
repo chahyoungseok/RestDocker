@@ -6,5 +6,4 @@ public interface NetworkArgProperties {
     String SUBNET = "--subnet";
     String IPRANGE = "--ip-range";
     String OPTION = "--opt";
-    String NAME = "name";
 }
