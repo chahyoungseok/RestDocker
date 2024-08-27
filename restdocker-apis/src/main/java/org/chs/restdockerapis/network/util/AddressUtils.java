@@ -135,6 +135,30 @@ public class AddressUtils {
         return intToIp(gatewayInt);
     }
 
+    public boolean duplicateSubnetCheck(List<String> existSubnetList, String newSubnet) {
+        String[] newSubnetWithCidr = newSubnet.split("/");
+        if (2 != newSubnetWithCidr.length) {
+            throw new CustomBadRequestException(ErrorCode.NOT_VALID_ADDRESS_FORMAT);
+        }
+
+        SubnetRangeDto newSubnetRange = getSubnetRange(newSubnet.split("/"));
+
+        for (String existSubnet : existSubnetList) {
+            SubnetRangeDto existSubnetRange = getSubnetRange(existSubnet.split("/"));
+
+            if (duplicateSubnetCheck(existSubnetRange, newSubnetRange)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private boolean duplicateSubnetCheck(SubnetRangeDto range1, SubnetRangeDto range2) {
+        return range1.endAddress() >= range2.startAddress()
+                && range1.startAddress() <= range2.endAddress();
+    }
+
     /**
      * Description
      *

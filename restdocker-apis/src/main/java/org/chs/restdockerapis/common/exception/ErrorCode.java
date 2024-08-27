@@ -16,6 +16,7 @@ public enum ErrorCode {
     NOT_VALID_ADDRESS_FORMAT(HttpStatus.BAD_REQUEST, "10108","유효한 IP 주소형식이 아닙니다."),
     MUST_IPRANGE_INTO_SUBNET(HttpStatus.BAD_REQUEST, "10109", "IPRange 는 Subnet 안에 포함되어야합니다"),
     MUST_GATEWAY_INTO_SUBNET(HttpStatus.BAD_REQUEST, "10110", "Gateway 는 Subnet 안에 포함되어야합니다"),
+    DUPLICATE_SUBNET(HttpStatus.BAD_REQUEST, "10111", "Subnet이 존재하는 Network와 겹칩니다."),
 
     JWT_EXPIRED_EXCEPTION(HttpStatus.BAD_REQUEST, "11001", "JWT 만료되었습니다."),
     JWT_VALID_EXCEPTION(HttpStatus.BAD_REQUEST, "11002", "JWT 정보의 유효성검사가 실패하였습니다."),

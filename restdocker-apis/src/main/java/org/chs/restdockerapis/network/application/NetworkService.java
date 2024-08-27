@@ -144,8 +144,10 @@ public class NetworkService {
     }
 
     private NetworkOptionDto validSubnet(NetworkOptionDto networkOption, String oauthServiceId) {
+        List<String> existSubnetList = getSubnetList(oauthServiceId);
+
         if (null == networkOption.getSubnet()) {
-            String subnet = automaticAllocationSubnet(oauthServiceId);
+            String subnet = addressUtils.automaticAllocationSubnet(existSubnetList);
             String gateway = addressUtils.automaticAllocationGateway(subnet);
 
             networkOption.setAutomaticAddress(subnet, gateway);
@@ -153,7 +155,20 @@ public class NetworkService {
         if (false == addressUtils.validAddressRangeFormat(networkOption.getSubnet())) {
             throw new CustomBadRequestException(ErrorCode.NOT_VALID_ADDRESS_FORMAT);
         }
+
+        if (true == addressUtils.duplicateSubnetCheck(existSubnetList, networkOption.getSubnet())) {
+            throw new CustomBadRequestException(ErrorCode.DUPLICATE_SUBNET);
+        }
+
         return networkOption;
+    }
+
+    private List<String> getSubnetList(String oauthServiceId) {
+        List<NetworkElements> networkList = dockerNetworkRepository.findByOAuthServiceId(oauthServiceId);
+
+        return networkList.stream()
+                .map(NetworkElements::getSubnet)
+                .toList();
     }
 
     private NetworkOptionDto validGateway(NetworkOptionDto networkOption) {
@@ -176,17 +191,6 @@ public class NetworkService {
             }
         }
         return networkOption;
-    }
-
-
-    private String automaticAllocationSubnet(String oauthServiceId) {
-        List<NetworkElements> networkList = dockerNetworkRepository.findByOAuthServiceId(oauthServiceId);
-
-        return addressUtils.automaticAllocationSubnet(
-                networkList.stream()
-                        .map(NetworkElements::getSubnet)
-                        .toList()
-        );
     }
 
 
