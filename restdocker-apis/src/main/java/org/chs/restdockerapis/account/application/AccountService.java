@@ -73,7 +73,7 @@ public class AccountService {
         );
         account.setMyServiceToken(oAuthLoginResponse.accessToken(), oAuthLoginResponse.refreshToken());
 
-        this.accountRepository.saveAndFlush(account);
+        this.accountRepository.save(account);
         this.saveLoginHistoryWithExceptionHandling(account.getOauthServiceId(), ipAddress, false, null);
 
         this.createDockerZero(account);
@@ -172,7 +172,7 @@ public class AccountService {
         );
         account.setMyServiceToken(oAuthLoginResponse.accessToken(), oAuthLoginResponse.refreshToken());
 
-        this.accountRepository.saveAndFlush(account);
+        this.accountRepository.save(account);
         this.saveLoginHistoryWithExceptionHandling(account.getOauthServiceId(), ipAddress, false,null);
 
         this.createDockerZero(account);
