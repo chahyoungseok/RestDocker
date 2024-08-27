@@ -6,6 +6,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.chs.domain.network.dto.NetworkDetailElements;
 import org.chs.domain.network.dto.NetworkElements;
+import org.chs.domain.network.entity.NetworkEntity;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -70,11 +71,20 @@ public class CustomNetworkEntityRepositoryImpl implements CustomNetworkEntityRep
     public boolean rmNetwork(String oauthServiceId, String networkName) {
         nullCheckNetworkName(networkName);
 
+        NetworkEntity network = queryFactory.selectFrom(networkEntity)
+                .innerJoin(networkEntity.account, accountEntity)
+                    .on(networkEntity.account.pk.eq(accountEntity.pk))
+                .where(
+                        eqOauthServiceId(oauthServiceId),
+                        eqNetworkName(networkName)
+                )
+                .fetchOne();
+
         long networkContainerMappingDeleteResult =
-                networkContainerMappingEntityRepository.deleteByNetworkName(networkName);
+                networkContainerMappingEntityRepository.deleteByNetworkPk(network.getPk());
 
         long networkDeleteResult = queryFactory.delete(networkEntity)
-                .where(eqNetworkName(networkName))
+                .where(eqNetworkPk(network.getPk()))
                 .execute();
 
         if (0 != networkContainerMappingDeleteResult && 0 != networkDeleteResult) {
@@ -97,6 +107,14 @@ public class CustomNetworkEntityRepositoryImpl implements CustomNetworkEntityRep
         }
 
         return networkEntity.name.eq(networkName);
+    }
+
+    private BooleanExpression eqNetworkPk(String networkPk) {
+        if (null == networkPk) {
+            return null;
+        }
+
+        return networkEntity.pk.eq(networkPk);
     }
 
     private void nullCheckNetworkName(String networkName) {
