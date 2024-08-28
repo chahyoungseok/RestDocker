@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.chs.restdockerapis.common.aop.annotation.Auth;
 import org.chs.restdockerapis.common.argument_resolver.annotation.GetRequester;
 import org.chs.restdockerapis.common.argument_resolver.dto.GetRequesterDto;
+import org.chs.restdockerapis.image.presentation.dto.DockerCommandRequestDto;
 import org.chs.restdockerapis.image.application.ImageService;
 import org.chs.restdockerapis.image.presentation.dto.*;
 import org.springframework.http.ResponseEntity;

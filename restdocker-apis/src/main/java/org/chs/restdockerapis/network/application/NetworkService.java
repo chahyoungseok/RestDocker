@@ -41,7 +41,7 @@ public class NetworkService {
      */
     @Transactional(readOnly = true)
     public LsNetworkResponseDto lsNetwork(GetRequesterDto requesterInfo, DockerCommandRequestDto request) {
-        if (false == listUtils.isBlank(request.getArgCommands())) {
+        if (false == listUtils.isBlank(request.argCommands())) {
             throw new CustomBadRequestException(ErrorCode.ARGUMENT_COMMAND_NOT_VALID_EXCEPTION);
         }
 
@@ -62,7 +62,7 @@ public class NetworkService {
      */
     @Transactional(readOnly = true)
     public InspectNetworkResponseDto inspectNetwork(GetRequesterDto requesterInfo, DockerCommandRequestDto request) {
-        String networkName = getNetworkNameForOneArgCommand(request.getArgCommands());
+        String networkName = getNetworkNameForOneArgCommand(request.argCommands());
 
         NetworkDetailElements inspectedNetworkDetailElements = dockerNetworkRepository.inspectNetwork(requesterInfo.id(), networkName);
 
@@ -94,11 +94,11 @@ public class NetworkService {
      * @return 생성된 DockerNetwork 정보
      */
     public CreateNetworkResponseDto createNetwork(GetRequesterDto requesterInfo, DockerCommandRequestDto request) {
-        if (listUtils.isBlank(request.getArgCommands())) {
+        if (listUtils.isBlank(request.argCommands())) {
             throw new CustomBadRequestException(ErrorCode.ARGUMENT_COMMAND_NOT_VALID_EXCEPTION);
         }
 
-        NetworkOptionDto castednetworkOptionDto = castCommandToMap(request.getArgCommands());
+        NetworkOptionDto castednetworkOptionDto = castCommandToMap(request.argCommands());
         NetworkOptionDto validedOptionDto = validNetworkOption(castednetworkOptionDto, requesterInfo.id());
 
         NetworkEntity savedNetwork = saveNetworkForOptionDto(validedOptionDto, requesterInfo.id(), requesterInfo.thirdPartyType());
@@ -225,7 +225,7 @@ public class NetworkService {
      * @return 특정 DockerNetwork 삭제의 성공유무
      */
     public RmNetworkResponseDto rmNetwork(GetRequesterDto requesterInfo, DockerCommandRequestDto request) {
-        String networkName = getNetworkNameForOneArgCommand(request.getArgCommands());
+        String networkName = getNetworkNameForOneArgCommand(request.argCommands());
 
         boolean deleteNetworkResult = dockerNetworkRepository.rmNetwork(requesterInfo.id(), networkName);
 
