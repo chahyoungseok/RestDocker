@@ -47,8 +47,8 @@ public class CommandServiceTest {
             CommandAnalysisResponseDto actual = commandService.filteringCommand(testRequest);
 
             // then
-            Assertions.assertEquals(expected.getUrl(), actual.getUrl());
-            Assertions.assertEquals(expected.getArgCommands(), actual.getArgCommands());
+            Assertions.assertEquals(expected.url(), actual.url());
+            Assertions.assertEquals(expected.argCommands(), actual.argCommands());
         }
 
         @Tag("business")
@@ -71,8 +71,8 @@ public class CommandServiceTest {
             CommandAnalysisResponseDto actual = commandService.filteringCommand(testRequest);
 
             // then
-            Assertions.assertEquals(expected.getUrl(), actual.getUrl());
-            Assertions.assertEquals(expected.getArgCommands(), actual.getArgCommands());
+            Assertions.assertEquals(expected.url(), actual.url());
+            Assertions.assertEquals(expected.argCommands(), actual.argCommands());
         }
 
         @Tag("business")
@@ -95,8 +95,8 @@ public class CommandServiceTest {
             CommandAnalysisResponseDto actual = commandService.filteringCommand(testRequest);
 
             // then
-            Assertions.assertEquals(expected.getUrl(), actual.getUrl());
-            Assertions.assertEquals(expected.getArgCommands(), actual.getArgCommands());
+            Assertions.assertEquals(expected.url(), actual.url());
+            Assertions.assertEquals(expected.argCommands(), actual.argCommands());
         }
 
         @Tag("business")
@@ -119,8 +119,8 @@ public class CommandServiceTest {
             CommandAnalysisResponseDto actual = commandService.filteringCommand(testRequest);
 
             // then
-            Assertions.assertEquals(expected.getUrl(), actual.getUrl());
-            Assertions.assertEquals(expected.getArgCommands(), actual.getArgCommands());
+            Assertions.assertEquals(expected.url(), actual.url());
+            Assertions.assertEquals(expected.argCommands(), actual.argCommands());
         }
 
         @Tag("business")
@@ -143,8 +143,8 @@ public class CommandServiceTest {
             CommandAnalysisResponseDto actual = commandService.filteringCommand(testRequest);
 
             // then
-            Assertions.assertEquals(expected.getUrl(), actual.getUrl());
-            Assertions.assertEquals(expected.getArgCommands(), actual.getArgCommands());
+            Assertions.assertEquals(expected.url(), actual.url());
+            Assertions.assertEquals(expected.argCommands(), actual.argCommands());
         }
 
         @Tag("business")
@@ -167,8 +167,8 @@ public class CommandServiceTest {
             CommandAnalysisResponseDto actual = commandService.filteringCommand(testRequest);
 
             // then
-            Assertions.assertEquals(expected.getUrl(), actual.getUrl());
-            Assertions.assertEquals(expected.getArgCommands(), actual.getArgCommands());
+            Assertions.assertEquals(expected.url(), actual.url());
+            Assertions.assertEquals(expected.argCommands(), actual.argCommands());
         }
 
         @Tag("business")
@@ -191,8 +191,8 @@ public class CommandServiceTest {
             CommandAnalysisResponseDto actual = commandService.filteringCommand(testRequest);
 
             // then
-            Assertions.assertEquals(expected.getUrl(), actual.getUrl());
-            Assertions.assertEquals(expected.getArgCommands(), actual.getArgCommands());
+            Assertions.assertEquals(expected.url(), actual.url());
+            Assertions.assertEquals(expected.argCommands(), actual.argCommands());
         }
 
         @Tag("business")
@@ -215,8 +215,8 @@ public class CommandServiceTest {
             CommandAnalysisResponseDto actual = commandService.filteringCommand(testRequest);
 
             // then
-            Assertions.assertEquals(expected.getUrl(), actual.getUrl());
-            Assertions.assertEquals(expected.getArgCommands(), actual.getArgCommands());
+            Assertions.assertEquals(expected.url(), actual.url());
+            Assertions.assertEquals(expected.argCommands(), actual.argCommands());
         }
 
         @Tag("business")
@@ -239,8 +239,8 @@ public class CommandServiceTest {
             CommandAnalysisResponseDto actual = commandService.filteringCommand(testRequest);
 
             // then
-            Assertions.assertEquals(expected.getUrl(), actual.getUrl());
-            Assertions.assertEquals(expected.getArgCommands(), actual.getArgCommands());
+            Assertions.assertEquals(expected.url(), actual.url());
+            Assertions.assertEquals(expected.argCommands(), actual.argCommands());
         }
 
         @Tag("business")
@@ -263,8 +263,8 @@ public class CommandServiceTest {
             CommandAnalysisResponseDto actual = commandService.filteringCommand(testRequest);
 
             // then
-            Assertions.assertEquals(expected.getUrl(), actual.getUrl());
-            Assertions.assertEquals(expected.getArgCommands(), actual.getArgCommands());
+            Assertions.assertEquals(expected.url(), actual.url());
+            Assertions.assertEquals(expected.argCommands(), actual.argCommands());
         }
 
         @Tag("business")
@@ -287,8 +287,8 @@ public class CommandServiceTest {
             CommandAnalysisResponseDto actual = commandService.filteringCommand(testRequest);
 
             // then
-            Assertions.assertEquals(expected.getUrl(), actual.getUrl());
-            Assertions.assertEquals(expected.getArgCommands(), actual.getArgCommands());
+            Assertions.assertEquals(expected.url(), actual.url());
+            Assertions.assertEquals(expected.argCommands(), actual.argCommands());
         }
 
         @Tag("business")
@@ -311,8 +311,8 @@ public class CommandServiceTest {
             CommandAnalysisResponseDto actual = commandService.filteringCommand(testRequest);
 
             // then
-            Assertions.assertEquals(expected.getUrl(), actual.getUrl());
-            Assertions.assertEquals(expected.getArgCommands(), actual.getArgCommands());
+            Assertions.assertEquals(expected.url(), actual.url());
+            Assertions.assertEquals(expected.argCommands(), actual.argCommands());
         }
 
         @Tag("business")
@@ -335,8 +335,8 @@ public class CommandServiceTest {
             CommandAnalysisResponseDto actual = commandService.filteringCommand(testRequest);
 
             // then
-            Assertions.assertEquals(expected.getUrl(), actual.getUrl());
-            Assertions.assertEquals(expected.getArgCommands(), actual.getArgCommands());
+            Assertions.assertEquals(expected.url(), actual.url());
+            Assertions.assertEquals(expected.argCommands(), actual.argCommands());
         }
 
         @Tag("business")
@@ -359,8 +359,8 @@ public class CommandServiceTest {
             CommandAnalysisResponseDto actual = commandService.filteringCommand(testRequest);
 
             // then
-            Assertions.assertEquals(expected.getUrl(), actual.getUrl());
-            Assertions.assertEquals(expected.getArgCommands(), actual.getArgCommands());
+            Assertions.assertEquals(expected.url(), actual.url());
+            Assertions.assertEquals(expected.argCommands(), actual.argCommands());
         }
 
         @Tag("business")
@@ -383,8 +383,8 @@ public class CommandServiceTest {
             CommandAnalysisResponseDto actual = commandService.filteringCommand(testRequest);
 
             // then
-            Assertions.assertEquals(expected.getUrl(), actual.getUrl());
-            Assertions.assertEquals(expected.getArgCommands(), actual.getArgCommands());
+            Assertions.assertEquals(expected.url(), actual.url());
+            Assertions.assertEquals(expected.argCommands(), actual.argCommands());
         }
 
         @Tag("business")
@@ -407,8 +407,8 @@ public class CommandServiceTest {
             CommandAnalysisResponseDto actual = commandService.filteringCommand(testRequest);
 
             // then
-            Assertions.assertEquals(expected.getUrl(), actual.getUrl());
-            Assertions.assertEquals(expected.getArgCommands(), actual.getArgCommands());
+            Assertions.assertEquals(expected.url(), actual.url());
+            Assertions.assertEquals(expected.argCommands(), actual.argCommands());
         }
 
         @Tag("business")
@@ -431,8 +431,8 @@ public class CommandServiceTest {
             CommandAnalysisResponseDto actual = commandService.filteringCommand(testRequest);
 
             // then
-            Assertions.assertEquals(expected.getUrl(), actual.getUrl());
-            Assertions.assertEquals(expected.getArgCommands(), actual.getArgCommands());
+            Assertions.assertEquals(expected.url(), actual.url());
+            Assertions.assertEquals(expected.argCommands(), actual.argCommands());
         }
 
         @Tag("business")
@@ -455,8 +455,8 @@ public class CommandServiceTest {
             CommandAnalysisResponseDto actual = commandService.filteringCommand(testRequest);
 
             // then
-            Assertions.assertEquals(expected.getUrl(), actual.getUrl());
-            Assertions.assertEquals(expected.getArgCommands(), actual.getArgCommands());
+            Assertions.assertEquals(expected.url(), actual.url());
+            Assertions.assertEquals(expected.argCommands(), actual.argCommands());
         }
 
         @Tag("business")
@@ -479,8 +479,8 @@ public class CommandServiceTest {
             CommandAnalysisResponseDto actual = commandService.filteringCommand(testRequest);
 
             // then
-            Assertions.assertEquals(expected.getUrl(), actual.getUrl());
-            Assertions.assertEquals(expected.getArgCommands(), actual.getArgCommands());
+            Assertions.assertEquals(expected.url(), actual.url());
+            Assertions.assertEquals(expected.argCommands(), actual.argCommands());
         }
 
         @Tag("business")
@@ -503,8 +503,8 @@ public class CommandServiceTest {
             CommandAnalysisResponseDto actual = commandService.filteringCommand(testRequest);
 
             // then
-            Assertions.assertEquals(expected.getUrl(), actual.getUrl());
-            Assertions.assertEquals(expected.getArgCommands(), actual.getArgCommands());
+            Assertions.assertEquals(expected.url(), actual.url());
+            Assertions.assertEquals(expected.argCommands(), actual.argCommands());
         }
 
         @Tag("business")
@@ -527,8 +527,8 @@ public class CommandServiceTest {
             CommandAnalysisResponseDto actual = commandService.filteringCommand(testRequest);
 
             // then
-            Assertions.assertEquals(expected.getUrl(), actual.getUrl());
-            Assertions.assertEquals(expected.getArgCommands(), actual.getArgCommands());
+            Assertions.assertEquals(expected.url(), actual.url());
+            Assertions.assertEquals(expected.argCommands(), actual.argCommands());
         }
 
         @Tag("business")
@@ -551,8 +551,8 @@ public class CommandServiceTest {
             CommandAnalysisResponseDto actual = commandService.filteringCommand(testRequest);
 
             // then
-            Assertions.assertEquals(expected.getUrl(), actual.getUrl());
-            Assertions.assertEquals(expected.getArgCommands(), actual.getArgCommands());
+            Assertions.assertEquals(expected.url(), actual.url());
+            Assertions.assertEquals(expected.argCommands(), actual.argCommands());
         }
 
         @Tag("business")
@@ -575,8 +575,8 @@ public class CommandServiceTest {
             CommandAnalysisResponseDto actual = commandService.filteringCommand(testRequest);
 
             // then
-            Assertions.assertEquals(expected.getUrl(), actual.getUrl());
-            Assertions.assertEquals(expected.getArgCommands(), actual.getArgCommands());
+            Assertions.assertEquals(expected.url(), actual.url());
+            Assertions.assertEquals(expected.argCommands(), actual.argCommands());
         }
 
         @Tag("business")
@@ -599,8 +599,8 @@ public class CommandServiceTest {
             CommandAnalysisResponseDto actual = commandService.filteringCommand(testRequest);
 
             // then
-            Assertions.assertEquals(expected.getUrl(), actual.getUrl());
-            Assertions.assertEquals(expected.getArgCommands(), actual.getArgCommands());
+            Assertions.assertEquals(expected.url(), actual.url());
+            Assertions.assertEquals(expected.argCommands(), actual.argCommands());
         }
 
         @Tag("business")
@@ -623,8 +623,8 @@ public class CommandServiceTest {
             CommandAnalysisResponseDto actual = commandService.filteringCommand(testRequest);
 
             // then
-            Assertions.assertEquals(expected.getUrl(), actual.getUrl());
-            Assertions.assertEquals(expected.getArgCommands(), actual.getArgCommands());
+            Assertions.assertEquals(expected.url(), actual.url());
+            Assertions.assertEquals(expected.argCommands(), actual.argCommands());
         }
 
         @Tag("business")
@@ -647,8 +647,8 @@ public class CommandServiceTest {
             CommandAnalysisResponseDto actual = commandService.filteringCommand(testRequest);
 
             // then
-            Assertions.assertEquals(expected.getUrl(), actual.getUrl());
-            Assertions.assertEquals(expected.getArgCommands(), actual.getArgCommands());
+            Assertions.assertEquals(expected.url(), actual.url());
+            Assertions.assertEquals(expected.argCommands(), actual.argCommands());
         }
 
         @Tag("business")
@@ -681,8 +681,8 @@ public class CommandServiceTest {
             CommandAnalysisResponseDto actual = commandService.filteringCommand(testRequest);
 
             // then
-            Assertions.assertEquals(expected.getUrl(), actual.getUrl());
-            Assertions.assertEquals(expected.getArgCommands(), actual.getArgCommands());
+            Assertions.assertEquals(expected.url(), actual.url());
+            Assertions.assertEquals(expected.argCommands(), actual.argCommands());
         }
 
         @Tag("business")

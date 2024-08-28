@@ -123,7 +123,7 @@ public class ImageServiceTest {
             LsImageResponseDto actual = imageService.lsImage(testRequestInfo, testEmptyRequest);
 
             // then
-            Assertions.assertEquals(testResponse.getLsImageList(), actual.getLsImageList());
+            Assertions.assertEquals(testResponse.lsImageList(), actual.lsImageList());
         }
 
         @Tag("business")
@@ -144,7 +144,7 @@ public class ImageServiceTest {
             LsImageResponseDto actual = imageService.lsImage(testRequestInfo, testRequest);
 
             // then
-            Assertions.assertEquals(testResponse.getLsImageList(), actual.getLsImageList());
+            Assertions.assertEquals(testResponse.lsImageList(), actual.lsImageList());
         }
 
         @Tag("business")
@@ -165,7 +165,7 @@ public class ImageServiceTest {
             LsImageResponseDto actual = imageService.lsImage(testRequestInfo, testRequest);
 
             // then
-            Assertions.assertNull(actual.getLsImageList());
+            Assertions.assertNull(actual.lsImageList());
         }
 
         @Tag("business")
@@ -268,7 +268,7 @@ public class ImageServiceTest {
             PullImageResponseDto actual = imageService.pullImage(testRequestInfo, testRequest);
 
             // then
-            Assertions.assertEquals(testResponse.getPullImageFullName(), actual.getPullImageFullName());
+            Assertions.assertEquals(testResponse.pullImageFullName(), actual.pullImageFullName());
         }
 
         @Tag("business")
@@ -371,7 +371,7 @@ public class ImageServiceTest {
             InspectImageResponseDto actual = imageService.inspectImage(testRequestInfo, testRequest);
 
             // then
-            Assertions.assertEquals(testResponse.getInspectImage(), actual.getInspectImage());
+            Assertions.assertEquals(testResponse.inspectImage(), actual.inspectImage());
         }
 
         @Tag("business")
@@ -465,7 +465,7 @@ public class ImageServiceTest {
             RmImageResponseDto actual = imageService.rmImage(testRequestInfo, testRequest);
 
             // then
-            Assertions.assertEquals(testSuccessResponse.isImageDeleteResult(), actual.isImageDeleteResult());
+            Assertions.assertEquals(testSuccessResponse.imageDeleteResult(), actual.imageDeleteResult());
         }
 
         @Tag("business")
@@ -486,7 +486,7 @@ public class ImageServiceTest {
             RmImageResponseDto actual = imageService.rmImage(testRequestInfo, testRequest);
 
             // then
-            Assertions.assertEquals(testFailResponse.isImageDeleteResult(), actual.isImageDeleteResult());
+            Assertions.assertEquals(testFailResponse.imageDeleteResult(), actual.imageDeleteResult());
         }
 
         @Tag("business")

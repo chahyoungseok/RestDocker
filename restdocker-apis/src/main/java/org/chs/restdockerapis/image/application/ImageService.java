@@ -40,7 +40,7 @@ public class ImageService {
      */
     @Transactional(readOnly = true)
     public LsImageResponseDto lsImage(GetRequesterDto requesterInfo, DockerCommandRequestDto request) {
-        String imageName = existArgOnlyOneImageName(request.getArgCommands());
+        String imageName = existArgOnlyOneImageName(request.argCommands());
         String oauthServiceId = requesterInfo.id();
 
         List<ImageElements> imageElementList = dockerImageRepository.findAllByOauthServiceId(
@@ -62,7 +62,7 @@ public class ImageService {
      * @return Image Pull의 결과 List
      */
     public PullImageResponseDto pullImage(GetRequesterDto requesterInfo, DockerCommandRequestDto request) {
-        String imageName = existArgOnlyOneImageName(request.getArgCommands());
+        String imageName = existArgOnlyOneImageName(request.argCommands());
         DockerHubEntity pulledImage = dockerHubEntityRepository.selectDockerImage(imageName);
         if (null == pulledImage) {
             throw new CustomBadRequestException(ErrorCode.NOT_EXIST_IMAGE_IN_DOCKERHUB);
@@ -97,7 +97,7 @@ public class ImageService {
      */
     @Transactional(readOnly = true)
     public InspectImageResponseDto inspectImage(GetRequesterDto requesterInfo, DockerCommandRequestDto request) {
-        String imageName = existArgOnlyOneImageName(request.getArgCommands());
+        String imageName = existArgOnlyOneImageName(request.argCommands());
         if (null == imageName) {
             throw new CustomBadRequestException(ErrorCode.ARGUMENT_COMMAND_NOT_VALID_EXCEPTION);
         }
@@ -118,7 +118,7 @@ public class ImageService {
      * @return Image 삭제 성공유무
      */
     public RmImageResponseDto rmImage(GetRequesterDto requesterInfo, DockerCommandRequestDto request) {
-        String imageName = existArgOnlyOneImageName(request.getArgCommands());
+        String imageName = existArgOnlyOneImageName(request.argCommands());
         if (null == imageName) {
             throw new CustomBadRequestException(ErrorCode.ARGUMENT_COMMAND_NOT_VALID_EXCEPTION);
         }

@@ -6,6 +6,7 @@ import org.chs.domain.image.dto.ImageElements;
 import org.chs.restdockerapis.common.exception.CustomBadRequestException;
 import org.chs.restdockerapis.common.exception.ErrorCode;
 import org.chs.restdockerapis.common.structure.ControllerTest;
+import org.chs.restdockerapis.image.presentation.dto.DockerCommandRequestDto;
 import org.chs.restdockerapis.image.application.ImageService;
 import org.chs.restdockerapis.image.presentation.dto.*;
 import org.junit.jupiter.api.*;

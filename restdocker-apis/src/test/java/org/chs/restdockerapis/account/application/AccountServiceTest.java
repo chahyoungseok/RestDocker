@@ -293,7 +293,7 @@ public class AccountServiceTest {
             GenericSingleResponse<Boolean> actual = accountService.kakaoOAuthLogout(testRequesterInfo);
 
             // then
-            Assertions.assertEquals(testSuccessResponse.getData(), actual.getData());
+            Assertions.assertEquals(testSuccessResponse.data(), actual.data());
         }
 
         @Tag("business")
@@ -311,7 +311,7 @@ public class AccountServiceTest {
             GenericSingleResponse<Boolean> actual = accountService.kakaoOAuthLogout(testRequesterInfo);
 
             // then
-            Assertions.assertEquals(testFailResponse.getData(), actual.getData());
+            Assertions.assertEquals(testFailResponse.data(), actual.data());
         }
 
         @Tag("business")
@@ -407,7 +407,7 @@ public class AccountServiceTest {
             GenericSingleResponse<Boolean> actual = accountService.kakaoOAuthLogout(testRequesterInfo);
 
             // then
-            Assertions.assertEquals(testSuccessResponse.getData(), actual.getData());
+            Assertions.assertEquals(testSuccessResponse.data(), actual.data());
         }
     }
 
@@ -643,7 +643,7 @@ public class AccountServiceTest {
             GenericSingleResponse<Boolean> actual = accountService.naverOAuthLogout(testRequesterInfo);
 
             // then
-            Assertions.assertEquals(testSuccessResponse.getData(), actual.getData());
+            Assertions.assertEquals(testSuccessResponse.data(), actual.data());
         }
 
         @Tag("business")
@@ -661,7 +661,7 @@ public class AccountServiceTest {
             GenericSingleResponse<Boolean> actual = accountService.naverOAuthLogout(testRequesterInfo);
 
             // then
-            Assertions.assertEquals(testFailResponse.getData(), actual.getData());
+            Assertions.assertEquals(testFailResponse.data(), actual.data());
         }
 
         @Tag("business")
@@ -757,7 +757,7 @@ public class AccountServiceTest {
             GenericSingleResponse<Boolean> actual = accountService.naverOAuthLogout(testRequesterInfo);
 
             // the
-            Assertions.assertEquals(testSuccessResponse.getData(), actual.getData());
+            Assertions.assertEquals(testSuccessResponse.data(), actual.data());
         }
     }
 
@@ -838,7 +838,7 @@ public class AccountServiceTest {
             ReIssueTokenResponse actual = accountService.reIssueToken(testReIssueTokenRequest);
 
             // then
-            Assertions.assertEquals(testReIssueTokenResponse.getAccessToken(), actual.getAccessToken());
+            Assertions.assertEquals(testReIssueTokenResponse.accessToken(), actual.accessToken());
         }
 
         @Tag("business")
