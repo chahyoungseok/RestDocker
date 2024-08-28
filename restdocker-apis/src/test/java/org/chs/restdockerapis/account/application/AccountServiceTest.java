@@ -6,6 +6,8 @@ import com.auth0.jwt.interfaces.Claim;
 import org.chs.domain.account.AccountRepository;
 import org.chs.domain.account.entity.AccountEntity;
 import org.chs.domain.common.enumerate.ThirdPartyEnum;
+import org.chs.domain.network.NetworkEntityRepository;
+import org.chs.domain.network.entity.NetworkEntity;
 import org.chs.globalutils.dto.TokenDto;
 import org.chs.restdockerapis.account.presentation.dto.ReIssueTokenRequest;
 import org.chs.restdockerapis.account.presentation.dto.ReIssueTokenResponse;
@@ -30,7 +32,6 @@ import java.util.Map;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.ArgumentMatchers.anyLong;
 
 @ActiveProfiles("test")
 @ExtendWith(MockitoExtension.class)
@@ -47,6 +48,9 @@ public class AccountServiceTest {
 
     @Mock
     private AccountRepository accountRepository;
+
+    @Mock
+    private NetworkEntityRepository dockerNetworkEntityRepository;
 
     @Mock
     private KakaoOAuthUtils kakaoOAuthUtils;
@@ -68,6 +72,7 @@ public class AccountServiceTest {
         private OAuthLoginRequestDto testRequest = null;
         private OAuthLoginInfoDto testOAuthLoginInfoDto = null;
         private AccountEntity testAccount = null;
+        private NetworkEntity testNetwork = null;
 
 
         protected KakaoOAuthLogin() {
@@ -96,6 +101,14 @@ public class AccountServiceTest {
                     .build();
 
             testIpAddress = "IP";
+
+            testNetwork = NetworkEntity.builder()
+                    .account(testAccount)
+                    .name("testName")
+                    .subnet("testSubnet")
+                    .mtu(1000)
+                    .enableIcc(true)
+                    .build();
         }
 
         @Tag("business")
@@ -114,6 +127,9 @@ public class AccountServiceTest {
 
             BDDMockito.willDoNothing().given(accountHistoryService)
                     .saveLoginHistory(any(), any(), anyBoolean(), any());
+
+            BDDMockito.given(dockerNetworkEntityRepository.save(any()))
+                    .willReturn(testNetwork);
 
             // when
             TokenDto actual = accountService.kakaoOAuthLogin(testIpAddress, testRequest);
@@ -207,6 +223,9 @@ public class AccountServiceTest {
 
             BDDMockito.given(accountRepository.save(any()))
                     .willReturn(testAccount);
+
+            BDDMockito.given(dockerNetworkEntityRepository.save(any()))
+                    .willReturn(testNetwork);
 
             BDDMockito.willThrow(new HistoryException(ErrorCode.LOGIN_HISTORY_SAVE_EXCEPTION)).given(accountHistoryService)
                     .saveLoginHistory(any(), any(), anyBoolean(), any());
@@ -402,6 +421,7 @@ public class AccountServiceTest {
         private OAuthLoginRequestDto testRequest = null;
         private OAuthLoginInfoDto testOAuthLoginInfoDto = null;
         private AccountEntity testAccount = null;
+        private NetworkEntity testNetwork = null;
 
 
         protected NaverOAuthLogin() {
@@ -430,6 +450,14 @@ public class AccountServiceTest {
                     .build();
 
             testIpAddress = "IP";
+
+            testNetwork = NetworkEntity.builder()
+                    .account(testAccount)
+                    .name("testName")
+                    .subnet("testSubnet")
+                    .mtu(1000)
+                    .enableIcc(true)
+                    .build();
         }
 
         @Tag("business")
@@ -448,6 +476,9 @@ public class AccountServiceTest {
 
             BDDMockito.willDoNothing().given(accountHistoryService)
                     .saveLoginHistory(any(), any(), anyBoolean(), any());
+
+            BDDMockito.given(dockerNetworkEntityRepository.save(any()))
+                    .willReturn(testNetwork);
 
             // when
             TokenDto actual = accountService.naverOAuthLogin(testIpAddress, testRequest);
@@ -541,6 +572,9 @@ public class AccountServiceTest {
 
             BDDMockito.given(accountRepository.save(any()))
                     .willReturn(testAccount);
+
+            BDDMockito.given(dockerNetworkEntityRepository.save(any()))
+                    .willReturn(testNetwork);
 
             BDDMockito.willThrow(new HistoryException(ErrorCode.LOGIN_HISTORY_SAVE_EXCEPTION)).given(accountHistoryService)
                     .saveLoginHistory(any(), any(), anyBoolean(), any());

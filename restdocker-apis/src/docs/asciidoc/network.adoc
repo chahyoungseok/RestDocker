@@ -1,0 +1,304 @@
+== Docker Network
+
+=== LS Network [성공 테스트]
+
+==== Request Fields
+
+include::{snippets}/ls-network-success/정상적으로_네트워크를_조회해온다/request-body.adoc[]
+
+==== Response Fields
+
+include::{snippets}/ls-network-success/정상적으로_네트워크를_조회해온다/response-body.adoc[]
+
+==== HTTP Request
+
+include::{snippets}/ls-network-success/정상적으로_네트워크를_조회해온다//http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/ls-network-success/정상적으로_네트워크를_조회해온다//http-response.adoc[]
+
+
+=== LS Network [실패 테스트]
+
+==== Request Fields
+
+include::{snippets}/ls-network-fail/원하는_네트워크를_-ls로_조회하려다_실패한다/request-body.adoc[]
+
+==== Response Fields
+
+include::{snippets}/ls-network-fail/원하는_네트워크를_-ls로_조회하려다_실패한다/response-body.adoc[]
+
+==== HTTP Request
+
+include::{snippets}/ls-network-fail/원하는_네트워크를_-ls로_조회하려다_실패한다/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/ls-network-fail/원하는_네트워크를_-ls로_조회하려다_실패한다/http-response.adoc[]
+
+
+=== Inspect Network [성공 테스트]
+
+==== Request Fields
+
+include::{snippets}/inspect-network-success/정상적으로_네트워크를_조회해온다/request-body.adoc[]
+
+==== Response Fields
+
+include::{snippets}/inspect-network-success/정상적으로_네트워크를_조회해온다/response-body.adoc[]
+
+==== HTTP Request
+
+include::{snippets}/inspect-network-success/정상적으로_네트워크를_조회해온다/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/inspect-network-success/정상적으로_네트워크를_조회해온다/http-response.adoc[]
+
+
+=== Inspect Network [실패 테스트]
+
+==== Request Fields
+
+include::{snippets}/inspect-network-fail/네트워크_-inspect_조회_시_특정_네트워크를_지정하지_않아_실패한다/request-body.adoc[]
+
+==== Response Fields
+
+include::{snippets}/inspect-network-fail/네트워크_-inspect_조회_시_특정_네트워크를_지정하지_않아_실패한다/response-body.adoc[]
+
+==== HTTP Request
+
+include::{snippets}/inspect-network-fail/네트워크_-inspect_조회_시_특정_네트워크를_지정하지_않아_실패한다/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/inspect-network-fail/네트워크_-inspect_조회_시_특정_네트워크를_지정하지_않아_실패한다/http-response.adoc[]
+
+
+=== Create Network [성공 테스트 - 네트워크 이름만 있는경우]
+
+==== Request Fields
+
+include::{snippets}/create-network-success/네트워크_이름만으로_정상적인_네트워크를_생성한다/request-body.adoc[]
+
+==== Response Fields
+
+include::{snippets}/create-network-success/네트워크_이름만으로_정상적인_네트워크를_생성한다/response-body.adoc[]
+
+==== HTTP Request
+
+include::{snippets}/create-network-success/네트워크_이름만으로_정상적인_네트워크를_생성한다/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/create-network-success/네트워크_이름만으로_정상적인_네트워크를_생성한다/http-response.adoc[]
+
+
+=== Create Network [성공 테스트 - 네트워크 이름과 서브넷만 있는경우]
+
+==== Request Fields
+
+include::{snippets}/create-network-success/네트워크_이름과_서브넷으로_정상적인_네트워크를_생성한다/request-body.adoc[]
+
+==== Response Fields
+
+include::{snippets}/create-network-success/네트워크_이름과_서브넷으로_정상적인_네트워크를_생성한다/response-body.adoc[]
+
+==== HTTP Request
+
+include::{snippets}/create-network-success/네트워크_이름과_서브넷으로_정상적인_네트워크를_생성한다/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/create-network-success/네트워크_이름과_서브넷으로_정상적인_네트워크를_생성한다/http-response.adoc[]
+
+
+=== Create Network [성공 테스트 - 네트워크 이름과 서브넷과 게이트웨이만 있는경우]
+
+==== Request Fields
+
+include::{snippets}/create-network-success/네트워크_이름과_서브넷과_게이트웨이로_정상적인_네트워크를_생성한다/request-body.adoc[]
+
+==== Response Fields
+
+include::{snippets}/create-network-success/네트워크_이름과_서브넷과_게이트웨이로_정상적인_네트워크를_생성한다/response-body.adoc[]
+
+==== HTTP Request
+
+include::{snippets}/create-network-success/네트워크_이름과_서브넷과_게이트웨이로_정상적인_네트워크를_생성한다/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/create-network-success/네트워크_이름과_서브넷과_게이트웨이로_정상적인_네트워크를_생성한다/http-response.adoc[]
+
+
+=== Create Network [성공 테스트 - 네트워크 이름과 서브넷과 게이트웨이와 IP 대역이 있는경우]
+
+==== Request Fields
+
+include::{snippets}/create-network-success/네트워크_이름과_서브넷과_게이트웨이와_ip대역으로_정상적인_네트워크를_생성한다/request-body.adoc[]
+
+==== Response Fields
+
+include::{snippets}/create-network-success/네트워크_이름과_서브넷과_게이트웨이와_ip대역으로_정상적인_네트워크를_생성한다/response-body.adoc[]
+
+==== HTTP Request
+
+include::{snippets}/create-network-success/네트워크_이름과_서브넷과_게이트웨이와_ip대역으로_정상적인_네트워크를_생성한다/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/create-network-success/네트워크_이름과_서브넷과_게이트웨이와_ip대역으로_정상적인_네트워크를_생성한다/http-response.adoc[]
+
+
+=== Create Network [성공 테스트 - 네트워크 이름과 서브넷과 게이트웨이와 IP 대역과 옵션이 있는경우]
+
+==== Request Fields
+
+include::{snippets}/create-network-success/네트워크_이름과_서브넷과_게이트웨이와_ip대역과_옵션들로_정상적인_네트워크를_생성한다/request-body.adoc[]
+
+==== Response Fields
+
+include::{snippets}/create-network-success/네트워크_이름과_서브넷과_게이트웨이와_ip대역과_옵션들로_정상적인_네트워크를_생성한다/response-body.adoc[]
+
+==== HTTP Request
+
+include::{snippets}/create-network-success/네트워크_이름과_서브넷과_게이트웨이와_ip대역과_옵션들로_정상적인_네트워크를_생성한다/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/create-network-success/네트워크_이름과_서브넷과_게이트웨이와_ip대역과_옵션들로_정상적인_네트워크를_생성한다/http-response.adoc[]
+
+
+=== Create Network [실패 테스트 - 네트워크 이름이 없는경우]
+
+==== Request Fields
+
+include::{snippets}/create-network-fail/네트워크_생성시_네트워크_이름을_지정하지_않아_실패한다/request-body.adoc[]
+
+==== Response Fields
+
+include::{snippets}/create-network-fail/네트워크_생성시_네트워크_이름을_지정하지_않아_실패한다/response-body.adoc[]
+
+==== HTTP Request
+
+include::{snippets}/create-network-fail/네트워크_생성시_네트워크_이름을_지정하지_않아_실패한다/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/create-network-fail/네트워크_생성시_네트워크_이름을_지정하지_않아_실패한다/http-response.adoc[]
+
+
+=== Create Network [실패 테스트 - 네트워크 이름에 띄어쓰기가 있는 경우]
+
+==== Request Fields
+
+include::{snippets}/create-network-fail/네트워크_생성시_네트워크_이름에_띄어쓰기가_포함되어_실패한다/request-body.adoc[]
+
+==== Response Fields
+
+include::{snippets}/create-network-fail/네트워크_생성시_네트워크_이름에_띄어쓰기가_포함되어_실패한다/response-body.adoc[]
+
+==== HTTP Request
+
+include::{snippets}/create-network-fail/네트워크_생성시_네트워크_이름에_띄어쓰기가_포함되어_실패한다/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/create-network-fail/네트워크_생성시_네트워크_이름에_띄어쓰기가_포함되어_실패한다/http-response.adoc[]
+
+
+=== Create Network [실패 테스트 - 네트워크 서브넷이 시작주소가 아니어서 실패한다]
+
+==== Request Fields
+
+include::{snippets}/create-network-fail/네트워크_생성시_서브넷이_시작주소가_아니어서_실패한다/request-body.adoc[]
+
+==== Response Fields
+
+include::{snippets}/create-network-fail/네트워크_생성시_서브넷이_시작주소가_아니어서_실패한다/response-body.adoc[]
+
+==== HTTP Request
+
+include::{snippets}/create-network-fail/네트워크_생성시_서브넷이_시작주소가_아니어서_실패한다/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/create-network-fail/네트워크_생성시_서브넷이_시작주소가_아니어서_실패한다/http-response.adoc[]
+
+
+=== Create Network [실패 테스트 - 네트워크 서브넷이 유효하지 않아 실패한다]
+
+==== Request Fields
+
+include::{snippets}/create-network-fail/네트워크_생성시_서브넷이_유효하지않아_실패한다/request-body.adoc[]
+
+==== Response Fields
+
+include::{snippets}/create-network-fail/네트워크_생성시_서브넷이_유효하지않아_실패한다/response-body.adoc[]
+
+==== HTTP Request
+
+include::{snippets}/create-network-fail/네트워크_생성시_서브넷이_유효하지않아_실패한다/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/create-network-fail/네트워크_생성시_서브넷이_유효하지않아_실패한다/http-response.adoc[]
+
+
+=== Create Network [실패 테스트 - 네트워크 서브넷이 기존 서브넷과 겹치게되어 실패한다]
+
+==== Request Fields
+
+include::{snippets}/create-network-fail/네트워크_생성시_서브넷이_겹치게되어_실패한다/request-body.adoc[]
+
+==== Response Fields
+
+include::{snippets}/create-network-fail/네트워크_생성시_서브넷이_겹치게되어_실패한다/response-body.adoc[]
+
+==== HTTP Request
+
+include::{snippets}/create-network-fail/네트워크_생성시_서브넷이_겹치게되어_실패한다/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/create-network-fail/네트워크_생성시_서브넷이_겹치게되어_실패한다/http-response.adoc[]
+
+
+=== Rm Network [성공 테스트]
+
+==== Request Fields
+
+include::{snippets}/rm-network-success/정상적으로_네트워크를_삭제한다/request-body.adoc[]
+
+==== Response Fields
+
+include::{snippets}/rm-network-success/정상적으로_네트워크를_삭제한다/response-body.adoc[]
+
+==== HTTP Request
+
+include::{snippets}/rm-network-success/정상적으로_네트워크를_삭제한다/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/rm-network-success/정상적으로_네트워크를_삭제한다/http-response.adoc[]
+
+
+=== Inspect Network [실패 테스트]
+
+==== Request Fields
+
+include::{snippets}/rm-network-fail/네트워크_삭제시_특정_네트워크를_지정하지_않아_실패한다/request-body.adoc[]
+
+==== Response Fields
+
+include::{snippets}/rm-network-fail/네트워크_삭제시_특정_네트워크를_지정하지_않아_실패한다/response-body.adoc[]
+
+==== HTTP Request
+
+include::{snippets}/rm-network-fail/네트워크_삭제시_특정_네트워크를_지정하지_않아_실패한다/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/rm-network-fail/네트워크_삭제시_특정_네트워크를_지정하지_않아_실패한다/http-response.adoc[]

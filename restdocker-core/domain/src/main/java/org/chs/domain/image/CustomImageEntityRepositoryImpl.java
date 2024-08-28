@@ -88,7 +88,7 @@ public class CustomImageEntityRepositoryImpl implements CustomImageEntityReposit
                 )
                 .fetchOne();
 
-        long containerDeleteResult = containerEntityRepository.deleteByImage(selectedImage.getPk());
+        long containerDeleteResult = containerEntityRepository.deleteByImagePk(selectedImage.getPk());
 
         long imageDeleteResult = queryFactory.delete(imageEntity)
                 .where(eqImagePk(selectedImage.getPk()))
