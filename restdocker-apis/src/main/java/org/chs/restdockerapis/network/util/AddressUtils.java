@@ -120,6 +120,10 @@ public class AddressUtils {
             newSubnetStart = subnetRanges.get(subnetRanges.size() - 1).endAddress() + 1;
         }
 
+        while (newSubnetStart % (1 << (32 - defaultCidr)) != 0) {
+            newSubnetStart++;
+        }
+
         return intToIp(newSubnetStart) + "/" + defaultCidr;
     }
 

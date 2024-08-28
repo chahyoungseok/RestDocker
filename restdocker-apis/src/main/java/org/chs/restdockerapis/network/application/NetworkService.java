@@ -138,7 +138,10 @@ public class NetworkService {
 
         return validIpRange(
                 validGateway(
-                        validSubnet(networkOption, oauthServiceId)
+                        validSubnet(
+                                networkOption,
+                                oauthServiceId
+                        )
                 )
         );
     }
@@ -172,11 +175,13 @@ public class NetworkService {
     }
 
     private NetworkOptionDto validGateway(NetworkOptionDto networkOption) {
-        if (false == addressUtils.validAddressFormat(networkOption.getGateway())) {
-            throw new CustomBadRequestException(ErrorCode.NOT_VALID_ADDRESS_FORMAT);
-        }
-        if (false == addressUtils.validGatewayIntoSubnet(networkOption.getSubnet(), networkOption.getGateway())) {
-            throw new CustomBadRequestException(ErrorCode.MUST_GATEWAY_INTO_SUBNET);
+        if (null != networkOption.getGateway()) {
+            if (false == addressUtils.validAddressFormat(networkOption.getGateway())) {
+                throw new CustomBadRequestException(ErrorCode.NOT_VALID_ADDRESS_FORMAT);
+            }
+            if (false == addressUtils.validGatewayIntoSubnet(networkOption.getSubnet(), networkOption.getGateway())) {
+                throw new CustomBadRequestException(ErrorCode.MUST_GATEWAY_INTO_SUBNET);
+            }
         }
         return networkOption;
     }
@@ -212,7 +217,6 @@ public class NetworkService {
     }
 
     /**
-     * 여러 이미지도 한번에 삭제?
      * 예상 명령어 : docker network rm ${도커 네트워크 이름}
      * 예상 인자값 : 없음
      *
