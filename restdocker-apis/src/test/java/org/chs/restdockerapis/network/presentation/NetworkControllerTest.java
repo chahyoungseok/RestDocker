@@ -1,6 +1,5 @@
 package org.chs.restdockerapis.network.presentation;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.chs.domain.network.dto.NetworkDetailElements;
 import org.chs.domain.network.dto.NetworkElements;
 import org.chs.restdockerapis.common.exception.CustomBadRequestException;
@@ -60,14 +59,6 @@ public class NetworkControllerTest extends ControllerTest {
                     .build();
         }
 
-        private String makeRequest(List<String> argCommands) throws JsonProcessingException {
-            return objectMapper.writeValueAsString(
-                    DockerCommandRequestDto.builder()
-                            .argCommands(argCommands)
-                            .build()
-            );
-        }
-
         @Tag("controller")
         @Test
         @DisplayName("[Network][Controller] Ls Network")
@@ -79,7 +70,7 @@ public class NetworkControllerTest extends ControllerTest {
             // when
             ResultActions resultActions = mockMvc.perform(post("/api/v1/network/ls")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(makeRequest(null))
+                    .content(writeValueAsStringRequest(null))
             );
 
             // then
@@ -127,14 +118,6 @@ public class NetworkControllerTest extends ControllerTest {
                     .build();
         }
 
-        private String makeRequest(List<String> argCommands) throws JsonProcessingException {
-            return objectMapper.writeValueAsString(
-                    DockerCommandRequestDto.builder()
-                            .argCommands(argCommands)
-                            .build()
-            );
-        }
-
         @Tag("controller")
         @Test
         @DisplayName("[Network][Controller] Ls Network")
@@ -146,7 +129,7 @@ public class NetworkControllerTest extends ControllerTest {
             // when
             ResultActions resultActions = mockMvc.perform(post("/api/v1/network/ls")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(makeRequest(List.of("bridge")))
+                    .content(writeValueAsStringRequest(List.of("bridge")))
             );
 
             // then
@@ -188,14 +171,6 @@ public class NetworkControllerTest extends ControllerTest {
                     .build();
         }
 
-        private String makeRequest(List<String> argCommands) throws JsonProcessingException {
-            return objectMapper.writeValueAsString(
-                    DockerCommandRequestDto.builder()
-                            .argCommands(argCommands)
-                            .build()
-            );
-        }
-
         @Tag("controller")
         @Test
         @DisplayName("[Network][Controller] Inspect Network")
@@ -207,7 +182,7 @@ public class NetworkControllerTest extends ControllerTest {
             // when
             ResultActions resultActions = mockMvc.perform(post("/api/v1/network/inspect")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(makeRequest(List.of("bridge")))
+                    .content(writeValueAsStringRequest(List.of("bridge")))
             );
 
             // then
@@ -240,14 +215,6 @@ public class NetworkControllerTest extends ControllerTest {
 
         private DockerCommandRequestDto testRequest = null;
 
-        private String makeRequest(List<String> argCommands) throws JsonProcessingException {
-            return objectMapper.writeValueAsString(
-                    DockerCommandRequestDto.builder()
-                            .argCommands(argCommands)
-                            .build()
-            );
-        }
-
         @Tag("controller")
         @Test
         @DisplayName("[Network][Controller] Ls Network")
@@ -259,7 +226,7 @@ public class NetworkControllerTest extends ControllerTest {
             // when
             ResultActions resultActions = mockMvc.perform(post("/api/v1/network/inspect")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(makeRequest(List.of()))
+                    .content(writeValueAsStringRequest(List.of()))
             );
 
             // then
@@ -289,14 +256,6 @@ public class NetworkControllerTest extends ControllerTest {
                     .build();
         }
 
-        private String makeRequest(List<String> argCommands) throws JsonProcessingException {
-            return objectMapper.writeValueAsString(
-                    DockerCommandRequestDto.builder()
-                            .argCommands(argCommands)
-                            .build()
-            );
-        }
-
         @Tag("controller")
         @Test
         @DisplayName("[Network][Controller] Create Network")
@@ -308,7 +267,7 @@ public class NetworkControllerTest extends ControllerTest {
             // when
             ResultActions resultActions = mockMvc.perform(post("/api/v1/network/create")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(makeRequest(List.of("restdocker")))
+                    .content(writeValueAsStringRequest(List.of("restdocker")))
             );
 
             // then
@@ -337,7 +296,7 @@ public class NetworkControllerTest extends ControllerTest {
             // when
             ResultActions resultActions = mockMvc.perform(post("/api/v1/network/create")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(makeRequest(List.of("restdocker", "--subnet 172.17.0.0/16")))
+                    .content(writeValueAsStringRequest(List.of("restdocker", "--subnet 172.17.0.0/16")))
             );
 
             // then
@@ -366,7 +325,7 @@ public class NetworkControllerTest extends ControllerTest {
             // when
             ResultActions resultActions = mockMvc.perform(post("/api/v1/network/create")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(makeRequest(List.of("restdocker", "--subnet 172.17.0.0/16", "--gateway 172.17.0.1")))
+                    .content(writeValueAsStringRequest(List.of("restdocker", "--subnet 172.17.0.0/16", "--gateway 172.17.0.1")))
             );
 
             // then
@@ -395,7 +354,7 @@ public class NetworkControllerTest extends ControllerTest {
             // when
             ResultActions resultActions = mockMvc.perform(post("/api/v1/network/create")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(makeRequest(List.of("restdocker", "--subnet 172.17.0.0/16", "--gateway 172.17.0.1", "--ip-range 172.17.0.0/24")))
+                    .content(writeValueAsStringRequest(List.of("restdocker", "--subnet 172.17.0.0/16", "--gateway 172.17.0.1", "--ip-range 172.17.0.0/24")))
             );
 
             // then
@@ -424,7 +383,7 @@ public class NetworkControllerTest extends ControllerTest {
             // when
             ResultActions resultActions = mockMvc.perform(post("/api/v1/network/create")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(makeRequest(
+                    .content(writeValueAsStringRequest(
                             List.of(
                                     "restdocker",
                                     "--subnet 172.17.0.0/16",
@@ -455,14 +414,6 @@ public class NetworkControllerTest extends ControllerTest {
     @DisplayName("[Network][실패 테스트] Network 생성을 테스트한다.")
     class CreateNetworkFail {
 
-        private String makeRequest(List<String> argCommands) throws JsonProcessingException {
-            return objectMapper.writeValueAsString(
-                    DockerCommandRequestDto.builder()
-                            .argCommands(argCommands)
-                            .build()
-            );
-        }
-
         @Tag("controller")
         @Test
         @DisplayName("[Network][Controller] Create Network")
@@ -474,7 +425,7 @@ public class NetworkControllerTest extends ControllerTest {
             // when
             ResultActions resultActions = mockMvc.perform(post("/api/v1/network/create")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(makeRequest(List.of()))
+                    .content(writeValueAsStringRequest(List.of()))
             );
 
             // then
@@ -501,7 +452,7 @@ public class NetworkControllerTest extends ControllerTest {
             // when
             ResultActions resultActions = mockMvc.perform(post("/api/v1/network/create")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(makeRequest(List.of("rest docker")))
+                    .content(writeValueAsStringRequest(List.of("rest docker")))
             );
 
             // then
@@ -528,7 +479,7 @@ public class NetworkControllerTest extends ControllerTest {
             // when
             ResultActions resultActions = mockMvc.perform(post("/api/v1/network/create")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(makeRequest(List.of("restdocker", "--subnet 172.17.0.0/16")))
+                    .content(writeValueAsStringRequest(List.of("restdocker", "--subnet 172.17.0.0/16")))
             );
 
             // then
@@ -555,7 +506,7 @@ public class NetworkControllerTest extends ControllerTest {
             // when
             ResultActions resultActions = mockMvc.perform(post("/api/v1/network/create")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(makeRequest(List.of("restdocker", "--subnet 172.17.0.0/33")))
+                    .content(writeValueAsStringRequest(List.of("restdocker", "--subnet 172.17.0.0/33")))
             );
 
             // then
@@ -582,7 +533,7 @@ public class NetworkControllerTest extends ControllerTest {
             // when
             ResultActions resultActions = mockMvc.perform(post("/api/v1/network/create")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(makeRequest(List.of("restdocker", "--subnet 172.17.0.1/16")))
+                    .content(writeValueAsStringRequest(List.of("restdocker", "--subnet 172.17.0.1/16")))
             );
 
             // then
@@ -613,14 +564,6 @@ public class NetworkControllerTest extends ControllerTest {
                     .build();
         }
 
-        private String makeRequest(List<String> argCommands) throws JsonProcessingException {
-            return objectMapper.writeValueAsString(
-                    DockerCommandRequestDto.builder()
-                            .argCommands(argCommands)
-                            .build()
-            );
-        }
-
         @Tag("controller")
         @Test
         @DisplayName("[Network][Controller] Rm Network")
@@ -632,7 +575,7 @@ public class NetworkControllerTest extends ControllerTest {
             // when
             ResultActions resultActions = mockMvc.perform(post("/api/v1/network/rm")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(makeRequest(List.of("bridge")))
+                    .content(writeValueAsStringRequest(List.of("bridge")))
             );
 
             // then
@@ -657,14 +600,6 @@ public class NetworkControllerTest extends ControllerTest {
 
         private DockerCommandRequestDto testRequest = null;
 
-        private String makeRequest(List<String> argCommands) throws JsonProcessingException {
-            return objectMapper.writeValueAsString(
-                    DockerCommandRequestDto.builder()
-                            .argCommands(argCommands)
-                            .build()
-            );
-        }
-
         @Tag("controller")
         @Test
         @DisplayName("[Network][Controller] Rm Network")
@@ -676,7 +611,7 @@ public class NetworkControllerTest extends ControllerTest {
             // when
             ResultActions resultActions = mockMvc.perform(post("/api/v1/network/rm")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(makeRequest(List.of()))
+                    .content(writeValueAsStringRequest(List.of()))
             );
 
             // then
