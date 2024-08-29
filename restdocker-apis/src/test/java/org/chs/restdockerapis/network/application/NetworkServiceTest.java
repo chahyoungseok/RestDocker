@@ -3,6 +3,10 @@ package org.chs.restdockerapis.network.application;
 import org.chs.domain.account.AccountRepository;
 import org.chs.domain.account.entity.AccountEntity;
 import org.chs.domain.common.enumerate.ThirdPartyEnum;
+import org.chs.domain.container.ContainerEntityRepository;
+import org.chs.domain.container.dto.ContainerElements;
+import org.chs.domain.container.enumerate.ContainerStatusEnum;
+import org.chs.domain.network.NetworkContainerMappingEntityRepository;
 import org.chs.domain.network.NetworkEntityRepository;
 import org.chs.domain.network.dto.NetworkDetailElements;
 import org.chs.domain.network.dto.NetworkElements;
@@ -43,6 +47,12 @@ public class NetworkServiceTest {
 
     @Mock
     private NetworkEntityRepository dockerNetworkRepository;
+
+    @Mock
+    private ContainerEntityRepository dockerContainerRepository;
+
+    @Mock
+    private NetworkContainerMappingEntityRepository dockerNetworkContainerMappingRepository;
 
     @Mock
     private ListUtils listUtils;
@@ -165,6 +175,9 @@ public class NetworkServiceTest {
     class InspectNetwork {
 
         private NetworkDetailElements networkDetailElements = null;
+        private ContainerElements containerElements = null;
+
+        private AccountEntity testAccount;
 
         protected InspectNetwork() {
             // given - data
@@ -178,6 +191,27 @@ public class NetworkServiceTest {
                     .enableIcc(true)
                     .mtu(1000)
                     .build();
+
+            containerElements = ContainerElements.builder()
+                    .createDate(LocalDateTime.now())
+                    .updateDate(LocalDateTime.now())
+                    .name("restDocker")
+                    .imageName("testImageName")
+                    .imageTag("testImageTag")
+                    .outerPort("1111")
+                    .innerPort("2222")
+                    .privateIp("172.17.18.11")
+                    .status(ContainerStatusEnum.Running)
+                    .build();
+
+            testAccount = AccountEntity.builder()
+                    .nickname("테스트용 계정1")
+                    .oauthServiceId("test_account_1")
+                    .thirdPartyType(ThirdPartyEnum.KAKAO)
+                    .isActive(true)
+                    .build();
+
+            testAccount.setDateTimeForTest(LocalDateTime.now(), LocalDateTime.now());
         }
 
         private boolean compareDto(NetworkDetailElements elements1, NetworkDetailElements elements2) {
@@ -199,6 +233,12 @@ public class NetworkServiceTest {
             // given - mocking
             BDDMockito.given(dockerNetworkRepository.inspectNetwork(any(), any()))
                     .willReturn(networkDetailElements);
+
+            BDDMockito.given(accountRepository.findByOauthServiceIdEqualsAndThirdPartyTypeEquals(any(), any()))
+                    .willReturn(Optional.of(testAccount));
+
+            BDDMockito.given(dockerContainerRepository.lsContainer(any()))
+                    .willReturn(List.of(containerElements));
 
             // when
             InspectNetworkResponseDto actual = networkService.inspectNetwork(testRequestInfo, testNameRequest);
@@ -495,6 +535,19 @@ public class NetworkServiceTest {
     class RmNetwork {
 
         boolean deleteNetworkResultSuccess = true;
+        AccountEntity testAccount = null;
+
+        public RmNetwork() {
+
+            testAccount = AccountEntity.builder()
+                    .nickname("테스트용 계정1")
+                    .oauthServiceId("test_account_1")
+                    .thirdPartyType(ThirdPartyEnum.KAKAO)
+                    .isActive(true)
+                    .build();
+
+            testAccount.setDateTimeForTest(LocalDateTime.now(), LocalDateTime.now());
+        }
 
         @Tag("business")
         @Test
@@ -503,6 +556,12 @@ public class NetworkServiceTest {
             // given - mocking
             BDDMockito.given(dockerNetworkRepository.rmNetwork(any(), any()))
                     .willReturn(deleteNetworkResultSuccess);
+
+            BDDMockito.given(accountRepository.findByOauthServiceIdEqualsAndThirdPartyTypeEquals(any(), any()))
+                    .willReturn(Optional.of(testAccount));
+
+            BDDMockito.given(dockerNetworkContainerMappingRepository.existNetworkBindingContainer(any(), any()))
+                    .willReturn(false);
 
             // when
             RmNetworkResponseDto actual = networkService.rmNetwork(testRequestInfo, testNameRequest);

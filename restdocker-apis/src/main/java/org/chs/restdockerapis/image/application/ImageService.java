@@ -3,6 +3,7 @@ package org.chs.restdockerapis.image.application;
 import lombok.RequiredArgsConstructor;
 import org.chs.domain.account.AccountRepository;
 import org.chs.domain.account.entity.AccountEntity;
+import org.chs.domain.container.ContainerEntityRepository;
 import org.chs.domain.dockerhub.DockerHubEntityRepository;
 import org.chs.domain.dockerhub.entity.DockerHubEntity;
 import org.chs.domain.image.ImageEntityRepository;
@@ -29,6 +30,7 @@ public class ImageService {
 
     private final AccountRepository accountRepository;
     private final ImageEntityRepository dockerImageRepository;
+    private final ContainerEntityRepository containerEntityRepository;
     private final DockerHubEntityRepository dockerHubEntityRepository;
 
     /**
@@ -118,17 +120,25 @@ public class ImageService {
      * @return Image 삭제 성공유무
      */
     public RmImageResponseDto rmImage(GetRequesterDto requesterInfo, DockerCommandRequestDto request) {
-        String imageName = existArgOnlyOneImageName(request.argCommands());
-        if (null == imageName) {
+        String imageFullName = existArgOnlyOneImageName(request.argCommands());
+        if (null == imageFullName) {
             throw new CustomBadRequestException(ErrorCode.ARGUMENT_COMMAND_NOT_VALID_EXCEPTION);
         }
         String oauthServiceId = requesterInfo.id();
 
-        boolean deleteImageResult = dockerImageRepository.rmImage(oauthServiceId, imageName);
+        if (existContainer(oauthServiceId, imageFullName)) {
+            throw new CustomBadRequestException(ErrorCode.REMOVE_IMPOSSIBLE_IMAGE_EXIST_CONTAINER);
+        }
+
+        boolean deleteImageResult = dockerImageRepository.rmImage(oauthServiceId, imageFullName);
 
         return RmImageResponseDto.builder()
                 .imageDeleteResult(deleteImageResult)
                 .build();
+    }
+
+    private boolean existContainer(String oauthServiceId, String imageFullName) {
+        return containerEntityRepository.existContainerForImage(oauthServiceId, imageFullName);
     }
 
     private String existArgOnlyOneImageName(List<String> argCommands) {

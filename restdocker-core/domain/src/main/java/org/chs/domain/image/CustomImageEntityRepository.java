@@ -11,5 +11,5 @@ public interface CustomImageEntityRepository {
 
     ImageDetailElements inspectImage(String oauthServiceId, String imageName);
 
-    boolean rmImage(String oauthServiceId, String imageName);
+    boolean rmImage(String oauthServiceId, String imageFullName);
 }

@@ -17,6 +17,10 @@ public enum ErrorCode {
     MUST_IPRANGE_INTO_SUBNET(HttpStatus.BAD_REQUEST, "10109", "IPRange 는 Subnet 안에 포함되어야합니다"),
     MUST_GATEWAY_INTO_SUBNET(HttpStatus.BAD_REQUEST, "10110", "Gateway 는 Subnet 안에 포함되어야합니다"),
     DUPLICATE_SUBNET(HttpStatus.BAD_REQUEST, "10111", "Subnet이 존재하는 Network와 겹칩니다."),
+    IMPOSSIBLE_RM_BRIDGE_NETWORK(HttpStatus.BAD_REQUEST, "10112", "Bridge 네트워크는 삭제할 수 없습니다."),
+    ARGS_NEED_NETWORK(HttpStatus.BAD_REQUEST, "10113", "Container IP를 명시적 선언하려면 Network를 명시적으로 설정해야합니다."),
+    REMOVE_IMPOSSIBLE_IMAGE_EXIST_CONTAINER(HttpStatus.BAD_REQUEST, "10114","해당 이미지로 만들어진 컨테이너가 존재하여 이미지를 삭제할 수 없습니다."),
+    REMOVE_IMPOSSIBLE_NETWORK_EXIST_CONTAINER(HttpStatus.BAD_REQUEST, "10115","해당 네트워크에 할당된 컨테이너가 존재하여 네트워크를 삭제할 수 없습니다."),
 
     JWT_EXPIRED_EXCEPTION(HttpStatus.BAD_REQUEST, "11001", "JWT 만료되었습니다."),
     JWT_VALID_EXCEPTION(HttpStatus.BAD_REQUEST, "11002", "JWT 정보의 유효성검사가 실패하였습니다."),

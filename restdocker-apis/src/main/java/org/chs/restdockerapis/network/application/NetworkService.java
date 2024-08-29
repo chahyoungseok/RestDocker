@@ -220,12 +220,25 @@ public class NetworkService {
      * 예상 명령어 : docker network rm ${도커 네트워크 이름}
      * 예상 인자값 : 없음
      *
+     * 참고사항 :
+     *          Docker 는 bridge 네트워크를 항상 하나이상 할당해놓으려 하기 때문에
+     *          bridge 네트워크를 삭제하면 컨테이너 실행 시, 새로운 bridge 네트워크를 할당한다.
+     *
+     *          따라서 본 서버에서는 bridge 네트워크의 삭제를 제지합니다.
+     *
      * @param requesterInfo 사용자 기본 정보 (IP, OAuthServiceId, AccessToken, RefreshToken)
      * @param request ArgCommands : 명령어의 추가 요구사항 List(인자 값)
      * @return 특정 DockerNetwork 삭제의 성공유무
      */
     public RmNetworkResponseDto rmNetwork(GetRequesterDto requesterInfo, DockerCommandRequestDto request) {
         String networkName = getNetworkNameForOneArgCommand(request.argCommands());
+        if (networkName.equals("bridge")) {
+            throw new CustomBadRequestException(ErrorCode.IMPOSSIBLE_RM_BRIDGE_NETWORK);
+        }
+
+        if (existContainer(getAccountPk(requesterInfo.id(), requesterInfo.thirdPartyType()), networkName)) {
+            throw new CustomBadRequestException(ErrorCode.REMOVE_IMPOSSIBLE_NETWORK_EXIST_CONTAINER);
+        }
 
         boolean deleteNetworkResult = dockerNetworkRepository.rmNetwork(requesterInfo.id(), networkName);
 
@@ -234,11 +247,22 @@ public class NetworkService {
                 .build();
     }
 
+    private boolean existContainer(String accountPk, String networkName) {
+        return networkContainerMappingRepository.existNetworkBindingContainer(accountPk, networkName);
+    }
+
     private String getNetworkNameForOneArgCommand(List<String> argCommands) {
         if (1 != argCommands.size()) {
             throw new CustomBadRequestException(ErrorCode.ARGUMENT_COMMAND_NOT_VALID_EXCEPTION);
         }
 
         return argCommands.get(0);
+    }
+
+    private String getAccountPk(String oauthServiceId, ThirdPartyEnum thirdPartyType) {
+        AccountEntity account = accountRepository.findByOauthServiceIdEqualsAndThirdPartyTypeEquals(oauthServiceId, thirdPartyType)
+                .orElseThrow(() -> new CustomBadRequestException(ErrorCode.ACCOUNT_NOT_EXIST_OAUTH_ID_EXCEPTION));
+
+        return account.getPk();
     }
 }
