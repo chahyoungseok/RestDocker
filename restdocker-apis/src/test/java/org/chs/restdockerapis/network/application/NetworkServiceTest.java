@@ -177,8 +177,6 @@ public class NetworkServiceTest {
         private NetworkDetailElements networkDetailElements = null;
         private ContainerElements containerElements = null;
 
-        private AccountEntity testAccount;
-
         protected InspectNetwork() {
             // given - data
             networkDetailElements = NetworkDetailElements.builder()
@@ -203,15 +201,6 @@ public class NetworkServiceTest {
                     .privateIp("172.17.18.11")
                     .status(ContainerStatusEnum.Running)
                     .build();
-
-            testAccount = AccountEntity.builder()
-                    .nickname("테스트용 계정1")
-                    .oauthServiceId("test_account_1")
-                    .thirdPartyType(ThirdPartyEnum.KAKAO)
-                    .isActive(true)
-                    .build();
-
-            testAccount.setDateTimeForTest(LocalDateTime.now(), LocalDateTime.now());
         }
 
         private boolean compareDto(NetworkDetailElements elements1, NetworkDetailElements elements2) {
@@ -233,9 +222,6 @@ public class NetworkServiceTest {
             // given - mocking
             BDDMockito.given(dockerNetworkRepository.inspectNetwork(any(), any()))
                     .willReturn(networkDetailElements);
-
-            BDDMockito.given(accountRepository.findByOauthServiceIdEqualsAndThirdPartyTypeEquals(any(), any()))
-                    .willReturn(Optional.of(testAccount));
 
             BDDMockito.given(dockerContainerRepository.lsContainer(any()))
                     .willReturn(List.of(containerElements));
@@ -535,19 +521,6 @@ public class NetworkServiceTest {
     class RmNetwork {
 
         boolean deleteNetworkResultSuccess = true;
-        AccountEntity testAccount = null;
-
-        public RmNetwork() {
-
-            testAccount = AccountEntity.builder()
-                    .nickname("테스트용 계정1")
-                    .oauthServiceId("test_account_1")
-                    .thirdPartyType(ThirdPartyEnum.KAKAO)
-                    .isActive(true)
-                    .build();
-
-            testAccount.setDateTimeForTest(LocalDateTime.now(), LocalDateTime.now());
-        }
 
         @Tag("business")
         @Test
@@ -556,9 +529,6 @@ public class NetworkServiceTest {
             // given - mocking
             BDDMockito.given(dockerNetworkRepository.rmNetwork(any(), any()))
                     .willReturn(deleteNetworkResultSuccess);
-
-            BDDMockito.given(accountRepository.findByOauthServiceIdEqualsAndThirdPartyTypeEquals(any(), any()))
-                    .willReturn(Optional.of(testAccount));
 
             BDDMockito.given(dockerNetworkContainerMappingRepository.existNetworkBindingContainer(any(), any()))
                     .willReturn(false);

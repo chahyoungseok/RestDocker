@@ -35,7 +35,6 @@ public class CustomImageEntityRepositoryImpl implements CustomImageEntityReposit
                 )
                 .from(imageEntity)
                 .innerJoin(imageEntity.account, accountEntity)
-                    .on(imageEntity.account.pk.eq(accountEntity.pk))
                 .where(
                         eqOauthServiceId(oauthServiceId),
                         containImageName(imageNameAndTag[0]),
@@ -61,7 +60,6 @@ public class CustomImageEntityRepositoryImpl implements CustomImageEntityReposit
                 )
                 .from(imageEntity)
                 .innerJoin(imageEntity.account, accountEntity)
-                    .on(imageEntity.account.pk.eq(accountEntity.pk))
                 .where(
                         eqOauthServiceId(oauthServiceId),
                         eqImageName(imageNameAndTag[0]),
@@ -78,7 +76,6 @@ public class CustomImageEntityRepositoryImpl implements CustomImageEntityReposit
 
         ImageEntity selectedImage = queryFactory.selectFrom(imageEntity)
                 .innerJoin(imageEntity.account, accountEntity)
-                    .on(imageEntity.account.pk.eq(accountEntity.pk))
                 .where(
                         eqOauthServiceId(oauthServiceId),
                         eqImageName(imageNameAndTag[0]),

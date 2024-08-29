@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+import static org.chs.domain.account.entity.QAccountEntity.accountEntity;
 import static org.chs.domain.network.entity.QNetworkContainerMappingEntity.networkContainerMappingEntity;
 import static org.chs.domain.network.entity.QNetworkEntity.networkEntity;
 
@@ -38,13 +39,13 @@ public class CustomNetworkContainerMappingEntityRepositoryImpl implements Custom
     }
 
     @Override
-    public boolean existNetworkBindingContainer(String accountPk, String networkName) {
+    public boolean existNetworkBindingContainer(String oauthServiceId, String networkName) {
         Integer fetchOne = queryFactory.selectOne()
                 .from(networkContainerMappingEntity)
                 .innerJoin(networkContainerMappingEntity.network, networkEntity)
-                .on(networkContainerMappingEntity.network.pk.eq(networkEntity.pk))
+                .innerJoin(networkEntity.account, accountEntity)
                 .where(
-                        eqAccountPk(accountPk),
+                        eqOAuthServiceId(oauthServiceId),
                         eqNetworkName(networkName)
                 )
                 .fetchOne();
@@ -52,12 +53,12 @@ public class CustomNetworkContainerMappingEntityRepositoryImpl implements Custom
         return null != fetchOne;
     }
 
-    private BooleanExpression eqAccountPk(String accountPk) {
-        if (null == accountPk) {
+    private BooleanExpression eqOAuthServiceId(String oauthServiceId) {
+        if (null == oauthServiceId) {
             return null;
         }
 
-        return networkEntity.account.pk.eq(accountPk);
+        return networkEntity.account.oauthServiceId.eq(oauthServiceId);
     }
 
     private BooleanExpression eqNetworkName(String networkName) {

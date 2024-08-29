@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface ImageEntityRepository extends JpaRepository<ImageEntity, String>, CustomImageEntityRepository {
 
-    List<ImageEntity> findImageEntitiesByAccount_Pk(String accountPk);
+    List<ImageEntity> findImageEntitiesByAccountOauthServiceId(String oauthServiceId);
 }
