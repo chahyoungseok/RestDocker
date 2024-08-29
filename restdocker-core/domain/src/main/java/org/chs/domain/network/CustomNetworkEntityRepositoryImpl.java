@@ -22,6 +22,17 @@ public class CustomNetworkEntityRepositoryImpl implements CustomNetworkEntityRep
     private final NetworkContainerMappingEntityRepository networkContainerMappingEntityRepository;
 
     @Override
+    public NetworkEntity findByOAuthServiceIdAndNetworkName(String oauthServiceId, String networkName) {
+        return queryFactory.selectFrom(networkEntity)
+                .innerJoin(networkEntity.account, accountEntity)
+                .where(
+                        eqOauthServiceId(oauthServiceId),
+                        eqNetworkName(networkName)
+                )
+                .fetchOne();
+    }
+
+    @Override
     public List<NetworkElements> findByOAuthServiceId(String oauthServiceId) {
 
         return queryFactory.select(

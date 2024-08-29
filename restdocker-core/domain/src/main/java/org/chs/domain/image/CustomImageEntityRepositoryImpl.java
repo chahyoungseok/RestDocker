@@ -22,6 +22,20 @@ public class CustomImageEntityRepositoryImpl implements CustomImageEntityReposit
     private final JPAQueryFactory queryFactory;
 
     @Override
+    public ImageEntity findByOAuthServiceIdAndImageFullName(String oauthServiceId, String imageFullName) {
+        String[] imageNameAndTag = separateColonImageName(imageFullName);
+
+       return queryFactory.selectFrom(imageEntity)
+                .innerJoin(imageEntity.account, accountEntity)
+                .where(
+                        eqOauthServiceId(oauthServiceId),
+                        containImageName(imageNameAndTag[0]),
+                        containImageTag(imageNameAndTag[1])
+                )
+                .fetchOne();
+    }
+
+    @Override
     public List<ImageElements> findAllByOauthServiceId(String oauthServiceId, String imageName) {
         String[] imageNameAndTag = separateColonImageName(imageName);
 

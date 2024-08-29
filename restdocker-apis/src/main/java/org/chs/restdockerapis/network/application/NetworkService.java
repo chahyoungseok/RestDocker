@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.chs.domain.account.AccountRepository;
 import org.chs.domain.account.entity.AccountEntity;
 import org.chs.domain.common.enumerate.ThirdPartyEnum;
+import org.chs.domain.container.ContainerEntityRepository;
+import org.chs.domain.network.NetworkContainerMappingEntityRepository;
 import org.chs.domain.network.NetworkEntityRepository;
 import org.chs.domain.network.dto.NetworkDetailElements;
 import org.chs.domain.network.dto.NetworkElements;
@@ -27,6 +29,8 @@ public class NetworkService {
 
     private final AccountRepository accountRepository;
     private final NetworkEntityRepository dockerNetworkRepository;
+    private final ContainerEntityRepository dockerContainerRepository;
+    private final NetworkContainerMappingEntityRepository networkContainerMappingRepository;
 
     private final ListUtils listUtils;
     private final AddressUtils addressUtils;
@@ -66,6 +70,10 @@ public class NetworkService {
 
         NetworkDetailElements inspectedNetworkDetailElements = dockerNetworkRepository.inspectNetwork(requesterInfo.id(), networkName);
 
+        inspectedNetworkDetailElements.setContainerInfo(
+                dockerContainerRepository.lsContainer(requesterInfo.id())
+        );
+
         return InspectNetworkResponseDto.builder()
                 .inspectNetworkDetailElements(inspectedNetworkDetailElements)
                 .build();
@@ -98,7 +106,7 @@ public class NetworkService {
             throw new CustomBadRequestException(ErrorCode.ARGUMENT_COMMAND_NOT_VALID_EXCEPTION);
         }
 
-        NetworkOptionDto castednetworkOptionDto = castCommandToMap(request.argCommands());
+        NetworkOptionDto castednetworkOptionDto = castCommandToDto(request.argCommands());
         NetworkOptionDto validedOptionDto = validNetworkOption(castednetworkOptionDto, requesterInfo.id());
 
         NetworkEntity savedNetwork = saveNetworkForOptionDto(validedOptionDto, requesterInfo.id(), requesterInfo.thirdPartyType());
@@ -108,7 +116,7 @@ public class NetworkService {
                 .build();
     }
 
-    private NetworkOptionDto castCommandToMap(List<String> argCommands) {
+    private NetworkOptionDto castCommandToDto(List<String> argCommands) {
         NetworkOptionDto networkOption = new NetworkOptionDto();
 
         for (String argCommand : argCommands) {
@@ -236,7 +244,7 @@ public class NetworkService {
             throw new CustomBadRequestException(ErrorCode.IMPOSSIBLE_RM_BRIDGE_NETWORK);
         }
 
-        if (existContainer(getAccountPk(requesterInfo.id(), requesterInfo.thirdPartyType()), networkName)) {
+        if (existContainer(requesterInfo.id(), networkName)) {
             throw new CustomBadRequestException(ErrorCode.REMOVE_IMPOSSIBLE_NETWORK_EXIST_CONTAINER);
         }
 
@@ -247,8 +255,8 @@ public class NetworkService {
                 .build();
     }
 
-    private boolean existContainer(String accountPk, String networkName) {
-        return networkContainerMappingRepository.existNetworkBindingContainer(accountPk, networkName);
+    private boolean existContainer(String oauthServiceId, String networkName) {
+        return networkContainerMappingRepository.existNetworkBindingContainer(oauthServiceId, networkName);
     }
 
     private String getNetworkNameForOneArgCommand(List<String> argCommands) {
@@ -257,12 +265,5 @@ public class NetworkService {
         }
 
         return argCommands.get(0);
-    }
-
-    private String getAccountPk(String oauthServiceId, ThirdPartyEnum thirdPartyType) {
-        AccountEntity account = accountRepository.findByOauthServiceIdEqualsAndThirdPartyTypeEquals(oauthServiceId, thirdPartyType)
-                .orElseThrow(() -> new CustomBadRequestException(ErrorCode.ACCOUNT_NOT_EXIST_OAUTH_ID_EXCEPTION));
-
-        return account.getPk();
     }
 }

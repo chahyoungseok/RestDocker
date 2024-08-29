@@ -28,7 +28,7 @@ public class CommandService {
     public CommandService() {
         this.imageSubCommands = List.of("ls", "inspect", "rm", "pull");
         this.networkSubCommands = List.of("ls", "inspect", "create", "rm");
-        this.containerSubCommands = List.of("ls", "ps", "rename", "create", "run", "start", "stop", "exec", "rm", "inspect");
+        this.containerSubCommands = List.of("ls", "ps", "rename", "create", "run", "start", "stop", "rm", "inspect");
     }
 
     public CommandAnalysisResponseDto filteringCommand(CommandAnalysisRequestDto request) {

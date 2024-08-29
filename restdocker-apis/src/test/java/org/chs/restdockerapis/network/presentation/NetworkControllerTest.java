@@ -1,5 +1,7 @@
 package org.chs.restdockerapis.network.presentation;
 
+import org.chs.domain.container.dto.ContainerElements;
+import org.chs.domain.container.enumerate.ContainerStatusEnum;
 import org.chs.domain.network.dto.NetworkDetailElements;
 import org.chs.domain.network.dto.NetworkElements;
 import org.chs.restdockerapis.common.exception.CustomBadRequestException;
@@ -151,10 +153,23 @@ public class NetworkControllerTest extends ControllerTest {
     class InspectNetworkSuccess {
         private NetworkDetailElements testNetworkDetailElement = null;
         private InspectNetworkResponseDto testResponse = null;
+        private ContainerElements containerElements = null;
 
         @BeforeEach
         void setUpData() {
             // given
+            containerElements = ContainerElements.builder()
+                    .createDate(LocalDateTime.now())
+                    .updateDate(LocalDateTime.now())
+                    .name("restDocker")
+                    .imageName("testImageName")
+                    .imageTag("testImageTag")
+                    .outerPort("1111")
+                    .innerPort("2222")
+                    .privateIp("172.17.18.11")
+                    .status(ContainerStatusEnum.Running)
+                    .build();
+
             testNetworkDetailElement = NetworkDetailElements.builder()
                     .createDate(LocalDateTime.now())
                     .updateDate(LocalDateTime.now())
@@ -164,6 +179,7 @@ public class NetworkControllerTest extends ControllerTest {
                     .gateway("172.17.0.1")
                     .enableIcc(true)
                     .mtu(1000)
+                    .containerInfo(List.of(containerElements))
                     .build();
 
             testResponse = InspectNetworkResponseDto.builder()
@@ -202,7 +218,17 @@ public class NetworkControllerTest extends ControllerTest {
                                             fieldWithPath("inspectNetworkDetailElements.ipRange").type(JsonFieldType.STRING).description("네트워크 IP 대역"),
                                             fieldWithPath("inspectNetworkDetailElements.gateway").type(JsonFieldType.STRING).description("네트워크 게이트웨이"),
                                             fieldWithPath("inspectNetworkDetailElements.enableIcc").type(JsonFieldType.BOOLEAN).description("컨테이너 간 통신이 가능하게 할지의 여부"),
-                                            fieldWithPath("inspectNetworkDetailElements.mtu").type(JsonFieldType.NUMBER).description("네트워크 인터페이스가 한번에 전송할 수 있는 최대 데이터 패킷 크기")
+                                            fieldWithPath("inspectNetworkDetailElements.mtu").type(JsonFieldType.NUMBER).description("네트워크 인터페이스가 한번에 전송할 수 있는 최대 데이터 패킷 크기"),
+                                            fieldWithPath("inspectNetworkDetailElements.containerInfo[]").type(JsonFieldType.ARRAY).description("네트워크에 할당되어있는 컨테이너 정보 리스트"),
+                                            fieldWithPath("inspectNetworkDetailElements.containerInfo[].createDate").type(JsonFieldType.STRING).description("네트워크에 할당되어있는 컨테이너 생성날짜"),
+                                            fieldWithPath("inspectNetworkDetailElements.containerInfo[].updateDate").type(JsonFieldType.STRING).description("네트워크에 할당되어있는 컨테이너 수정날짜"),
+                                            fieldWithPath("inspectNetworkDetailElements.containerInfo[].imageName").type(JsonFieldType.STRING).description("네트워크에 할당되어있는 컨테이너 이미지 이름"),
+                                            fieldWithPath("inspectNetworkDetailElements.containerInfo[].imageTag").type(JsonFieldType.STRING).description("네트워크에 할당되어있는 컨테이너 이미지 태그"),
+                                            fieldWithPath("inspectNetworkDetailElements.containerInfo[].name").type(JsonFieldType.STRING).description("네트워크에 할당되어있는 컨테이너 이름"),
+                                            fieldWithPath("inspectNetworkDetailElements.containerInfo[].privateIp").type(JsonFieldType.STRING).description("네트워크에 할당되어있는 컨테이너 내부 IP"),
+                                            fieldWithPath("inspectNetworkDetailElements.containerInfo[].outerPort").type(JsonFieldType.STRING).description("네트워크에 할당되어있는 컨테이너 외부 포트"),
+                                            fieldWithPath("inspectNetworkDetailElements.containerInfo[].innerPort").type(JsonFieldType.STRING).description("네트워크에 할당되어있는 컨테이너 내부 포트"),
+                                            fieldWithPath("inspectNetworkDetailElements.containerInfo[].status").type(JsonFieldType.STRING).description("네트워크에 할당되어있는 컨테이너 상태값")
                                     )
                             )
                     );

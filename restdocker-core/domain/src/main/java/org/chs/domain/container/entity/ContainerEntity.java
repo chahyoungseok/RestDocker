@@ -2,9 +2,11 @@ package org.chs.domain.container.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.chs.domain.common.BaseDomainEntity;
+import org.chs.domain.container.enumerate.ContainerStatusEnum;
 import org.chs.domain.image.entity.ImageEntity;
 
 @Entity
@@ -14,7 +16,7 @@ import org.chs.domain.image.entity.ImageEntity;
                 @UniqueConstraint(
                         name = "unique__network___account_fk_name",
                         columnNames = {
-                                "account_fk", "name"
+                                "image_fk", "name"
                         }
                 )
 })
@@ -29,11 +31,28 @@ public class ContainerEntity extends BaseDomainEntity {
     private String name;
 
     @Column(name = "status", nullable = false)
-    private String status;
+    private ContainerStatusEnum status;
 
-    @Column(name = "pid", nullable = false)
-    private String pid;
+    @Column(name = "stop_rm", nullable = false)
+    private boolean stopRm;
 
-    @Column(name = "restart_count", nullable = false)
-    private String restartCount;
+    @Column(name = "private_ip", nullable = false)
+    private String privateIp;
+
+    @Column(name = "outer_port", nullable = true)
+    private String outerPort;
+
+    @Column(name = "inner_port", nullable = true)
+    private String innerPort;
+
+    @Builder
+    public ContainerEntity(ImageEntity image, String name, ContainerStatusEnum status, boolean stopRm, String privateIp, String outerPort, String innerPort) {
+        this.image = image;
+        this.name = name;
+        this.status = status;
+        this.stopRm = stopRm;
+        this.privateIp = privateIp;
+        this.outerPort = outerPort;
+        this.innerPort = innerPort;
+    }
 }

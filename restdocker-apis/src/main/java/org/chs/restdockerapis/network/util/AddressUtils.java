@@ -6,7 +6,10 @@ import org.chs.restdockerapis.network.presentation.dto.SubnetRangeDto;
 import org.springframework.stereotype.Component;
 
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Component
 public class AddressUtils {
@@ -80,6 +83,29 @@ public class AddressUtils {
             }
 
             if (octet < 0 || octet > 255) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public boolean validPortForwardingFormat(String portForward) {
+        String[] ports = portForward.split(":");
+
+        if (2 != ports.length) {
+            return false;
+        }
+
+        for (int portIndex = 0; portIndex < 2; portIndex++) {
+            int port = -1;
+            try {
+                port = Integer.parseInt(ports[portIndex]);
+            } catch (Exception exception) {
+                throw new CustomBadRequestException(ErrorCode.NOT_VALID_ADDRESS_FORMAT);
+            }
+
+            if (port < 0 || port > 65535) {
                 return false;
             }
         }
@@ -161,6 +187,27 @@ public class AddressUtils {
     private boolean duplicateSubnetCheck(SubnetRangeDto range1, SubnetRangeDto range2) {
         return range1.endAddress() >= range2.startAddress()
                 && range1.startAddress() <= range2.endAddress();
+    }
+
+    public String automaticAllocationContainerIp(String subnet, List<String> containerPrivateIp) {
+        String[] subnetWithCidr = subnet.split("/");
+        SubnetRangeDto subnetRange = getSubnetRange(subnetWithCidr);
+
+        // 사용된 IP 주소 목록을 정수로 변환
+        Set<Integer> usedIpSet = (containerPrivateIp == null) ?
+                new HashSet<>() :
+                containerPrivateIp.stream()
+                        .map(this::ipToInt)
+                        .collect(Collectors.toSet());
+
+        // 서브넷의 시작 IP부터 끝 IP까지 사용되지 않은 첫 번째 IP 찾기
+        for (int currentIp = subnetRange.startAddress() + 1; currentIp < subnetRange.endAddress(); currentIp++) {
+            if (false == usedIpSet.contains(currentIp)) {
+                return intToIp(currentIp);
+            }
+        }
+
+        return null;
     }
 
     /**
