@@ -14,7 +14,7 @@ import org.chs.domain.image.entity.ImageEntity;
 @Table(name = "container",
         uniqueConstraints = {
                 @UniqueConstraint(
-                        name = "unique__network___account_fk_name",
+                        name = "unique__image_fk__container__name",
                         columnNames = {
                                 "image_fk", "name"
                         }

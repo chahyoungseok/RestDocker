@@ -1,4 +1,8 @@
 package org.chs.restdockerapis.container.presentation.dto;
 
-public record StopContainerResponseDto() {
-}
+import lombok.Builder;
+
+@Builder
+public record StopContainerResponseDto(
+        boolean stopResult
+) {}

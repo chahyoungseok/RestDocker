@@ -4,6 +4,8 @@ package org.chs.domain.container;
 import org.chs.domain.container.dto.ContainerDetailElements;
 import org.chs.domain.container.dto.ContainerElements;
 import org.chs.domain.container.dto.ContainerValidElementsDto;
+import org.chs.domain.container.entity.ContainerEntity;
+import org.chs.domain.container.enumerate.ContainerStatusEnum;
 
 import java.util.List;
 
@@ -18,9 +20,9 @@ public interface CustomContainerEntityRepository {
 
     boolean existContainerForImage(String oauthServiceId, String imageName);
 
-    String findContainerPk(String oauthServiceId, String containerName);
-
     List<ContainerValidElementsDto> findValidElementsListByOAuthServiceId(String oauthServiceId);
 
-    String findContainerPkByOAuthServiceAndContainerName(String oauthServiceId, String preContainerName);
+    ContainerEntity findContainerByOAuthServiceAndContainerName(String oauthServiceId, String containerName);
+
+    long updateContainerStatus(String containerPk, ContainerStatusEnum containerStatusEnum);
 }

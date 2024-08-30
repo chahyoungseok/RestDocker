@@ -133,11 +133,11 @@ public class ContainerService {
         if (2 != request.argCommands().size()) {
             throw new CustomBadRequestException(ErrorCode.ARGUMENT_COMMAND_NOT_VALID_EXCEPTION);
         }
-        String containerPk
-                = containerEntityRepository.findContainerPkByOAuthServiceAndContainerName(requesterInfo.id(), request.argCommands().get(0));
+        ContainerEntity container
+                = containerEntityRepository.findContainerByOAuthServiceAndContainerName(requesterInfo.id(), request.argCommands().get(0));
 
         boolean renameResult = containerEntityRepository.renameContainer(
-                containerPk, request.argCommands().get(1)
+                container.getPk(), request.argCommands().get(1)
         );
 
         return RenameContainerResponseDto.builder()
@@ -347,24 +347,102 @@ public class ContainerService {
     public RmContainerResponseDto rmContainer(String oauthServiceId, DockerCommandRequestDto request) {
         String containerName = getContainerNameForOneArgCommand(request.argCommands());
 
-        String containerPk = containerEntityRepository.findContainerPk(oauthServiceId, containerName);
-        boolean rmResult = containerEntityRepository.rmContainer(containerPk);
+        ContainerEntity container = containerEntityRepository.findContainerByOAuthServiceAndContainerName(oauthServiceId, containerName);
+        boolean rmResult = containerEntityRepository.rmContainer(container.getPk());
 
         return RmContainerResponseDto.builder()
                 .rmResult(rmResult)
                 .build();
     }
 
+    /**
+     * 예상 명령어 : docker container run ${컨테이너 이름}
+     * 예상 인자 :
+     *          --name ${도커 컨테이너 이름}
+     *          --rm
+     *          --net ${도커 네트워크 이름}
+     *          --ip ${도커 네트워크 안에서 할당할 ip}
+     *          -p ${외부 Port}:${내부 Port}
+     *          ${이미지 이름}:${이미지 태그}
+     *
+     * 참고사항 :
+     *          docker run 은 docker create 와 docker start 가 합쳐진 명령어
+     *
+     * @param requesterInfo 사용자 기본 정보 (IP, OAuthServiceId, AccessToken, RefreshToken, ThirdPartyEnum)
+     * @param request 명령어의 추가 요구사항 List(인자 값)
+     * @return 컨테이너 생성 및 시작의 성공여부
+     */
     public RunContainerResponseDto runContainer(GetRequesterDto requesterInfo, DockerCommandRequestDto request) {
-        return null;
+
+        CreateContainerResponseDto createdContainer = this.createContainer(requesterInfo, request);
+        DockerCommandRequestDto argCommands = DockerCommandRequestDto.builder()
+                .argCommands(List.of(createdContainer.containerName()))
+                .build();
+
+        StartContainerResponseDto startContainerResponse = this.startContainer(requesterInfo.id(), argCommands);
+
+        return RunContainerResponseDto.builder()
+                .startResult(startContainerResponse.startResult())
+                .build();
     }
 
-    public StartContainerResponseDto startContainer(GetRequesterDto requesterInfo, DockerCommandRequestDto request) {
-        return null;
+    /**
+     * 예상 명령어 : docker start ${컨테이너 이름}
+     * 예상 인자 : 없음
+     *
+     * @param oauthServiceId 사용자 기본 정보
+     * @param request 명령어의 추가 요구사항 List(인자 값)
+     * @return 컨테이너 시작 성공유무
+     */
+    public StartContainerResponseDto startContainer(String oauthServiceId, DockerCommandRequestDto request) {
+        String containerName = getContainerNameForOneArgCommand(request.argCommands());
+
+        ContainerEntity targetContainer = containerEntityRepository.findContainerByOAuthServiceAndContainerName(oauthServiceId, containerName);
+        if (ContainerStatusEnum.Running.equals(targetContainer.getStatus())) {
+            throw new CustomBadRequestException(ErrorCode.ALREADY_CONTAINER_IS_RUNNING);
+        }
+
+        long updateResult = containerEntityRepository.updateContainerStatus(targetContainer.getPk(), ContainerStatusEnum.Running);
+        return StartContainerResponseDto.builder()
+                .startResult(0 != updateResult)
+                .build();
     }
 
-    public StopContainerResponseDto stopContainer(GetRequesterDto requesterInfo, DockerCommandRequestDto request) {
-        return null;
+    /**
+     * 예상 명령어 : docker stop ${컨테이너 이름}
+     * 예상 인자 : 없음
+     * 참고사항 :
+     *          컨테이너의 isRm 옵션이 활성화 되었을 경우 stop 명령은 rm 명령으로 바뀐다.
+     *
+     * @param oauthServiceId 사용자 기본 정보
+     * @param request 명령어의 추가 요구사항 List(인자 값)
+     * @return 컨테이너 시작 성공유무
+     */
+    public StopContainerResponseDto stopContainer(String oauthServiceId, DockerCommandRequestDto request) {
+        String containerName = getContainerNameForOneArgCommand(request.argCommands());
+
+        ContainerEntity targetContainer = containerEntityRepository.findContainerByOAuthServiceAndContainerName(oauthServiceId, containerName);
+        if (false == ContainerStatusEnum.Running.equals(targetContainer.getStatus())) {
+            throw new CustomBadRequestException(ErrorCode.NOT_EXIST_RUNNING_CONTAINER);
+        }
+
+        boolean updateResult = false;
+        if (targetContainer.isStopRm()) {
+            DockerCommandRequestDto argCommands = DockerCommandRequestDto.builder()
+                    .argCommands(List.of(targetContainer.getName()))
+                    .build();
+
+            RmContainerResponseDto rmContainerResponse = this.rmContainer(oauthServiceId, argCommands);
+
+            updateResult = rmContainerResponse.rmResult();
+        } else {
+            long updateStatusResult = containerEntityRepository.updateContainerStatus(targetContainer.getPk(), ContainerStatusEnum.Paused);
+            updateResult = (0 != updateStatusResult);
+        }
+
+        return StopContainerResponseDto.builder()
+                .stopResult(updateResult)
+                .build();
     }
 
     private String getContainerNameForOneArgCommand(List<String> argCommands) {

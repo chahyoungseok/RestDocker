@@ -154,7 +154,7 @@ public class NetworkRepositoryTest extends RepositoryTest {
 
         @Tag("domain")
         @Test
-        @DisplayName("[Network][실패 테스트] Ls Network - OAuthServiceId이 Null인 경우 조회에 실패한다.")
+        @DisplayName("[Network][실패 테스트] Inspect Network - OAuthServiceId이 Null인 경우 조회에 실패한다.")
         void OauthServiceId이_Null인_경우_조회에_실패한다() {
             // when && then
             Assertions.assertThrows(

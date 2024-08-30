@@ -9,6 +9,7 @@ import org.chs.domain.container.dto.ContainerDetailElements;
 import org.chs.domain.container.dto.ContainerElements;
 import org.chs.domain.container.dto.ContainerValidElementsDto;
 import org.chs.domain.container.entity.ContainerEntity;
+import org.chs.domain.container.enumerate.ContainerStatusEnum;
 import org.chs.domain.network.NetworkContainerMappingEntityRepository;
 import org.springframework.stereotype.Repository;
 
@@ -86,20 +87,6 @@ public class CustomContainerEntityRepositoryImpl implements CustomContainerEntit
     }
 
     @Override
-    public String findContainerPk(String oauthServiceId, String containerName) {
-        ContainerEntity container = queryFactory.selectFrom(containerEntity)
-                .innerJoin(containerEntity.image, imageEntity)
-                .innerJoin(imageEntity.account, accountEntity)
-                .where(
-                        eqOauthServiceId(oauthServiceId),
-                        eqContainerName(containerName)
-                )
-                .fetchOne();
-
-        return container.getPk();
-    }
-
-    @Override
     public List<ContainerValidElementsDto> findValidElementsListByOAuthServiceId(String oauthServiceId) {
         return queryFactory.select(Projections.fields(ContainerValidElementsDto.class,
                         containerEntity.name.as("containerName"),
@@ -113,15 +100,24 @@ public class CustomContainerEntityRepositoryImpl implements CustomContainerEntit
     }
 
     @Override
-    public String findContainerPkByOAuthServiceAndContainerName(String oauthServiceId, String preContainerName) {
+    public ContainerEntity findContainerByOAuthServiceAndContainerName(String oauthServiceId, String containerName) {
         return queryFactory.selectFrom(containerEntity)
                 .innerJoin(containerEntity.image, imageEntity)
                 .innerJoin(imageEntity.account, accountEntity)
                 .where(
                         eqOauthServiceId(oauthServiceId),
-                        eqContainerName(preContainerName)
+                        eqContainerName(containerName)
                 )
-                .fetchOne().getPk();
+                .fetchOne();
+    }
+
+
+    @Override
+    public long updateContainerStatus(String containerPk, ContainerStatusEnum containerStatusEnum) {
+        return queryFactory.update(containerEntity)
+                .set(containerEntity.status, containerStatusEnum)
+                .where(eqContainerPk(containerPk))
+                .execute();
     }
 
     @Override
@@ -164,10 +160,18 @@ public class CustomContainerEntityRepositoryImpl implements CustomContainerEntit
 
     private BooleanExpression eqOauthServiceId(String oauthServiceId) {
         if (null == oauthServiceId) {
-            throw new IllegalArgumentException("");
+            throw new IllegalArgumentException("OAuthServiceId를 가진 계정이 존재하지 않습니다.");
         }
 
         return accountEntity.oauthServiceId.eq(oauthServiceId);
+    }
+
+    private BooleanExpression eqContainerPk(String containerPk) {
+        if (null == containerPk) {
+            return Expressions.FALSE;
+        }
+
+        return containerEntity.pk.eq(containerPk);
     }
 
     private BooleanExpression eqImageName(String imageName) {
@@ -184,14 +188,6 @@ public class CustomContainerEntityRepositoryImpl implements CustomContainerEntit
         }
 
         return imageEntity.tag.eq(imageTag);
-    }
-
-    private BooleanExpression eqContainerPk(String containerPk) {
-        if (null == containerPk) {
-            return Expressions.FALSE;
-        }
-
-        return containerEntity.pk.eq(containerPk);
     }
 
     private String[] validColonImageName(String imageName) {
@@ -213,6 +209,4 @@ public class CustomContainerEntityRepositoryImpl implements CustomContainerEntit
 
         return imageName;
     }
-
-    // Container Create 시, OauthServiceId, ContainerName 이 복합 Unique 속성인걸 인지
 }

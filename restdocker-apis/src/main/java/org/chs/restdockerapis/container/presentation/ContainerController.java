@@ -60,12 +60,12 @@ public class ContainerController {
     @Auth
     @PostMapping("/start")
     public ResponseEntity<StartContainerResponseDto> startContainer(@GetRequester GetRequesterDto requesterInfo, @Valid @RequestBody DockerCommandRequestDto request) {
-        return ResponseEntity.ok(containerService.startContainer(requesterInfo, request));
+        return ResponseEntity.ok(containerService.startContainer(requesterInfo.id(), request));
     }
 
     @Auth
     @PostMapping("/stop")
     public ResponseEntity<StopContainerResponseDto> stopContainer(@GetRequester GetRequesterDto requesterInfo, @Valid @RequestBody DockerCommandRequestDto request) {
-        return ResponseEntity.ok(containerService.stopContainer(requesterInfo, request));
+        return ResponseEntity.ok(containerService.stopContainer(requesterInfo.id(), request));
     }
 }

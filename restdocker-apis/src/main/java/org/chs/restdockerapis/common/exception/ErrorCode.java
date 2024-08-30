@@ -27,6 +27,9 @@ public enum ErrorCode {
     NOT_VALID_PRIVATEIP(HttpStatus.BAD_REQUEST, "10119", " PrivateIp 가 유효성검증 과정에서 실패하였습니다."),
     NOT_VALID_NAME(HttpStatus.BAD_REQUEST, "10120", "Container Name 이 이미 당신의 Host에 존재하는 이름입니다."),
     NOT_EXIST_NETWORK_IN_HOST(HttpStatus.BAD_REQUEST, "10117", "요청으로 온 Docker Network가 당신의 Host에 있지 않습니다."),
+    ALREADY_CONTAINER_IS_RUNNING(HttpStatus.BAD_REQUEST, "10118", "요청한 컨테이너는 이미 실행중입니다."),
+    NOT_EXIST_RUNNING_CONTAINER(HttpStatus.BAD_REQUEST, "10119", "실행중인 컨테이너 중 요청한 컨테이너가 없습니다."),
+
 
     JWT_EXPIRED_EXCEPTION(HttpStatus.BAD_REQUEST, "11001", "JWT 만료되었습니다."),
     JWT_VALID_EXCEPTION(HttpStatus.BAD_REQUEST, "11002", "JWT 정보의 유효성검사가 실패하였습니다."),
