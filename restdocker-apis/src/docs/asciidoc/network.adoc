@@ -4,11 +4,11 @@
 
 ==== Request Fields
 
-include::{snippets}/ls-network-success/정상적으로_네트워크를_조회해온다/request-body.adoc[]
+include::{snippets}/ls-network-success/정상적으로_네트워크를_조회해온다/request-fields.adoc[]
 
 ==== Response Fields
 
-include::{snippets}/ls-network-success/정상적으로_네트워크를_조회해온다/response-body.adoc[]
+include::{snippets}/ls-network-success/정상적으로_네트워크를_조회해온다/response-fields.adoc[]
 
 ==== HTTP Request
 
@@ -23,9 +23,9 @@ include::{snippets}/ls-network-success/정상적으로_네트워크를_조회해
 
 ==== Request Fields
 
-include::{snippets}/ls-network-fail/원하는_네트워크를_-ls로_조회하려다_실패한다/request-body.adoc[]
+include::{snippets}/ls-network-fail/원하는_네트워크를_-ls로_조회하려다_실패한다/request-fields.adoc[]
 
-==== Response Fields
+==== Response Body
 
 include::{snippets}/ls-network-fail/원하는_네트워크를_-ls로_조회하려다_실패한다/response-body.adoc[]
 
@@ -42,11 +42,11 @@ include::{snippets}/ls-network-fail/원하는_네트워크를_-ls로_조회하�
 
 ==== Request Fields
 
-include::{snippets}/inspect-network-success/정상적으로_네트워크를_조회해온다/request-body.adoc[]
+include::{snippets}/inspect-network-success/정상적으로_네트워크를_조회해온다/request-fields.adoc[]
 
 ==== Response Fields
 
-include::{snippets}/inspect-network-success/정상적으로_네트워크를_조회해온다/response-body.adoc[]
+include::{snippets}/inspect-network-success/정상적으로_네트워크를_조회해온다/response-fields.adoc[]
 
 ==== HTTP Request
 
@@ -61,9 +61,9 @@ include::{snippets}/inspect-network-success/정상적으로_네트워크를_조�
 
 ==== Request Fields
 
-include::{snippets}/inspect-network-fail/네트워크_-inspect_조회_시_특정_네트워크를_지정하지_않아_실패한다/request-body.adoc[]
+include::{snippets}/inspect-network-fail/네트워크_-inspect_조회_시_특정_네트워크를_지정하지_않아_실패한다/request-fields.adoc[]
 
-==== Response Fields
+==== Response Body
 
 include::{snippets}/inspect-network-fail/네트워크_-inspect_조회_시_특정_네트워크를_지정하지_않아_실패한다/response-body.adoc[]
 
@@ -80,11 +80,11 @@ include::{snippets}/inspect-network-fail/네트워크_-inspect_조회_시_특정
 
 ==== Request Fields
 
-include::{snippets}/create-network-success/네트워크_이름만으로_정상적인_네트워크를_생성한다/request-body.adoc[]
+include::{snippets}/create-network-success/네트워크_이름만으로_정상적인_네트워크를_생성한다/request-fields.adoc[]
 
 ==== Response Fields
 
-include::{snippets}/create-network-success/네트워크_이름만으로_정상적인_네트워크를_생성한다/response-body.adoc[]
+include::{snippets}/create-network-success/네트워크_이름만으로_정상적인_네트워크를_생성한다/response-fields.adoc[]
 
 ==== HTTP Request
 
@@ -99,11 +99,11 @@ include::{snippets}/create-network-success/네트워크_이름만으로_정상�
 
 ==== Request Fields
 
-include::{snippets}/create-network-success/네트워크_이름과_서브넷으로_정상적인_네트워크를_생성한다/request-body.adoc[]
+include::{snippets}/create-network-success/네트워크_이름과_서브넷으로_정상적인_네트워크를_생성한다/request-fields.adoc[]
 
 ==== Response Fields
 
-include::{snippets}/create-network-success/네트워크_이름과_서브넷으로_정상적인_네트워크를_생성한다/response-body.adoc[]
+include::{snippets}/create-network-success/네트워크_이름과_서브넷으로_정상적인_네트워크를_생성한다/response-fields.adoc[]
 
 ==== HTTP Request
 
@@ -118,11 +118,11 @@ include::{snippets}/create-network-success/네트워크_이름과_서브넷으�
 
 ==== Request Fields
 
-include::{snippets}/create-network-success/네트워크_이름과_서브넷과_게이트웨이로_정상적인_네트워크를_생성한다/request-body.adoc[]
+include::{snippets}/create-network-success/네트워크_이름과_서브넷과_게이트웨이로_정상적인_네트워크를_생성한다/request-fields.adoc[]
 
 ==== Response Fields
 
-include::{snippets}/create-network-success/네트워크_이름과_서브넷과_게이트웨이로_정상적인_네트워크를_생성한다/response-body.adoc[]
+include::{snippets}/create-network-success/네트워크_이름과_서브넷과_게이트웨이로_정상적인_네트워크를_생성한다/response-fields.adoc[]
 
 ==== HTTP Request
 
@@ -137,11 +137,11 @@ include::{snippets}/create-network-success/네트워크_이름과_서브넷과_�
 
 ==== Request Fields
 
-include::{snippets}/create-network-success/네트워크_이름과_서브넷과_게이트웨이와_ip대역으로_정상적인_네트워크를_생성한다/request-body.adoc[]
+include::{snippets}/create-network-success/네트워크_이름과_서브넷과_게이트웨이와_ip대역으로_정상적인_네트워크를_생성한다/request-fields.adoc[]
 
 ==== Response Fields
 
-include::{snippets}/create-network-success/네트워크_이름과_서브넷과_게이트웨이와_ip대역으로_정상적인_네트워크를_생성한다/response-body.adoc[]
+include::{snippets}/create-network-success/네트워크_이름과_서브넷과_게이트웨이와_ip대역으로_정상적인_네트워크를_생성한다/response-fields.adoc[]
 
 ==== HTTP Request
 
@@ -156,11 +156,11 @@ include::{snippets}/create-network-success/네트워크_이름과_서브넷과_�
 
 ==== Request Fields
 
-include::{snippets}/create-network-success/네트워크_이름과_서브넷과_게이트웨이와_ip대역과_옵션들로_정상적인_네트워크를_생성한다/request-body.adoc[]
+include::{snippets}/create-network-success/네트워크_이름과_서브넷과_게이트웨이와_ip대역과_옵션들로_정상적인_네트워크를_생성한다/request-fields.adoc[]
 
 ==== Response Fields
 
-include::{snippets}/create-network-success/네트워크_이름과_서브넷과_게이트웨이와_ip대역과_옵션들로_정상적인_네트워크를_생성한다/response-body.adoc[]
+include::{snippets}/create-network-success/네트워크_이름과_서브넷과_게이트웨이와_ip대역과_옵션들로_정상적인_네트워크를_생성한다/response-fields.adoc[]
 
 ==== HTTP Request
 
@@ -175,9 +175,9 @@ include::{snippets}/create-network-success/네트워크_이름과_서브넷과_�
 
 ==== Request Fields
 
-include::{snippets}/create-network-fail/네트워크_생성시_네트워크_이름을_지정하지_않아_실패한다/request-body.adoc[]
+include::{snippets}/create-network-fail/네트워크_생성시_네트워크_이름을_지정하지_않아_실패한다/request-fields.adoc[]
 
-==== Response Fields
+==== Response Body
 
 include::{snippets}/create-network-fail/네트워크_생성시_네트워크_이름을_지정하지_않아_실패한다/response-body.adoc[]
 
@@ -194,9 +194,9 @@ include::{snippets}/create-network-fail/네트워크_생성시_네트워크_이�
 
 ==== Request Fields
 
-include::{snippets}/create-network-fail/네트워크_생성시_네트워크_이름에_띄어쓰기가_포함되어_실패한다/request-body.adoc[]
+include::{snippets}/create-network-fail/네트워크_생성시_네트워크_이름에_띄어쓰기가_포함되어_실패한다/request-fields.adoc[]
 
-==== Response Fields
+==== Response Body
 
 include::{snippets}/create-network-fail/네트워크_생성시_네트워크_이름에_띄어쓰기가_포함되어_실패한다/response-body.adoc[]
 
@@ -213,9 +213,9 @@ include::{snippets}/create-network-fail/네트워크_생성시_네트워크_이�
 
 ==== Request Fields
 
-include::{snippets}/create-network-fail/네트워크_생성시_서브넷이_시작주소가_아니어서_실패한다/request-body.adoc[]
+include::{snippets}/create-network-fail/네트워크_생성시_서브넷이_시작주소가_아니어서_실패한다/request-fields.adoc[]
 
-==== Response Fields
+==== Response Body
 
 include::{snippets}/create-network-fail/네트워크_생성시_서브넷이_시작주소가_아니어서_실패한다/response-body.adoc[]
 
@@ -232,9 +232,9 @@ include::{snippets}/create-network-fail/네트워크_생성시_서브넷이_시�
 
 ==== Request Fields
 
-include::{snippets}/create-network-fail/네트워크_생성시_서브넷이_유효하지않아_실패한다/request-body.adoc[]
+include::{snippets}/create-network-fail/네트워크_생성시_서브넷이_유효하지않아_실패한다/request-fields.adoc[]
 
-==== Response Fields
+==== Response Body
 
 include::{snippets}/create-network-fail/네트워크_생성시_서브넷이_유효하지않아_실패한다/response-body.adoc[]
 
@@ -251,9 +251,9 @@ include::{snippets}/create-network-fail/네트워크_생성시_서브넷이_유�
 
 ==== Request Fields
 
-include::{snippets}/create-network-fail/네트워크_생성시_서브넷이_겹치게되어_실패한다/request-body.adoc[]
+include::{snippets}/create-network-fail/네트워크_생성시_서브넷이_겹치게되어_실패한다/request-fields.adoc[]
 
-==== Response Fields
+==== Response Body
 
 include::{snippets}/create-network-fail/네트워크_생성시_서브넷이_겹치게되어_실패한다/response-body.adoc[]
 
@@ -270,11 +270,11 @@ include::{snippets}/create-network-fail/네트워크_생성시_서브넷이_겹�
 
 ==== Request Fields
 
-include::{snippets}/rm-network-success/정상적으로_네트워크를_삭제한다/request-body.adoc[]
+include::{snippets}/rm-network-success/정상적으로_네트워크를_삭제한다/request-fields.adoc[]
 
 ==== Response Fields
 
-include::{snippets}/rm-network-success/정상적으로_네트워크를_삭제한다/response-body.adoc[]
+include::{snippets}/rm-network-success/정상적으로_네트워크를_삭제한다/response-fields.adoc[]
 
 ==== HTTP Request
 
@@ -289,9 +289,9 @@ include::{snippets}/rm-network-success/정상적으로_네트워크를_삭제한
 
 ==== Request Fields
 
-include::{snippets}/rm-network-fail/네트워크_삭제시_특정_네트워크를_지정하지_않아_실패한다/request-body.adoc[]
+include::{snippets}/rm-network-fail/네트워크_삭제시_특정_네트워크를_지정하지_않아_실패한다/request-fields.adoc[]
 
-==== Response Fields
+==== Response Body
 
 include::{snippets}/rm-network-fail/네트워크_삭제시_특정_네트워크를_지정하지_않아_실패한다/response-body.adoc[]
 

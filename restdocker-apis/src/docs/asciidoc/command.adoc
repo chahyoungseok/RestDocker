@@ -8,7 +8,7 @@ include::{snippets}/filtering-command-success/명령어_분석_후_알맞는_비
 
 ==== Response Fields
 
-include::{snippets}/filtering-command-success/명령어_분석_후_알맞는_비즈니스_로직을_성공시킨다/response-body.adoc[]
+include::{snippets}/filtering-command-success/명령어_분석_후_알맞는_비즈니스_로직을_성공시킨다/response-fields.adoc[]
 
 ==== HTTP Request
 
@@ -25,7 +25,7 @@ include::{snippets}/filtering-command-success/명령어_분석_후_알맞는_비
 
 include::{snippets}/filtering-command-fail/명령어_분석_후_알맞지_않은_명령어_조합이라면_실패한다/request-fields.adoc[]
 
-==== Response Fields
+==== Response Body
 
 include::{snippets}/filtering-command-fail/명령어_분석_후_알맞지_않은_명령어_조합이라면_실패한다/response-body.adoc[]
 
