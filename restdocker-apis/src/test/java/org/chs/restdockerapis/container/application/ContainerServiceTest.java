@@ -125,7 +125,7 @@ public class ContainerServiceTest {
                 .enableIcc(true)
                 .mtu(1500)
                 .account(account)
-                .build();;
+                .build();
 
         testRequestInfo = GetRequesterDto.builder()
                 .id("testId")
