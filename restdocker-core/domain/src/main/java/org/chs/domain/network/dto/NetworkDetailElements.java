@@ -4,8 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.chs.domain.container.dto.ContainerElements;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Builder
@@ -20,4 +22,9 @@ public class NetworkDetailElements {
     private String gateway;
     private Boolean enableIcc;
     private Integer mtu;
+    private List<ContainerElements> containerInfo;
+
+    public void setContainerInfo(List<ContainerElements> containerElementsList){
+        this.containerInfo = containerElementsList;
+    }
 }

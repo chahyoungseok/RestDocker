@@ -1,14 +1,15 @@
 package org.chs.restdockerapis.image.presentation;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.chs.domain.image.dto.ImageDetailElements;
 import org.chs.domain.image.dto.ImageElements;
 import org.chs.restdockerapis.common.exception.CustomBadRequestException;
 import org.chs.restdockerapis.common.exception.ErrorCode;
 import org.chs.restdockerapis.common.structure.ControllerTest;
-import org.chs.restdockerapis.image.presentation.dto.DockerCommandRequestDto;
 import org.chs.restdockerapis.image.application.ImageService;
-import org.chs.restdockerapis.image.presentation.dto.*;
+import org.chs.restdockerapis.image.presentation.dto.InspectImageResponseDto;
+import org.chs.restdockerapis.image.presentation.dto.LsImageResponseDto;
+import org.chs.restdockerapis.image.presentation.dto.PullImageResponseDto;
+import org.chs.restdockerapis.image.presentation.dto.RmImageResponseDto;
 import org.junit.jupiter.api.*;
 import org.mockito.BDDMockito;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -23,7 +24,6 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -33,14 +33,6 @@ public class ImageControllerTest extends ControllerTest {
 
     @MockBean
     private ImageService imageService;
-
-    private String writeValueAsStringRequest(List<String> commands) throws JsonProcessingException {
-        return objectMapper.writeValueAsString(
-                DockerCommandRequestDto.builder()
-                        .argCommands(commands)
-                        .build()
-        );
-    }
 
     @Nested
     @DisplayName("[Image][성공 테스트] 사용자가 가지고있는 이미지를 응답해준다.")

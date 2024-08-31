@@ -22,6 +22,17 @@ public class CustomNetworkEntityRepositoryImpl implements CustomNetworkEntityRep
     private final NetworkContainerMappingEntityRepository networkContainerMappingEntityRepository;
 
     @Override
+    public NetworkEntity findByOAuthServiceIdAndNetworkName(String oauthServiceId, String networkName) {
+        return queryFactory.selectFrom(networkEntity)
+                .innerJoin(networkEntity.account, accountEntity)
+                .where(
+                        eqOauthServiceId(oauthServiceId),
+                        eqNetworkName(networkName)
+                )
+                .fetchOne();
+    }
+
+    @Override
     public List<NetworkElements> findByOAuthServiceId(String oauthServiceId) {
 
         return queryFactory.select(
@@ -35,7 +46,6 @@ public class CustomNetworkEntityRepositoryImpl implements CustomNetworkEntityRep
                 )
                 .from(networkEntity)
                 .innerJoin(networkEntity.account, accountEntity)
-                    .on(networkEntity.account.pk.eq(accountEntity.pk))
                 .where(
                         eqOauthServiceId(oauthServiceId)
                 )
@@ -59,7 +69,6 @@ public class CustomNetworkEntityRepositoryImpl implements CustomNetworkEntityRep
                 )
                 .from(networkEntity)
                 .innerJoin(networkEntity.account, accountEntity)
-                    .on(networkEntity.account.pk.eq(accountEntity.pk))
                 .where(
                         eqOauthServiceId(oauthServiceId),
                         eqNetworkName(networkName)
@@ -73,7 +82,6 @@ public class CustomNetworkEntityRepositoryImpl implements CustomNetworkEntityRep
 
         NetworkEntity network = queryFactory.selectFrom(networkEntity)
                 .innerJoin(networkEntity.account, accountEntity)
-                    .on(networkEntity.account.pk.eq(accountEntity.pk))
                 .where(
                         eqOauthServiceId(oauthServiceId),
                         eqNetworkName(networkName)

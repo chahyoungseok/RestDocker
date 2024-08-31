@@ -3,6 +3,10 @@ package org.chs.restdockerapis.network.application;
 import org.chs.domain.account.AccountRepository;
 import org.chs.domain.account.entity.AccountEntity;
 import org.chs.domain.common.enumerate.ThirdPartyEnum;
+import org.chs.domain.container.ContainerEntityRepository;
+import org.chs.domain.container.dto.ContainerElements;
+import org.chs.domain.container.enumerate.ContainerStatusEnum;
+import org.chs.domain.network.NetworkContainerMappingEntityRepository;
 import org.chs.domain.network.NetworkEntityRepository;
 import org.chs.domain.network.dto.NetworkDetailElements;
 import org.chs.domain.network.dto.NetworkElements;
@@ -43,6 +47,12 @@ public class NetworkServiceTest {
 
     @Mock
     private NetworkEntityRepository dockerNetworkRepository;
+
+    @Mock
+    private ContainerEntityRepository dockerContainerRepository;
+
+    @Mock
+    private NetworkContainerMappingEntityRepository dockerNetworkContainerMappingRepository;
 
     @Mock
     private ListUtils listUtils;
@@ -165,6 +175,7 @@ public class NetworkServiceTest {
     class InspectNetwork {
 
         private NetworkDetailElements networkDetailElements = null;
+        private ContainerElements containerElements = null;
 
         protected InspectNetwork() {
             // given - data
@@ -177,6 +188,18 @@ public class NetworkServiceTest {
                     .gateway("172.17.0.1")
                     .enableIcc(true)
                     .mtu(1000)
+                    .build();
+
+            containerElements = ContainerElements.builder()
+                    .createDate(LocalDateTime.now())
+                    .updateDate(LocalDateTime.now())
+                    .name("restDocker")
+                    .imageName("testImageName")
+                    .imageTag("testImageTag")
+                    .outerPort("1111")
+                    .innerPort("2222")
+                    .privateIp("172.17.18.11")
+                    .status(ContainerStatusEnum.Running)
                     .build();
         }
 
@@ -199,6 +222,9 @@ public class NetworkServiceTest {
             // given - mocking
             BDDMockito.given(dockerNetworkRepository.inspectNetwork(any(), any()))
                     .willReturn(networkDetailElements);
+
+            BDDMockito.given(dockerContainerRepository.lsContainer(any()))
+                    .willReturn(List.of(containerElements));
 
             // when
             InspectNetworkResponseDto actual = networkService.inspectNetwork(testRequestInfo, testNameRequest);
@@ -503,6 +529,9 @@ public class NetworkServiceTest {
             // given - mocking
             BDDMockito.given(dockerNetworkRepository.rmNetwork(any(), any()))
                     .willReturn(deleteNetworkResultSuccess);
+
+            BDDMockito.given(dockerNetworkContainerMappingRepository.existNetworkBindingContainer(any(), any()))
+                    .willReturn(false);
 
             // when
             RmNetworkResponseDto actual = networkService.rmNetwork(testRequestInfo, testNameRequest);

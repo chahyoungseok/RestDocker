@@ -4,7 +4,6 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
-import org.chs.domain.container.ContainerEntityRepository;
 import org.chs.domain.image.dto.ImageDetailElements;
 import org.chs.domain.image.dto.ImageElements;
 import org.chs.domain.image.entity.ImageEntity;
@@ -21,7 +20,20 @@ import static org.chs.domain.image.entity.QImageEntity.imageEntity;
 public class CustomImageEntityRepositoryImpl implements CustomImageEntityRepository{
 
     private final JPAQueryFactory queryFactory;
-    private final ContainerEntityRepository containerEntityRepository;
+
+    @Override
+    public ImageEntity findByOAuthServiceIdAndImageFullName(String oauthServiceId, String imageFullName) {
+        String[] imageNameAndTag = separateColonImageName(imageFullName);
+
+       return queryFactory.selectFrom(imageEntity)
+                .innerJoin(imageEntity.account, accountEntity)
+                .where(
+                        eqOauthServiceId(oauthServiceId),
+                        containImageName(imageNameAndTag[0]),
+                        containImageTag(imageNameAndTag[1])
+                )
+                .fetchOne();
+    }
 
     @Override
     public List<ImageElements> findAllByOauthServiceId(String oauthServiceId, String imageName) {
@@ -37,7 +49,6 @@ public class CustomImageEntityRepositoryImpl implements CustomImageEntityReposit
                 )
                 .from(imageEntity)
                 .innerJoin(imageEntity.account, accountEntity)
-                    .on(imageEntity.account.pk.eq(accountEntity.pk))
                 .where(
                         eqOauthServiceId(oauthServiceId),
                         containImageName(imageNameAndTag[0]),
@@ -63,7 +74,6 @@ public class CustomImageEntityRepositoryImpl implements CustomImageEntityReposit
                 )
                 .from(imageEntity)
                 .innerJoin(imageEntity.account, accountEntity)
-                    .on(imageEntity.account.pk.eq(accountEntity.pk))
                 .where(
                         eqOauthServiceId(oauthServiceId),
                         eqImageName(imageNameAndTag[0]),
@@ -74,13 +84,12 @@ public class CustomImageEntityRepositoryImpl implements CustomImageEntityReposit
 
 
     @Override
-    public boolean rmImage(String oauthServiceId, String imageName) {
-        nullCheckImageName(imageName);
-        String[] imageNameAndTag = validColonImageName(imageName);
+    public boolean rmImage(String oauthServiceId, String imageFullName) {
+        nullCheckImageName(imageFullName);
+        String[] imageNameAndTag = validColonImageName(imageFullName);
 
         ImageEntity selectedImage = queryFactory.selectFrom(imageEntity)
                 .innerJoin(imageEntity.account, accountEntity)
-                    .on(imageEntity.account.pk.eq(accountEntity.pk))
                 .where(
                         eqOauthServiceId(oauthServiceId),
                         eqImageName(imageNameAndTag[0]),
@@ -88,13 +97,11 @@ public class CustomImageEntityRepositoryImpl implements CustomImageEntityReposit
                 )
                 .fetchOne();
 
-        long containerDeleteResult = containerEntityRepository.deleteByImagePk(selectedImage.getPk());
-
         long imageDeleteResult = queryFactory.delete(imageEntity)
                 .where(eqImagePk(selectedImage.getPk()))
                 .execute();
 
-        if (0 != containerDeleteResult && 0 != imageDeleteResult) {
+        if (0 != imageDeleteResult) {
             return true;
         }
         return false;

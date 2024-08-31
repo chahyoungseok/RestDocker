@@ -3,6 +3,7 @@ package org.chs.restdockerapis.image.application;
 import org.chs.domain.account.AccountRepository;
 import org.chs.domain.account.entity.AccountEntity;
 import org.chs.domain.common.enumerate.ThirdPartyEnum;
+import org.chs.domain.container.ContainerEntityRepository;
 import org.chs.domain.dockerhub.DockerHubEntityRepository;
 import org.chs.domain.dockerhub.entity.DockerHubEntity;
 import org.chs.domain.image.ImageEntityRepository;
@@ -43,6 +44,9 @@ public class ImageServiceTest {
 
     @Mock
     private ImageEntityRepository dockerImageRepository;
+
+    @Mock
+    private ContainerEntityRepository containerEntityRepository;
 
     @Mock
     private DockerHubEntityRepository dockerHubEntityRepository;
@@ -458,6 +462,9 @@ public class ImageServiceTest {
             BDDMockito.given(listUtils.isBlank(any()))
                     .willReturn(false);
 
+            BDDMockito.given(containerEntityRepository.existContainerForImage(any(), any()))
+                    .willReturn(false);
+
             BDDMockito.given(dockerImageRepository.rmImage(any(), any()))
                     .willReturn(true);
 
@@ -477,6 +484,9 @@ public class ImageServiceTest {
                     .willReturn(false);
 
             BDDMockito.given(listUtils.isBlank(any()))
+                    .willReturn(false);
+
+            BDDMockito.given(containerEntityRepository.existContainerForImage(any(), any()))
                     .willReturn(false);
 
             BDDMockito.given(dockerImageRepository.rmImage(any(), any()))
@@ -531,6 +541,9 @@ public class ImageServiceTest {
                     .willReturn(false);
 
             BDDMockito.given(listUtils.isBlank(any()))
+                    .willReturn(false);
+
+            BDDMockito.given(containerEntityRepository.existContainerForImage(any(), any()))
                     .willReturn(false);
 
             BDDMockito.given(dockerImageRepository.rmImage(any(), any()))

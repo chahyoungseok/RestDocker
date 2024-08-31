@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.chs.domain.account.AccountRepository;
 import org.chs.domain.account.entity.AccountEntity;
 import org.chs.domain.common.enumerate.ThirdPartyEnum;
+import org.chs.domain.container.ContainerEntityRepository;
+import org.chs.domain.network.NetworkContainerMappingEntityRepository;
 import org.chs.domain.network.NetworkEntityRepository;
 import org.chs.domain.network.dto.NetworkDetailElements;
 import org.chs.domain.network.dto.NetworkElements;
@@ -27,6 +29,8 @@ public class NetworkService {
 
     private final AccountRepository accountRepository;
     private final NetworkEntityRepository dockerNetworkRepository;
+    private final ContainerEntityRepository dockerContainerRepository;
+    private final NetworkContainerMappingEntityRepository networkContainerMappingRepository;
 
     private final ListUtils listUtils;
     private final AddressUtils addressUtils;
@@ -66,6 +70,10 @@ public class NetworkService {
 
         NetworkDetailElements inspectedNetworkDetailElements = dockerNetworkRepository.inspectNetwork(requesterInfo.id(), networkName);
 
+        inspectedNetworkDetailElements.setContainerInfo(
+                dockerContainerRepository.lsContainer(requesterInfo.id())
+        );
+
         return InspectNetworkResponseDto.builder()
                 .inspectNetworkDetailElements(inspectedNetworkDetailElements)
                 .build();
@@ -98,7 +106,7 @@ public class NetworkService {
             throw new CustomBadRequestException(ErrorCode.ARGUMENT_COMMAND_NOT_VALID_EXCEPTION);
         }
 
-        NetworkOptionDto castednetworkOptionDto = castCommandToMap(request.argCommands());
+        NetworkOptionDto castednetworkOptionDto = castCommandToDto(request.argCommands());
         NetworkOptionDto validedOptionDto = validNetworkOption(castednetworkOptionDto, requesterInfo.id());
 
         NetworkEntity savedNetwork = saveNetworkForOptionDto(validedOptionDto, requesterInfo.id(), requesterInfo.thirdPartyType());
@@ -108,7 +116,7 @@ public class NetworkService {
                 .build();
     }
 
-    private NetworkOptionDto castCommandToMap(List<String> argCommands) {
+    private NetworkOptionDto castCommandToDto(List<String> argCommands) {
         NetworkOptionDto networkOption = new NetworkOptionDto();
 
         for (String argCommand : argCommands) {
@@ -220,18 +228,35 @@ public class NetworkService {
      * 예상 명령어 : docker network rm ${도커 네트워크 이름}
      * 예상 인자값 : 없음
      *
+     * 참고사항 :
+     *          Docker 는 bridge 네트워크를 항상 하나이상 할당해놓으려 하기 때문에
+     *          bridge 네트워크를 삭제하면 컨테이너 실행 시, 새로운 bridge 네트워크를 할당한다.
+     *
+     *          따라서 본 서버에서는 bridge 네트워크의 삭제를 제지합니다.
+     *
      * @param requesterInfo 사용자 기본 정보 (IP, OAuthServiceId, AccessToken, RefreshToken)
      * @param request ArgCommands : 명령어의 추가 요구사항 List(인자 값)
      * @return 특정 DockerNetwork 삭제의 성공유무
      */
     public RmNetworkResponseDto rmNetwork(GetRequesterDto requesterInfo, DockerCommandRequestDto request) {
         String networkName = getNetworkNameForOneArgCommand(request.argCommands());
+        if (networkName.equals("bridge")) {
+            throw new CustomBadRequestException(ErrorCode.IMPOSSIBLE_RM_BRIDGE_NETWORK);
+        }
+
+        if (existContainer(requesterInfo.id(), networkName)) {
+            throw new CustomBadRequestException(ErrorCode.REMOVE_IMPOSSIBLE_NETWORK_EXIST_CONTAINER);
+        }
 
         boolean deleteNetworkResult = dockerNetworkRepository.rmNetwork(requesterInfo.id(), networkName);
 
         return RmNetworkResponseDto.builder()
                 .networkDeleteResult(deleteNetworkResult)
                 .build();
+    }
+
+    private boolean existContainer(String oauthServiceId, String networkName) {
+        return networkContainerMappingRepository.existNetworkBindingContainer(oauthServiceId, networkName);
     }
 
     private String getNetworkNameForOneArgCommand(List<String> argCommands) {

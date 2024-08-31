@@ -123,6 +123,10 @@ include::{snippets}/pull-image-success/docker-hub에서_사용자가_원하는_�
 
 include::{snippets}/pull-image-fail/docker-hub에서_사용자가_원하는_이미지가_없는경우/request-fields.adoc[]
 
+==== Response Body
+
+include::{snippets}/pull-image-fail/docker-hub에서_사용자가_원하는_이미지가_없는경우/response-body.adoc[]
+
 ==== HTTP Request
 
 include::{snippets}/pull-image-fail/docker-hub에서_사용자가_원하는_이미지가_없는경우/http-request.adoc[]
@@ -137,6 +141,10 @@ include::{snippets}/pull-image-fail/docker-hub에서_사용자가_원하는_이�
 ==== Request Fields
 
 include::{snippets}/pull-image-fail/사용자가_전달한_인자가_형식에_맞지_않는경우/request-fields.adoc[]
+
+==== Response Body
+
+include::{snippets}/pull-image-fail/사용자가_전달한_인자가_형식에_맞지_않는경우/response-body.adoc[]
 
 ==== HTTP Request
 
@@ -192,6 +200,10 @@ include::{snippets}/inspect-image-fail/사용자가_원하는_이미지의_db에
 
 include::{snippets}/inspect-image-fail/사용자가_전달한_인자가_형식에_맞지_않는경우/request-fields.adoc[]
 
+==== Response Body
+
+include::{snippets}/inspect-image-fail/사용자가_전달한_인자가_형식에_맞지_않는경우/response-body.adoc[]
+
 ==== HTTP Request
 
 include::{snippets}/inspect-image-fail/사용자가_전달한_인자가_형식에_맞지_않는경우/http-request.adoc[]
@@ -205,15 +217,20 @@ include::{snippets}/inspect-image-fail/사용자가_전달한_인자가_형식�
 
 ==== Request Fields
 
-include::{snippets}/inspect-image-fail/사용자가_전달한_인자가_형식에_맞지_않는경우/request-fields.adoc[]
+include::{snippets}/inspect-image-fail/사용자가_이미지_인자를_전달하지_않은경우/request-fields.adoc[]
+
+==== Response Body
+
+include::{snippets}/inspect-image-fail/사용자가_이미지_인자를_전달하지_않은경우/response-body.adoc[]
 
 ==== HTTP Request
 
-include::{snippets}/inspect-image-fail/사용자가_전달한_인자가_형식에_맞지_않는경우/http-request.adoc[]
+include::{snippets}/inspect-image-fail/사용자가_이미지_인자를_전달하지_않은경우/http-request.adoc[]
 
 ==== HTTP Response
 
-include::{snippets}/inspect-image-fail/사용자가_전달한_인자가_형식에_맞지_않는경우/http-response.adoc[]
+include::{snippets}/inspect-image-fail/사용자가_이미지_인자를_전달하지_않은경우/http-response.adoc[]
+
 
 
 === Rm Image [성공 테스트]
@@ -259,6 +276,10 @@ include::{snippets}/rm-image-fail/사용자가_요청한_이미지의_삭제를_
 ==== Request Fields
 
 include::{snippets}/rm-image-fail/사용자가_이미지를_인자로_전달하지_않은경우/request-fields.adoc[]
+
+==== Response Body
+
+include::{snippets}/rm-image-fail/사용자가_이미지를_인자로_전달하지_않은경우/response-body.adoc[]
 
 ==== HTTP Request
 

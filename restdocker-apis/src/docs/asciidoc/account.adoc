@@ -25,6 +25,10 @@ include::{snippets}/o-auth-login-success/카카오_요청에_대해_특정_접�
 
 include::{snippets}/o-auth-login-fail/카카오_요청에_-not-empty_값인_code_를_넣지_않고_보낸다/request-fields.adoc[]
 
+==== Response Body
+
+include::{snippets}/o-auth-login-fail/카카오_요청에_-not-empty_값인_code_를_넣지_않고_보낸다/response-body.adoc[]
+
 ==== HTTP Request
 
 include::{snippets}/o-auth-login-fail/카카오_요청에_-not-empty_값인_code_를_넣지_않고_보낸다/http-request.adoc[]
@@ -81,6 +85,10 @@ include::{snippets}/o-auth-login-success/네이버_요청에_대해_특정_접�
 ==== Request Fields
 
 include::{snippets}/o-auth-login-fail/네이버_요청에_-not-empty_값인_code_를_넣지_않고_보낸다/request-fields.adoc[]
+
+==== Response Body
+
+include::{snippets}/o-auth-login-fail/네이버_요청에_-not-empty_값인_code_를_넣지_않고_보낸다/response-body.adoc[]
 
 ==== HTTP Request
 
