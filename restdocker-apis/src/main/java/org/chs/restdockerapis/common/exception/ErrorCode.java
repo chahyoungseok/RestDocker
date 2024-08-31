@@ -29,7 +29,7 @@ public enum ErrorCode {
     NOT_EXIST_NETWORK_IN_HOST(HttpStatus.BAD_REQUEST, "10117", "요청으로 온 Docker Network가 당신의 Host에 있지 않습니다."),
     ALREADY_CONTAINER_IS_RUNNING(HttpStatus.BAD_REQUEST, "10118", "요청한 컨테이너는 이미 실행중입니다."),
     NOT_EXIST_RUNNING_CONTAINER(HttpStatus.BAD_REQUEST, "10119", "실행중인 컨테이너 중 요청한 컨테이너가 없습니다."),
-
+    NOT_EXIST_CONTAINER(HttpStatus.BAD_REQUEST, "10120", "요청한 컨테이너가 존재하지 않습니다."),
 
     JWT_EXPIRED_EXCEPTION(HttpStatus.BAD_REQUEST, "11001", "JWT 만료되었습니다."),
     JWT_VALID_EXCEPTION(HttpStatus.BAD_REQUEST, "11002", "JWT 정보의 유효성검사가 실패하였습니다."),

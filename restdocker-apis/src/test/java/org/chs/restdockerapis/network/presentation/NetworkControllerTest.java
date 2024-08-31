@@ -80,6 +80,9 @@ public class NetworkControllerTest extends ControllerTest {
                     .andExpect(status().isOk())
                     .andDo(
                             restDocs.document(
+                                    requestFields(
+                                            fieldWithPath("argCommands").type(JsonFieldType.NULL).description("도커 명령어 인자값 리스트")
+                                    ),
                                     responseFields(
                                             fieldWithPath("lsNetworkElements").type(JsonFieldType.ARRAY).description("네트워크 요소들의 리스트"),
                                             fieldWithPath("lsNetworkElements[].createDate").type(JsonFieldType.STRING).description("네트워크 생성날짜"),

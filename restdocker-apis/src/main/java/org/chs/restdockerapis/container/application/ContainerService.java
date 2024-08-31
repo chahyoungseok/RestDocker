@@ -348,6 +348,10 @@ public class ContainerService {
         String containerName = getContainerNameForOneArgCommand(request.argCommands());
 
         ContainerEntity container = containerEntityRepository.findContainerByOAuthServiceAndContainerName(oauthServiceId, containerName);
+        if (null == container) {
+            throw new CustomBadRequestException(ErrorCode.NOT_EXIST_CONTAINER);
+        }
+
         boolean rmResult = containerEntityRepository.rmContainer(container.getPk());
 
         return RmContainerResponseDto.builder()
