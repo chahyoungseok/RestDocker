@@ -69,16 +69,13 @@ jobs:
 
 
       # (5) - Build & Push to Docker Image
-      - name: Login to DockerHub
-        run: |
-          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-
       - name: Push Docker Image
         run: |
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
           VERSION=$(./gradlew -q version)
           
-          docker build --platform linux/amd64 -t restdocker:$VERSION .
-          docker push ${{ secrets.DOCKER_HUB_REPOSITORY }}:$VERSION
+          docker build --platform linux/amd64 -t ${{ secrets.DOCKER_HUB_REPOSITORY_AND_NAME }}:$VERSION .
+          docker push ${{ secrets.DOCKER_HUB_REPOSITORY_AND_NAME }}:$VERSION
 
           
       # (6) - Deploy to Target Instance
