@@ -784,7 +784,7 @@ public class AccountServiceTest {
 
             testTokenClaims = JWT.require(Algorithm.HMAC512(testSecretKey))
                     .build()
-                    .verify("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJSZXN0IERvY2tlciAtIEpXVCBUb2tlbiIsInRoaXJkUGFydHlUeXBlIjoiS0FLQU8iLCJvYXV0aFNlcnZpY2VJZCI6InRlc3RfYWNjb3VudF8xIiwibmlja25hbWUiOiLthYzsiqTtirjsmqkg6rOE7KCVMSIsImV4cCI6MTcyNTQxNzIzNX0.GKoZiA-xtphbatP8h_PaAtjdL7711dtORbW1ZiCWET9XCNWJXAjNH0eblc4Pu9J93IfzNBKKYQwljdydXhpMDA")
+                    .verify("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJSZXN0IERvY2tlciAtIEpXVCBUb2tlbiIsInRoaXJkUGFydHlUeXBlIjoiS0FLQU8iLCJvYXV0aFNlcnZpY2VJZCI6InRlc3RfYWNjb3VudF8xIiwibmlja25hbWUiOiLthYzsiqTtirjsmqkg6rOE7KCVMSIsImV4cCI6MjA0MDc4MDgxMH0.OT-G4C25TwBzlilCe4okAK1rPJHcXqATf13ueXSbQIatFQpHbnvqYj-k7MhSIphRpoZWKAIAAW0RZ5a-s9l0cg")
                     .getClaims();
 
             testSuccessAccount = AccountEntity.builder()

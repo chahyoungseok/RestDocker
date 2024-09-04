@@ -1,0 +1,13 @@
+[Unit]
+Description=RestDocker Service
+After=docker.service
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=3
+ExecStart=/opt/bin/scripts/service/start-restdocker-service.sh
+ExecStop=/opt/bin/scripts/service/stop-restdocker-service.sh
+
+[Install]
+WantedBy=multi-user.target
