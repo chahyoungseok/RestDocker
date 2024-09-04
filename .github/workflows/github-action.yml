@@ -19,9 +19,14 @@ jobs:
         uses: actions/checkout@v2
         with:
           ref: develop
+      # (2) - JDK Settin
+      - name: set up jdk 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'zulu'
 
-
-      # (2) - Security Information Injection
+      # (3) - Security Information Injection
       - name: Set prod-yml
         uses: microsoft/variable-substitution@v1
         with:
@@ -43,7 +48,7 @@ jobs:
           oauth2.naver.client-secret: ${{ secrets.NAVER_CLIENT_SECRET }}
 
 
-      # (3) - Prepare to access the Instance
+      # (4) - Prepare to access the Instance
       - name: Create Instance Pem Key
         run: |
           echo "${{ secrets.TARGET_INSTANCE_PEM_KEY }}" > ~/restdocker.pem
@@ -58,7 +63,7 @@ jobs:
           ssh-keyscan ${{ secrets.TARGET_INSTANCE_HOST_IP }} >> ~/.ssh/known_hosts
 
 
-      # (4) - Build & Push to Docker Image
+      # (5) - Build & Push to Docker Image
       - name: Login to DockerHub
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
@@ -71,7 +76,7 @@ jobs:
           docker push ${{ secrets.DOCKER_HUB_REPOSITORY }}:$VERSION
 
           
-      # (5) - Deploy to Target Instance
+      # (6) - Deploy to Target Instance
       - name: Deploy to Target Instance
         run: |
           ssh -i ~/restdocker.pem ${{ secrets.TARGET_INSTANCE_USER }}@${{ secrets.TARGET_INSTANCE_HOST_IP }} "bash ${{ env.RUN_SCRIPT_PATH }}"
