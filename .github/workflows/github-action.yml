@@ -1,0 +1,80 @@
+name: RestDocker - Continuous Delivery
+
+on:
+  pull_request:
+    branches: [ develop ]
+
+
+env:
+  RUN_SCRIPT_PATH: /opt/deploy/scripts/restdocker/restdocker_run.sh
+
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # (1) - Checkout
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+        with:
+          ref: develop
+
+
+      # (2) - Security Information Injection
+      - name: Set prod-yml
+        uses: microsoft/variable-substitution@v1
+        with:
+          files: ./restdocker-apis/src/main/resources/application-prod.yml
+        env:
+          spring.datasource.url: ${{ secrets.AWS_RDS_URL }}
+          spring.datasource.username: ${{ secrets.AWS_RDS_USERNAME }}
+          spring.datasource.password: ${{ secrets.AWS_RDS_PASSWORD }}
+
+      - name: Set security-yml
+        uses: microsoft/variable-substitution@v1
+        with:
+          files: ./restdocker-apis/src/main/resources/application-security.yml
+        env:
+          jwt.hmac512.secret-key: ${{ secrets.SECERT_KEY }}
+          oauth2.kakao.client-id: ${{ secrets.KAKAO_CLIENT_ID }}
+          oauth2.kakao.client-secret: ${{ secrets.KAKAO_CLIENT_SECRET }}
+          oauth2.naver.client-id: ${{ secrets.NAVER_CLIENT_ID }}
+          oauth2.naver.client-secret: ${{ secrets.NAVER_CLIENT_SECRET }}
+
+
+      # (3) - Prepare to access the Instance
+      - name: Create Instance Pem Key
+        run: |
+          echo "${{ secrets.TARGET_INSTANCE_PEM_KEY }}" > ~/restdocker.pem
+          chmod 600 ~/restdocker.pem
+
+      - name: Create SSH directory
+        run: | 
+          mkdir -p ~/.ssh
+      
+      - name: Add known host
+        run: |
+          ssh-keyscan ${{ secrets.TARGET_INSTANCE_HOST_IP }} >> ~/.ssh/known_hosts
+
+
+      # (4) - Build & Push to Docker Image
+      - name: Login to DockerHub
+        run: |
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Push Docker Image
+        run: |
+          VERSION=$(./gradlew -q version)
+          
+          docker build --platform linux/amd64 -t restdocker:$VERSION .
+          docker push ${{ secrets.DOCKER_HUB_REPOSITORY }}:$VERSION
+
+          
+      # (5) - Deploy to Target Instance
+      - name: Deploy to Target Instance
+        run: |
+          ssh -i ~/restdocker.pem ${{ secrets.TARGET_INSTANCE_USER }}@${{ secrets.TARGET_INSTANCE_HOST_IP }} "bash ${{ env.RUN_SCRIPT_PATH }}"
+
+
+
