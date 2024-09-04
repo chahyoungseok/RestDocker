@@ -8,6 +8,7 @@ on:
 
 
 env:
+  SERVICE_INFO_PATH: /opt/bin/scripts/restdocker-package-info.sh
   RUN_SCRIPT_PATH: /opt/deploy/scripts/restdocker/restdocker_run.sh
 
 
@@ -81,6 +82,8 @@ jobs:
       # (6) - Deploy to Target Instance
       - name: Deploy to Target Instance
         run: |
+          VERSION=$(./gradlew -q version)
+          sed -i "s/^export RESTDOCKER_DOCKER_VERSION=.*/export RESTDOCKER_DOCKER_VERSION=${VERSION}/" ${{ env.SERVICE_INFO_PATH }}
           ssh -i ~/restdocker.pem ${{ secrets.TARGET_INSTANCE_USER }}@${{ secrets.TARGET_INSTANCE_HOST_IP }} "bash ${{ env.RUN_SCRIPT_PATH }}"
 
 
