@@ -5,12 +5,12 @@ spring:
 
 jwt:
   hmac512:
-    secret-key: 123456789
+    secret-key: ${SECRET_KEY}
 
 oauth2:
   kakao:
-    client-id: ~
-    client-secret: ~
+    client-id: ${KAKAO_CLIENT_ID}
+    client-secret: ${KAKAO_CLIENT_SECRET}
   naver:
-    client-id: ~
-    client-secret: ~
+    client-id: ${NAVER_CLIENT_ID}
+    client-secret: ${NAVER_CLIENT_SECRET}

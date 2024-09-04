@@ -1,0 +1,6 @@
+#!/bin/bash
+
+export RESTDOCKER_CONTAINER_NAME=restdocker
+export RESTDOCKER_DOCKER_NETWORK_NAME=restdocker_network
+export RESTDOCKER_DOCKER_NETWORK_IP=172.200.1.1
+export RESTDOCKER_DOCKER_VERSION=latest
