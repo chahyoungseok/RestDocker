@@ -11,9 +11,7 @@ fi
 docker run --name ${RESTDOCKER_CONTAINER_NAME} \
 	   --rm \
 	   -itd \
-	   --net ${RESTDOCKER_DOCKER_NETWORK_NAME} \
-	   --ip ${RESTDOCKER_DOCKER_NETWORK_IP} \
-	   -p 8080:10100 \
+	   -p 443:8080 \
 	   -e SPRING_PROFILES_ACTIVE=prod \
 	   -e TZ=Asia/Seoul \
 	   -v /opt/serverlog/restdocker:/var/log/common/info \
