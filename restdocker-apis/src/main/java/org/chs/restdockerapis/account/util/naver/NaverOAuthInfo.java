@@ -17,7 +17,7 @@ public class NaverOAuthInfo {
     @Value("${oauth2.naver.client-secret}")
     private String CLIENT_SECRET;
 
-    private String REDIRECT_URI = "http://localhost:10100/login/oauth2/code/naver";
+    private String REDIRECT_URI = "https://restdocker.site/login/oauth2/code/naver";
 
     private String ACCESS_TOKEN_URI = "https://nid.naver.com/oauth2.0/token";
 

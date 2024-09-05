@@ -21,7 +21,7 @@ public class KakaoOAuthInfo {
 
     private String AUTHORIZATION_GRANT_TYPE = "authorization_code";
 
-    private String REDIRECT_URI = "http://localhost:10100/auth/kakao/callback";
+    private String REDIRECT_URI = "https://restdocker.site/auth/kakao/callback";
 
     private String ACCOUNT_INFO_URI = "https://kapi.kakao.com/v2/user/me";
 
