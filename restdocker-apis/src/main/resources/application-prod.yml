@@ -1,5 +1,5 @@
 server:
-  port: 10100
+  port: 8080
 
 spring:
   config:
@@ -17,7 +17,7 @@ spring:
     generate-ddl: true
     show-sql: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     properties:
       hibernate:
         format_sql: true
@@ -26,6 +26,6 @@ spring:
 
   sql:
     init:
-      mode: always
+      mode: never # 추후 수정예정
       continue-on-error: true
       data-locations: classpath:sql/data.sql
