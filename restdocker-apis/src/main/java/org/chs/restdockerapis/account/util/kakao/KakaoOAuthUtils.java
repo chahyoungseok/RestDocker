@@ -57,7 +57,7 @@ public class KakaoOAuthUtils {
                     String.class);
 
             JsonNode jsonNode = objectMapper.readTree(response.getBody());
-            return !Objects.isNull(jsonNode.get("id"));
+            return !Objects.isNull(jsonNode.get("id").asText());
 
         } catch (NullPointerException e){
             throw new CustomBadRequestException(ErrorCode.NULL_POINT_EXCEPTION);
@@ -93,8 +93,8 @@ public class KakaoOAuthUtils {
 
             JsonNode jsonNode = objectMapper.readTree(response.getBody());
             return OAuthTokenDto.builder()
-                    .accessToken(String.valueOf(jsonNode.get("access_token")))
-                    .refreshToken(String.valueOf(jsonNode.get("refresh_token")))
+                    .accessToken(jsonNode.get("access_token").asText())
+                    .refreshToken(jsonNode.get("refresh_token").asText())
                     .build();
         } catch (NullPointerException e){
             throw new CustomBadRequestException(ErrorCode.NULL_POINT_EXCEPTION);
@@ -124,8 +124,8 @@ public class KakaoOAuthUtils {
 
             JsonNode jsonNode = objectMapper.readTree(response.getBody());
             return OAuthLoginInfoDto.builder()
-                    .id(String.valueOf(jsonNode.get("id")))
-                    .nickname(String.valueOf(jsonNode.get("properties").get("nickname")))
+                    .id(jsonNode.get("id").asText())
+                    .nickname(jsonNode.get("properties").get("nickname").asText())
                     .accessToken(accessTokenInfo.accessToken())
                     .refreshToken(accessTokenInfo.refreshToken())
                     .build();
