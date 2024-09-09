@@ -519,7 +519,7 @@ public class CommandServiceTest {
             List<String> argCommands = List.of();
 
             expected = CommandAnalysisResponseDto.builder()
-                    .url("/api/v1/container/ps")
+                    .url("/api/v1/container/ls")
                     .argCommands(argCommands)
                     .build();
 
@@ -543,7 +543,7 @@ public class CommandServiceTest {
             List<String> argCommands = List.of();
 
             expected = CommandAnalysisResponseDto.builder()
-                    .url("/api/v1/container/ps")
+                    .url("/api/v1/container/ls")
                     .argCommands(argCommands)
                     .build();
 

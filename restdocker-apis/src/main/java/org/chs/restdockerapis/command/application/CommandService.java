@@ -38,9 +38,9 @@ public class CommandService {
         }
 
         return separateApi(
-                analysisResult.mainCommand(),
-                analysisResult.subCommand(),
-                analysisResult.argCommand()
+                analysisResult.getMainCommand(),
+                analysisResult.getSubCommand(),
+                analysisResult.getArgCommand()
         );
     }
 
@@ -77,7 +77,7 @@ public class CommandService {
         }
 
         if (null != (separateRequestDto = dockerSeparate(commands, argCommand, containerSubCommands, MainCommandEnum.CONTAINER.name().toLowerCase()))) {
-            return separateRequestDto;
+            return separateRequestDto.psToLs();
         }
 
         return null;
