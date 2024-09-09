@@ -13,9 +13,9 @@ import org.chs.domain.common.BaseDomainEntity;
 @Table(name = "image",
         uniqueConstraints = {
             @UniqueConstraint(
-                    name = "unique__image___name_tag",
+                    name = "unique__accountfk__image___name_tag",
                     columnNames = {
-                           "name", "tag"
+                           "account_fk", "name", "tag"
                     }
             )
 })

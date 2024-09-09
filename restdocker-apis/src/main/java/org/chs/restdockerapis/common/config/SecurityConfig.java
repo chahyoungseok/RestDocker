@@ -40,7 +40,7 @@ public class SecurityConfig {
                 .sessionManagement((manager) -> manager.sessionCreationPolicy(STATELESS)) // 인증과 인가에 관한 처리를 할 때 Session 을 사용하지 않는다는 의미
                 .cors((cors) -> cors.configurationSource(CorsConfigurationSource()))
                 .addFilterBefore(new JwtAuthorizationFilter(accountRepository, jwtProperties, objectMapper), UsernamePasswordAuthenticationFilter.class)
-                .authorizeHttpRequests((authorize) -> authorize.requestMatchers("/**").permitAll());
+                .authorizeHttpRequests((authorize) -> authorize.requestMatchers("/api/**", "/*.html").permitAll());
 
 
         return httpSecurity.build();
