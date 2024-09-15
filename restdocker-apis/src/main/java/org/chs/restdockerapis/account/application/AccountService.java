@@ -7,6 +7,7 @@ import org.chs.domain.account.AccountRepository;
 import org.chs.domain.account.entity.AccountEntity;
 import org.chs.domain.common.enumerate.ThirdPartyEnum;
 import org.chs.domain.network.NetworkEntityRepository;
+import org.chs.domain.network.dto.NetworkDetailElements;
 import org.chs.domain.network.entity.NetworkEntity;
 import org.chs.globalutils.dto.TokenDto;
 import org.chs.restdockerapis.account.presentation.dto.ReIssueTokenRequest;
@@ -336,16 +337,20 @@ public class AccountService {
     }
 
     private void createDockerZero(AccountEntity account) {
-        dockerNetworkRepository.save(
-                NetworkEntity.builder()
-                        .account(account)
-                        .name(DockerZeroProperties.NAME)
-                        .subnet(DockerZeroProperties.SUBNET)
-                        .gateway(DockerZeroProperties.GATEWAY)
-                        .mtu(DockerZeroProperties.MTU)
-                        .enableIcc(DockerZeroProperties.ICC)
-                        .build()
-        );
+        NetworkDetailElements existBridgeNetwork = dockerNetworkRepository.inspectNetwork(account.getOauthServiceId(), DockerZeroProperties.NAME);
+
+        if (null == existBridgeNetwork) {
+            dockerNetworkRepository.save(
+                    NetworkEntity.builder()
+                            .account(account)
+                            .name(DockerZeroProperties.NAME)
+                            .subnet(DockerZeroProperties.SUBNET)
+                            .gateway(DockerZeroProperties.GATEWAY)
+                            .mtu(DockerZeroProperties.MTU)
+                            .enableIcc(DockerZeroProperties.ICC)
+                            .build()
+            );
+        }
     }
 
     private void logInfoHistory(HistoryException exception) {

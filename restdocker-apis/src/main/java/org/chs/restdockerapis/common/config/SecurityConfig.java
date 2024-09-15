@@ -50,7 +50,7 @@ public class SecurityConfig {
     public CorsConfigurationSource CorsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.setAllowedOriginPatterns(Arrays.asList("https://restdocker.site", "https://www.restdocker.site", "http://localhost:3000"));
+        configuration.setAllowedOriginPatterns(Arrays.asList("https://restdocker.site", "https://www.restdocker.site", "http://localhost:3000", "https://play-with-docker-frontend.vercel.app"));
         configuration.setAllowedMethods(Arrays.asList(HttpMethod.GET.name(), HttpMethod.POST.name(), HttpMethod.PUT.name(), HttpMethod.PATCH.name(), HttpMethod.DELETE.name(), HttpMethod.HEAD.name(), HttpMethod.OPTIONS.name()));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setExposedHeaders(List.of("*"));

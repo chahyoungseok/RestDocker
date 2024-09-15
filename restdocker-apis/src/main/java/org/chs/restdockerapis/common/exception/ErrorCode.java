@@ -30,6 +30,7 @@ public enum ErrorCode {
     ALREADY_CONTAINER_IS_RUNNING(HttpStatus.BAD_REQUEST, "10118", "요청한 컨테이너는 이미 실행중입니다."),
     NOT_EXIST_RUNNING_CONTAINER(HttpStatus.BAD_REQUEST, "10119", "실행중인 컨테이너 중 요청한 컨테이너가 없습니다."),
     NOT_EXIST_CONTAINER(HttpStatus.BAD_REQUEST, "10120", "요청한 컨테이너가 존재하지 않습니다."),
+    ALREADY_EXIST_IMAGE(HttpStatus.BAD_REQUEST, "10121", "요청한 이미지가 이미 Host에 존재합니다."),
 
     JWT_EXPIRED_EXCEPTION(HttpStatus.BAD_REQUEST, "11001", "JWT 만료되었습니다."),
     JWT_VALID_EXCEPTION(HttpStatus.BAD_REQUEST, "11002", "JWT 정보의 유효성검사가 실패하였습니다."),

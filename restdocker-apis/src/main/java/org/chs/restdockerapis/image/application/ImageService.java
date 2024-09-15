@@ -70,6 +70,8 @@ public class ImageService {
             throw new CustomBadRequestException(ErrorCode.NOT_EXIST_IMAGE_IN_DOCKERHUB);
         }
 
+        validExistImage(requesterInfo.id(), pulledImage.getName(), pulledImage.getTag());
+
         AccountEntity account = accountRepository
                 .findByOauthServiceIdEqualsAndThirdPartyTypeEquals(requesterInfo.id(), requesterInfo.thirdPartyType())
                 .orElseThrow(() -> new IllegalArgumentException("토큰으로 온 사용자의 정보가 없습니다."));
@@ -88,6 +90,14 @@ public class ImageService {
         return PullImageResponseDto.builder()
                 .pullImageFullName(savedImage.getFullName())
                 .build();
+    }
+
+    public void validExistImage(String oauthServiceId, String imageName, String imageTag) {
+        ImageEntity existPulledImage
+                = dockerImageRepository.findByOAuthServiceIdAndImageFullName(oauthServiceId, imageName + ":" + imageTag);
+        if (null != existPulledImage) {
+            throw new CustomBadRequestException(ErrorCode.ALREADY_EXIST_IMAGE);
+        }
     }
 
     /**
